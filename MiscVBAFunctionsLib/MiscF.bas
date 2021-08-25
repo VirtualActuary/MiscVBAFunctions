@@ -110,10 +110,10 @@ AllDone:
     Next I
 
     Dim ICol As Collection
-    For I = 1 To N
+    For I = 1 To M
         Set ICol = New Collection
-        For J = 1 To M
-            ICol.Add AllArgs.Item(I).Item(J)
+        For J = 1 To N
+            ICol.Add AllArgs.Item(J).Item(I)
         Next J
         zip.Add ICol
     Next I
