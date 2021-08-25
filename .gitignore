@@ -115,3 +115,6 @@ dmypy.json
 
 *.xlsx
 .idea/
+*.xlsb
+*.xlsb
+MiscVBAFunctions.xlsb
