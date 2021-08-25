@@ -110,7 +110,7 @@ AllDone:
     For I = 1 To N
         Set ICol = New Collection
         For J = 1 To M
-            ICol.Add AllArgs.Item(J)
+            ICol.Add AllArgs.Item(I).Item(J)
         Next J
         zip.Add ICol
     Next I
