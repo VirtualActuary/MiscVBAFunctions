@@ -1,10 +1,10 @@
 Attribute VB_Name = "MiscF"
 Option Explicit
 
-'************"MiscCollection"
+'************"MiscCollectionCreate"
 
 
-Function collect( _
+Function col( _
     Optional arg1 As Variant = Empty, Optional arg2 As Variant = Empty, Optional arg3 As Variant = Empty, Optional arg4 As Variant = Empty, _
     Optional arg5 As Variant = Empty, Optional arg6 As Variant = Empty, Optional arg7 As Variant = Empty, Optional arg8 As Variant = Empty, _
     Optional arg9 As Variant = Empty, Optional arg10 As Variant = Empty, Optional arg11 As Variant = Empty, Optional arg12 As Variant = Empty, _
@@ -12,38 +12,42 @@ Function collect( _
     Optional arg17 As Variant = Empty, Optional arg18 As Variant = Empty, Optional arg19 As Variant = Empty, Optional arg20 As Variant = Empty, _
     Optional arg21 As Variant = Empty, Optional arg22 As Variant = Empty, Optional arg23 As Variant = Empty, Optional arg24 As Variant = Empty, _
     Optional arg25 As Variant = Empty, Optional arg26 As Variant = Empty, Optional arg27 As Variant = Empty, Optional arg28 As Variant = Empty, _
-    Optional arg29 As Variant = Empty) As Collection
+    Optional arg29 As Variant = Empty, Optional arg30 As Variant = Empty) As Collection
     
-    Set collect = New Collection
-    If arg1 = Empty Then Exit Function Else collect.Add arg1
-    If arg2 = Empty Then Exit Function Else collect.Add arg2
-    If arg3 = Empty Then Exit Function Else collect.Add arg3
-    If arg4 = Empty Then Exit Function Else collect.Add arg4
-    If arg5 = Empty Then Exit Function Else collect.Add arg5
-    If arg6 = Empty Then Exit Function Else collect.Add arg6
-    If arg7 = Empty Then Exit Function Else collect.Add arg7
-    If arg8 = Empty Then Exit Function Else collect.Add arg8
-    If arg9 = Empty Then Exit Function Else collect.Add arg9
-    If arg10 = Empty Then Exit Function Else collect.Add arg10
-    If arg11 = Empty Then Exit Function Else collect.Add arg11
-    If arg12 = Empty Then Exit Function Else collect.Add arg12
-    If arg13 = Empty Then Exit Function Else collect.Add arg13
-    If arg14 = Empty Then Exit Function Else collect.Add arg14
-    If arg15 = Empty Then Exit Function Else collect.Add arg15
-    If arg16 = Empty Then Exit Function Else collect.Add arg16
-    If arg17 = Empty Then Exit Function Else collect.Add arg17
-    If arg18 = Empty Then Exit Function Else collect.Add arg18
-    If arg19 = Empty Then Exit Function Else collect.Add arg19
-    If arg20 = Empty Then Exit Function Else collect.Add arg20
-    If arg21 = Empty Then Exit Function Else collect.Add arg21
-    If arg22 = Empty Then Exit Function Else collect.Add arg22
-    If arg23 = Empty Then Exit Function Else collect.Add arg23
-    If arg24 = Empty Then Exit Function Else collect.Add arg24
-    If arg25 = Empty Then Exit Function Else collect.Add arg25
-    If arg26 = Empty Then Exit Function Else collect.Add arg26
-    If arg27 = Empty Then Exit Function Else collect.Add arg27
-    If arg28 = Empty Then Exit Function Else collect.Add arg28
-    If arg29 = Empty Then Exit Function Else collect.Add arg29
+    Dim notEmpty As Boolean
+    Set col = New Collection
+    
+    ' Checking ArgX for emptyness fails on some objects like Dictionary, the error-resumption workaround handles those cases
+    notEmpty = True: On Error Resume Next: notEmpty = (arg1 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg1 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg2 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg2 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg3 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg3 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg4 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg4 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg5 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg5 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg6 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg6 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg7 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg7 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg8 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg8 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg9 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg9 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg10 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg10 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg11 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg11 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg12 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg12 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg13 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg13 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg14 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg14 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg15 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg15 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg16 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg16 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg17 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg17 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg18 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg18 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg19 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg19 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg20 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg20 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg21 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg21 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg22 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg22 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg23 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg23 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg24 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg24 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg25 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg25 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg26 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg26 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg27 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg27 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg28 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg28 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg29 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg29 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg30 <> Empty): On Error GoTo 0: If notEmpty Then col.Add arg30 Else Exit Function
 End Function
 
 
@@ -122,7 +126,7 @@ End Function
 
 
 
-'************"MiscDictionary"
+'************"MiscDictionaryCreate"
 
 
 Function dict( _
@@ -135,22 +139,24 @@ Function dict( _
     Optional arg25 As Variant = Empty, Optional arg26 As Variant = Empty, Optional arg27 As Variant = Empty, Optional arg28 As Variant = Empty, _
     Optional arg29 As Variant = Empty, Optional arg30 As Variant = Empty) As Dictionary
     
+    Dim notEmpty As Boolean
     Set dict = New Dictionary
-    If arg1 = Empty Then Exit Function Else dict.Add arg1, arg2
-    If arg3 = Empty Then Exit Function Else dict.Add arg3, arg4
-    If arg5 = Empty Then Exit Function Else dict.Add arg5, arg6
-    If arg7 = Empty Then Exit Function Else dict.Add arg7, arg8
-    If arg9 = Empty Then Exit Function Else dict.Add arg9, arg10
-    If arg11 = Empty Then Exit Function Else dict.Add arg11, arg12
-    If arg13 = Empty Then Exit Function Else dict.Add arg13, arg14
-    If arg15 = Empty Then Exit Function Else dict.Add arg15, arg16
-    If arg17 = Empty Then Exit Function Else dict.Add arg17, arg18
-    If arg19 = Empty Then Exit Function Else dict.Add arg19, arg20
-    If arg21 = Empty Then Exit Function Else dict.Add arg21, arg22
-    If arg23 = Empty Then Exit Function Else dict.Add arg23, arg24
-    If arg25 = Empty Then Exit Function Else dict.Add arg25, arg26
-    If arg27 = Empty Then Exit Function Else dict.Add arg27, arg28
-    If arg29 = Empty Then Exit Function Else dict.Add arg29, arg30
+    ' Checking ArgX for emptyness fails on some objects like Dictionary, the error-resumption workaround handles those cases
+    notEmpty = True: On Error Resume Next: notEmpty = (arg1 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg1, arg2 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg3 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg3, arg3 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg5 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg5, arg4 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg7 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg7, arg5 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg9 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg9, arg6 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg11 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg11, arg7 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg13 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg13, arg8 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg15 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg15, arg9 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg17 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg17, arg10 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg19 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg19, arg11 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg21 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg21, arg12 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg23 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg23, arg13 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg25 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg25, arg14 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg27 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg27, arg15 Else Exit Function
+    notEmpty = True: On Error Resume Next: notEmpty = (arg29 <> Empty): On Error GoTo 0: If notEmpty Then dict.Add arg29, arg16 Else Exit Function
 End Function
 
 
