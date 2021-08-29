@@ -31,8 +31,8 @@ Function dicti(ParamArray Args() As Variant) As Dictionary
     'Case insensitive dictionary
     
     Dim errmsg As String
-    Set dict = New Dictionary
-    dict.CompareMode = TextCompare
+    Set dicti = New Dictionary
+    dicti.CompareMode = TextCompare
     
     Dim I As Long
     Dim Cnt As Long
@@ -47,7 +47,7 @@ Function dicti(ParamArray Args() As Variant) As Dictionary
             Err.Raise 9, , errmsg
         End If
         
-        dict.Add Args(I), Args(I + 1)
+        dicti.Add Args(I), Args(I + 1)
 Cont:
     Next I
 
