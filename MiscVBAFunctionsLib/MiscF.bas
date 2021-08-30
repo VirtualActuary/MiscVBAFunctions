@@ -142,6 +142,39 @@ Cont:
 End Function
 
 
+'************"MiscExistsInCollection"
+
+
+Public Function ExistsInCollection(col, key As Variant) As Boolean
+    ' if either an object or non-object exists:
+    ExistsInCollection = ContainsObject(col, key) Or ContainsNonObject(col, key)
+End Function
+
+
+' whether an object exists in a collection
+Function ContainsObject(col, key As Variant) As Boolean
+    Dim obj As Variant
+    On Error GoTo Err
+        ContainsObject = True
+        Set obj = col(key)
+        Exit Function
+Err:
+
+    ContainsObject = False
+End Function
+
+' whether an scalar exists in a collection
+Function ContainsNonObject(col, key As Variant) As Boolean
+    Dim obj As Variant
+    On Error GoTo Err
+        ContainsNonObject = True
+        obj = col(key)
+        Exit Function
+Err:
+
+    ContainsNonObject = False
+End Function
+
 '************"MiscString"
 
 
@@ -153,3 +186,47 @@ Function randomString(length)
     randomString = Mid(s, 1, length)
 End Function
 
+
+'************"MiscTables"
+
+
+Function HasLO(Name As String, Optional WB As Workbook) As Boolean
+
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    Dim WS As Worksheet, LO As ListObject
+    
+    For Each WS In WB.Sheets
+        For Each LO In WS.ListObjects
+            If Name = LO.Name Then
+                HasLO = True
+                Exit Function
+            End If
+        Next LO
+    Next WS
+    
+    HasLO = False
+
+End Function
+
+
+' get list object only using it's name from within a workbook
+Function GetLO(Name As String, Optional WB As Workbook) As ListObject
+
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    Dim WS As Worksheet, LO As ListObject
+    
+    For Each WS In WB.Sheets
+        For Each LO In WS.ListObjects
+            If Name = LO.Name Then
+                Set GetLO = LO
+                Exit Function
+            End If
+        Next LO
+    Next WS
+    
+    If GetLO Is Nothing Then
+        ' 9: Subscript out of range
+        Err.Raise 9, , "List object '" & Name & "' not found in workbook '" & WB.Name & "'"
+    End If
+
+End Function

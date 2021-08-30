@@ -1,0 +1,43 @@
+Attribute VB_Name = "MiscTables"
+Option Explicit
+
+Function HasLO(Name As String, Optional WB As Workbook) As Boolean
+
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    Dim WS As Worksheet, LO As ListObject
+    
+    For Each WS In WB.Sheets
+        For Each LO In WS.ListObjects
+            If Name = LO.Name Then
+                HasLO = True
+                Exit Function
+            End If
+        Next LO
+    Next WS
+    
+    HasLO = False
+
+End Function
+
+
+' get list object only using it's name from within a workbook
+Function GetLO(Name As String, Optional WB As Workbook) As ListObject
+
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    Dim WS As Worksheet, LO As ListObject
+    
+    For Each WS In WB.Sheets
+        For Each LO In WS.ListObjects
+            If Name = LO.Name Then
+                Set GetLO = LO
+                Exit Function
+            End If
+        Next LO
+    Next WS
+    
+    If GetLO Is Nothing Then
+        ' 9: Subscript out of range
+        Err.Raise 9, , "List object '" & Name & "' not found in workbook '" & WB.Name & "'"
+    End If
+
+End Function
