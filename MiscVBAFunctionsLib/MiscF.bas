@@ -142,37 +142,22 @@ Cont:
 End Function
 
 
-'************"MiscExistsInCollection"
+'************"MiscHasKey"
 
 
-Public Function ExistsInCollection(col, key As Variant) As Boolean
-    ' if either an object or non-object exists:
-    ExistsInCollection = ContainsObject(col, key) Or ContainsNonObject(col, key)
-End Function
-
-
-' whether an object exists in a collection
-Function ContainsObject(col, key As Variant) As Boolean
-    Dim obj As Variant
-    On Error GoTo Err
-        ContainsObject = True
-        Set obj = col(key)
+Public Function hasKey(Container, key As Variant) As Boolean
+    hasKey = True
+    If TypeOf Container Is Collection Then
+        On Error GoTo noKey
+        TypeName Container(key)
         Exit Function
-Err:
-
-    ContainsObject = False
-End Function
-
-' whether an scalar exists in a collection
-Function ContainsNonObject(col, key As Variant) As Boolean
-    Dim obj As Variant
-    On Error GoTo Err
-        ContainsNonObject = True
-        obj = col(key)
+noKey:
+        hasKey = False
+    Else
+        'We expect keyable VBA objects to have .Exists methods
+        hasKey = Container.Exists(key)
         Exit Function
-Err:
-
-    ContainsNonObject = False
+    End If
 End Function
 
 '************"MiscString"

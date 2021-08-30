@@ -118,3 +118,4 @@ dmypy.json
 *.xlsb
 *.xlsb
 MiscVBAFunctions.xlsb
+MiscVBAFunctions/MiscVBAFunctions.xlsx
