@@ -96,7 +96,7 @@ Public Function hasKey(Container, key As Variant) As Boolean
         If emptyFlag Then ' Item was Empty/non-existant
             hasKey = False
         Else
-            hasKey = True ' Item was Empty/non-existant
+            hasKey = True ' Item was not Empty
         End If
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 And ErrX <> 13 Then ' Retrieval Error, but () is correct access method stil. 424: Method not exist; 438: Compilation error; 13: Variant bracketed ()
