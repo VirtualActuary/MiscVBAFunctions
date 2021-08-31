@@ -71,7 +71,7 @@ Public Function hasKey(Container, key As Variant) As Boolean
         ErrX = Err.Number
     On Error GoTo 0
     
-    If ErrX = 0 Then ' No error trying to Access Key via ()
+    If ErrX = 0 Then ' No error trying to Access Key via .Item
         If emptyFlag Then ' Item was Empty/non-existant
             hasKey = False
         Else
