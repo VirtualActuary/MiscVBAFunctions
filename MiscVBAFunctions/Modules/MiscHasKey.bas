@@ -8,19 +8,19 @@ Private Sub TestHasKey()
     c.Add col("x", "y", "z"), "b"
     
     Debug.Print vbLf & "*********** TestHasKey tests ***********"
-    Debug.Print hasKey(c, "a") ' True for scalar
-    Debug.Print hasKey(c, "b") ' True for object
-    Debug.Print hasKey(c, "A") ' False (case insensitive)
+    Debug.Print True, hasKey(c, "a") ' True for scalar
+    Debug.Print True, hasKey(c, "b") ' True for object
+    Debug.Print True, hasKey(c, "A") ' True (even though case insensitive???)
 
-    Debug.Print hasKey(Workbooks, ThisWorkbook.Name) ' True for non-collection type collections
+    Debug.Print True, hasKey(Workbooks, ThisWorkbook.Name) ' True for non-collection type collections
     
     Dim d As New Dictionary
     d.Add "a", "a"
     d.Add "b", col("x", "y", "z")
     
-    Debug.Print hasKey(d, "a") ' True for scalar
-    Debug.Print hasKey(d, "b") ' True for object
-    Debug.Print hasKey(d, "A") ' False - case sensitive by default
+    Debug.Print True, hasKey(d, "a") ' True for scalar
+    Debug.Print True, hasKey(d, "b") ' True for object
+    Debug.Print False, hasKey(d, "A") ' False - case sensitive by default
     
     Dim dObj As Object
     Set dObj = CreateObject("Scripting.Dictionary")
@@ -28,23 +28,90 @@ Private Sub TestHasKey()
     dObj.Add "a", "a"
     dObj.Add "b", col("x", "y", "z")
     
-    Debug.Print hasKey(dObj, "a") ' True for scalar
-    Debug.Print hasKey(dObj, "b") ' True for object
-    Debug.Print hasKey(dObj, "A") ' False - case sensitive by default
+    Debug.Print True, hasKey(dObj, "a") ' True for scalar
+    Debug.Print True, hasKey(dObj, "b") ' True for object
+    Debug.Print False, hasKey(dObj, "A") ' False - case sensitive by default
+    
+    ' Errors
+    On Error Resume Next
+        Err.Number = 0
+        hasKey ThisWorkbook, "A"
+        Debug.Print 9, Err.Number ' WorkBook doesn't have keys/items
+        
+        Err.Number = 0
+        hasKey 5, "A"
+        Debug.Print 9, Err.Number ' Variant doesn't have keys/items
+    On Error GoTo 0
 
 End Sub
 
+
 Public Function hasKey(Container, key As Variant) As Boolean
-    hasKey = True
-    If Not TypeOf Container Is Dictionary Then
-        On Error GoTo noKey
-        TypeName Container(key)
-        Exit Function
-noKey:
-        hasKey = False
-    Else
-        'We expect keyable VBA objects to have .Exists methods
-        hasKey = Container.Exists(key)
+    Dim ErrX As Integer
+    Dim hasKeyFlag As Boolean
+    Dim emptyFlag As Boolean
+    
+    ' First try .HasKey method on the object
+    On Error Resume Next
+        Err.Number = 0
+        hasKeyFlag = Container.Exists(key)
+        ErrX = Err.Number
+    On Error GoTo 0
+    If ErrX = 0 Then
+        hasKey = hasKeyFlag
         Exit Function
     End If
+    
+    
+    ' Then test with .Item method
+    emptyFlag = False
+    On Error Resume Next
+        Err.Number = 0
+        emptyFlag = TypeName(Container.Item(key)) = "Empty"
+        ErrX = Err.Number
+    On Error GoTo 0
+    
+    If ErrX = 0 Then ' No error trying to Access Key via .Item
+        If emptyFlag Then ' Item was Empty/non-existant
+            hasKey = False
+        Else
+            hasKey = True ' Item was not Empty
+        End If
+        Exit Function
+    ElseIf ErrX <> 424 And ErrX <> 438 Then ' Retrieval Error, but .Item is correct access method stil. 424: Method not exist; 438: Compilation error
+        hasKey = False
+        Exit Function
+    End If
+    
+    
+    ' Then test with bracketed access, like ()
+    emptyFlag = False
+    On Error Resume Next
+        Err.Number = 0
+        emptyFlag = TypeName(Container(key)) = "Empty"
+        ErrX = Err.Number
+    On Error GoTo 0
+    
+    If ErrX = 0 Then ' No error trying to Access Key via ()
+        If emptyFlag Then ' Item was Empty/non-existant
+            hasKey = False
+        Else
+            hasKey = True ' Item was not Empty
+        End If
+        Exit Function
+    ElseIf ErrX <> 424 And ErrX <> 438 And ErrX <> 13 Then ' Retrieval Error, but () is correct access method stil. 424: Method not exist; 438: Compilation error; 13: Variant bracketed ()
+        hasKey = False
+        Exit Function
+    End If
+
+    
+    Dim errmsg As String
+    On Error Resume Next
+        errmsg = "Object"
+        errmsg = errmsg & " of type '" & TypeName(Container) & "'"
+        errmsg = errmsg & " have neither '.Exists' method, nor bracketed indexing '()', nor '.Item' method"
+    On Error GoTo 0
+    Err.Raise 9, , errmsg
+    
 End Function
+
