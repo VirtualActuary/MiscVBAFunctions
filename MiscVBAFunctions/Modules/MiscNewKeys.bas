@@ -35,7 +35,7 @@ Private Function TestGetNewKey()
 End Function
 
 
-Private Function GetNewKey(Name As String, Container, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
+Function GetNewKey(Name As String, Container, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
     ' get a key that does not exists in a container (dict or collection)
     ' we keep appending, 1, 2, 3, ..., 10, 11 until the key is unique
     ' MaxLength is used when the key has a restriction on the maximum length

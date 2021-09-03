@@ -28,7 +28,7 @@ Sub FreezePanes(r As Range)
     Application.ScreenUpdating = False
     With Application.Windows(WS.Parent.Name)
         ' Unfortunately, we have to do this :/
-        Application.GoTo r
+        Application.Goto r
         .FreezePanes = True
     End With
     
