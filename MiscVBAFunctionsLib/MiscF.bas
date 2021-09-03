@@ -179,6 +179,11 @@ Sub FreezePanes(r As Range)
     currentScreenUpdating = Application.ScreenUpdating
     Application.ScreenUpdating = False
     With Application.Windows(WS.Parent.Name)
+        ' if existing freezed panes, remove them
+        If .FreezePanes = True Then
+            .FreezePanes = False
+        End If
+        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
         Application.Goto r
         .FreezePanes = True
