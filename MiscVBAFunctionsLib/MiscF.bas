@@ -7,6 +7,7 @@ Option Explicit
 
 'Dim J
 'Dim I
+'Dim WB
 
 
 '************"MiscCollectionCreate"
@@ -53,6 +54,26 @@ End Function
 
 
 
+
+'************"MiscCreateTextFile"
+
+
+Private Sub testCreateTextFile()
+    CreateTextFile "foo", ThisWorkbook.Path & "\tests\MiscCreateTextFile\test.txt"
+    ' TODO: assertion
+End Sub
+
+Function CreateTextFile(Content As String, FilePath As String)
+    ' Creates a new / overwrites an existing text file with Content
+    
+    Dim oFile As Integer
+    oFile = FreeFile
+    
+    Open FilePath For Output As #oFile
+        Print #oFile, Content
+    Close #oFile
+
+End Function
 
 '************"MiscDictionary"
 
@@ -524,4 +545,35 @@ Function GetLO(Name As String, Optional WB As Workbook) As ListObject
         Err.Raise 9, , "List object '" & Name & "' not found in workbook '" & WB.Name & "'"
     End If
 
+End Function
+
+'************"MiscTableToDicts"
+
+
+Private Sub TableToDictsTest()
+    Dim Dicts As Collection
+    Set Dicts = TableToDicts("TableToDictsTestData")
+    ' read row 2 in column "b":
+    Debug.Print Dicts(2)("b"), 5
+End Sub
+
+Function TableToDicts(TableName As String, Optional WB As Workbook) As Collection
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Set TableToDicts = New Collection
+    
+    Dim d As Dictionary
+    
+    Dim Table As ListObject, lr As ListRow, lc As ListColumn
+    Set Table = GetLO(TableName, WB)
+    For Each lr In Table.ListRows
+        Set d = New Dictionary
+        For Each lc In Table.ListColumns
+            d.Add lc.Name, lr.Range(1, lc.Index).Value
+        Next lc
+        
+        TableToDicts.Add d
+    Next lr
+    
 End Function

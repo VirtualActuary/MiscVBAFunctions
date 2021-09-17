@@ -4,4 +4,5 @@ Attribute VB_Name = "Casing"
 
 'Dim J
 'Dim I
+'Dim WB
 
