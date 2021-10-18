@@ -10,6 +10,22 @@ Option Explicit
 'Dim WB
 'Dim WS
 
+'************"MiscAssign"
+' Assign a value to a variable and also return that value The goal of this function is to
+' overcome the different `set` syntax for assigning an object vs. assigning a native type
+' like Int, Double etc. Additionally this function has similar functionality to Python's
+' walrus operator: https://towardsdatascience.com/the-walrus-operator-7971cd339d7d
+
+Function assign(ByRef var As Variant, ByRef val As Variant)
+    If IsObject(val) Then 'Object
+        Set var = val
+        Set assign = val
+    Else 'Variant
+        var = val
+        assign = val
+    End If
+End Function
+
 '************"MiscCollectionCreate"
 
 
@@ -100,19 +116,11 @@ End Function
 Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
         
     If d.Exists(key) Then
-    
-        If IsObject(d.Item(key)) Then
-            Set dictget = d.Item(key) 'Object
-        Else
-            dictget = d.Item(key) 'Variant
-        End If
+        assign dictget, d.Item(key)
         
     ElseIf Not IsEmpty(default) Then
-        If IsObject(default) Then
-            Set dictget = default 'Object
-        Else
-            dictget = default  'Variant
-        End If
+        assign dictget, default
+        
     Else
         Dim errmsg As String
         On Error Resume Next
@@ -214,9 +222,9 @@ Sub FreezePanes(r As Range)
         If .FreezePanes = True Then
             .FreezePanes = False
         End If
-        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
+        Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.Goto r
+        Application.GoTo r
         .FreezePanes = True
     End With
     

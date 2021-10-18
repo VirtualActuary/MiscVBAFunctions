@@ -23,19 +23,11 @@ End Function
 Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
         
     If d.Exists(key) Then
-    
-        If IsObject(d.Item(key)) Then
-            Set dictget = d.Item(key) 'Object
-        Else
-            dictget = d.Item(key) 'Variant
-        End If
+        assign dictget, d.Item(key)
         
     ElseIf Not IsEmpty(default) Then
-        If IsObject(default) Then
-            Set dictget = default 'Object
-        Else
-            dictget = default  'Variant
-        End If
+        assign dictget, default
+        
     Else
         Dim errmsg As String
         On Error Resume Next
