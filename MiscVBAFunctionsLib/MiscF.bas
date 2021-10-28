@@ -11,7 +11,7 @@ Option Explicit
 'Dim WS
 
 '************"MiscAssign"
-' Assign a value to a variable and also return that value The goal of this function is to
+' Assign a value to a variable and also return that value. The goal of this function is to
 ' overcome the different `set` syntax for assigning an object vs. assigning a native type
 ' like Int, Double etc. Additionally this function has similar functionality to Python's
 ' walrus operator: https://towardsdatascience.com/the-walrus-operator-7971cd339d7d
@@ -25,6 +25,67 @@ Function assign(ByRef var As Variant, ByRef val As Variant)
         assign = val
     End If
 End Function
+
+'************"MiscCollection"
+
+
+
+Function min(ByVal col As Collection) As Variant
+    
+    If col Is Nothing Then
+        Err.Raise Number:=91, _
+              Description:="Collection input can't be empty"
+    End If
+    
+    Dim Entry As Variant
+    min = col(1)
+    
+    For Each Entry In col
+        If Entry < min Then
+            min = Entry
+        End If
+    Next Entry
+    
+    
+    
+End Function
+
+Function max(ByVal col As Collection) As Variant
+    If col Is Nothing Then
+        Err.Raise Number:=91, _
+              Description:="Collection input can't be empty"
+    End If
+    
+    max = col(1)
+    
+    For Each Entry In col
+        If Entry > max Then
+            max = Entry
+        End If
+    Next Entry
+
+End Function
+
+Function mean(ByVal col As Collection) As Variant
+    If col Is Nothing Then
+        Err.Raise Number:=91, _
+              Description:="Collection input can't be empty"
+    End If
+
+    mean = 0
+    
+    For Each Entry In col
+        mean = mean + Entry
+    Next Entry
+    
+    mean = mean / col.Count
+    
+End Function
+
+
+
+
+
 
 '************"MiscCollectionCreate"
 
@@ -103,7 +164,7 @@ Private Function testDictget()
     Debug.Print dictget(d, "a"), 2 ' returns 2
     Debug.Print dictget(d, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
     
-    Debug.Print dictget(d, "c", ""), "" ' returns default value if key not found
+    Debug.Print dictget(d, "c", vbNullString), vbNullString ' returns default value if key not found
     
     On Error Resume Next
         Debug.Print dictget(d, "c")
@@ -711,3 +772,143 @@ Function TableToDicts(TableName As String, Optional WB As Workbook) As Collectio
     Next lr
     
 End Function
+
+'************"Test__MiscCollection"
+
+Option Private Module
+
+'@TestModule
+'@Folder("Tests")
+
+Private Assert As Rubberduck.AssertClass
+Private Fakes As Rubberduck.FakesProvider
+
+'@ModuleInitialize
+Private Sub ModuleInitialize()
+    'this method runs once per module.
+    Set Assert = New Rubberduck.AssertClass
+    Set Fakes = New Rubberduck.FakesProvider
+End Sub
+
+'@ModuleCleanup
+Private Sub ModuleCleanup()
+    'this method runs once per module.
+    Set Assert = Nothing
+    Set Fakes = Nothing
+End Sub
+
+'@TestInitialize
+Private Sub TestInitialize()
+    'This method runs before every test in the module..
+End Sub
+
+'@TestCleanup
+Private Sub TestCleanup()
+    'this method runs after every test in the module.
+End Sub
+
+'@TestMethod("MiscCollection.min")
+Private Sub Test_min()                        'TODO Rename test
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    'Act:
+
+    'Assert:
+    Assert.AreEqual 4, min(col(4, 5, 6)), "min test succeeded"
+    Assert.AreEqual 5, min(col(5, 6)), "min test succeeded"
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscCollection.min")
+Private Sub TestMethod1()                        'TODO Rename test
+    Const ExpectedError As Long = 91
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim c As Collection
+    'Act:
+    
+    
+    min c
+    
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Assert.Succeed
+        
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub
+
+'************"Test__MiscHasKey"
+
+Option Private Module
+
+'@TestModule
+'@Folder("Tests")
+
+Private Assert As Rubberduck.AssertClass
+Private Fakes As Rubberduck.FakesProvider
+
+'@ModuleInitialize
+Private Sub ModuleInitialize()
+    'this method runs once per module.
+    Set Assert = New Rubberduck.AssertClass
+    Set Fakes = New Rubberduck.FakesProvider
+End Sub
+
+'@ModuleCleanup
+Private Sub ModuleCleanup()
+    'this method runs once per module.
+    Set Assert = Nothing
+    Set Fakes = Nothing
+End Sub
+
+'@TestInitialize
+Private Sub TestInitialize()
+    'This method runs before every test in the module..
+End Sub
+
+'@TestCleanup
+Private Sub TestCleanup()
+    'this method runs after every test in the module.
+End Sub
+
+'@TestMethod("MiscHasKey")
+Private Sub test__HasKey__Collection()                        'TODO Rename test
+    On Error GoTo TestFail
+    
+    
+   
+    
+    'Arrange:
+     Dim c As New Collection
+
+    'Act:
+    c.Add "foo", "a"
+    c.Add col("x", "y", "z"), "b"
+    
+    'Assert:
+    'Assert.AreEqual hasKey(c, "a")
+    Assert.AreEqual True, hasKey(c, "a") ' True for scalar
+    'Assert.Succeed
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
