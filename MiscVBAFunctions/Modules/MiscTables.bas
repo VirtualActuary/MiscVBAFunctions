@@ -1,10 +1,12 @@
 Attribute VB_Name = "MiscTables"
 Option Explicit
 
-Function HasLO(Name As String, Optional WB As Workbook) As Boolean
+Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
 
     If WB Is Nothing Then Set WB = ThisWorkbook
-    Dim WS As Worksheet, LO As ListObject
+    ' Dim WS As Worksheet, LO As ListObject
+    Dim WS As Worksheet
+    Dim LO As ListObject
     
     For Each WS In WB.Sheets
         For Each LO In WS.ListObjects
@@ -21,10 +23,11 @@ End Function
 
 
 ' get list object only using it's name from within a workbook
-Function GetLO(Name As String, Optional WB As Workbook) As ListObject
+Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
 
     If WB Is Nothing Then Set WB = ThisWorkbook
-    Dim WS As Worksheet, LO As ListObject
+    Dim WS As Worksheet
+    Dim LO As ListObject
     
     For Each WS In WB.Sheets
         For Each LO In WS.ListObjects

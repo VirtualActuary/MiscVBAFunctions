@@ -15,7 +15,7 @@ UnFreeze:
     
 End Sub
 
-Sub FreezePanes(r As Range)
+Public Sub FreezePanes(r As Range)
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet
@@ -31,9 +31,9 @@ Sub FreezePanes(r As Range)
         If .FreezePanes = True Then
             .FreezePanes = False
         End If
-        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
+        Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.Goto r
+        Application.GoTo r
         .FreezePanes = True
     End With
     
@@ -42,7 +42,7 @@ Sub FreezePanes(r As Range)
     CurrentActiveSheet.Activate
 End Sub
 
-Sub UnFreezePanes(WS As Worksheet)
+Public Sub UnFreezePanes(WS As Worksheet)
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet

@@ -18,7 +18,7 @@ End Function
 
 
 
-Function RangeTo1DArray( _
+Public Function RangeTo1DArray( _
               r As Range _
             , Optional IgnoreEmpty As Boolean = True _
             ) As Variant()
@@ -37,7 +37,9 @@ Function RangeTo1DArray( _
     End If
     
     Values = r.Value
-    Dim I As Long, J As Long, counter As Long
+    Dim I As Long
+    Dim J As Long
+    Dim counter As Long
     counter = 0
     For I = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
@@ -45,7 +47,7 @@ Function RangeTo1DArray( _
                 ' if error, we cannot check if empty, we need to add it
                 arr(counter) = Values(I, J)
                 counter = counter + 1
-            ElseIf Values(I, J) = "" And IgnoreEmpty Then
+            ElseIf Values(I, J) = vbNullString And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
                 arr(counter) = Values(I, J)

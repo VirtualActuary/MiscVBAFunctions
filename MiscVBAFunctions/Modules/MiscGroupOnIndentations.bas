@@ -10,10 +10,11 @@ Private Sub TestGroupOnIndentations()
 
 End Sub
 
-Sub GroupRowsOnIndentations(r As Range)
+Public Sub GroupRowsOnIndentations(r As Range)
     ' groups the rows based on indentations of the cells in the range
     
-    Dim ri As Range, WS As Worksheet
+    ' Dim ri As Range, WS As Worksheet
+    Dim ri As Range
     For Each ri In r
         ri.EntireRow.OutlineLevel = ri.IndentLevel + 1
     Next ri
@@ -21,10 +22,11 @@ Sub GroupRowsOnIndentations(r As Range)
 End Sub
 
 
-Sub GroupColumnsOnIndentations(r As Range)
+Public Sub GroupColumnsOnIndentations(r As Range)
     ' groups the columns based on indentations of the cells in the range
     
-    Dim ri As Range, WS As Worksheet
+    ' Dim ri As Range, WS As Worksheet
+    Dim ri As Range
     For Each ri In r
         ri.EntireColumn.OutlineLevel = ri.IndentLevel + 1
     Next ri
@@ -40,16 +42,18 @@ Private Sub TestRemoveGroupings()
 End Sub
 
 
-Sub RemoveRowGroupings(WS As Worksheet)
-    Dim r As Range, ri As Range
+Public Sub RemoveRowGroupings(WS As Worksheet)
+    Dim r As Range
+    Dim ri As Range
     Set r = WS.UsedRange ' todo: better way to find last "active" cell
     For Each ri In r.Columns(1)
         ri.EntireRow.OutlineLevel = 1
     Next ri
 End Sub
 
-Sub RemoveColumnGroupings(WS As Worksheet)
-    Dim r As Range, ri As Range
+Public Sub RemoveColumnGroupings(WS As Worksheet)
+    Dim r As Range
+    Dim ri As Range
     Set r = WS.UsedRange ' todo: better way to find last "active" cell
     For Each ri In r.Rows(1)
         ri.EntireColumn.OutlineLevel = 1

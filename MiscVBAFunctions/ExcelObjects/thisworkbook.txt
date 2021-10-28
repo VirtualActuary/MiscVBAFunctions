@@ -17,7 +17,7 @@ End Sub
 '**********************************************************************************
 '* Add selected references to this project
 '**********************************************************************************
-Sub addEarlyBindings()
+Public Sub addEarlyBindings()
     On Error GoTo ErrorHandler
         If Not isBindingNameLoaded("ADODB") Then
             'Microsoft ActiveX Data Objects 6.1
@@ -53,7 +53,7 @@ End Sub
 '**********************************************************************************
 '* Verify if a reference is loaded
 '**********************************************************************************
-Function isBindingNameLoaded(ref As String) As Boolean
+Public Function isBindingNameLoaded(ref As String) As Boolean
     ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
     isBindingNameLoaded = False
     Dim xRef As Variant
@@ -69,7 +69,7 @@ End Function
 '**********************************************************************************
 '* Print all current active GUIDs
 '**********************************************************************************
-Sub printAllEarlyBindings()
+Public Sub printAllEarlyBindings()
     ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
     Dim xRef As Variant
     For Each xRef In ThisWorkbook.VBProject.References
@@ -79,7 +79,7 @@ Sub printAllEarlyBindings()
         Debug.Print xRef.Minor
         Debug.Print xRef.FullPath
         Debug.Print xRef.GUID
-        Debug.Print ""
+        Debug.Print vbNullString
     Next xRef
     
 End Sub

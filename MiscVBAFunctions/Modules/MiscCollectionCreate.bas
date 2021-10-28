@@ -1,7 +1,7 @@
 Attribute VB_Name = "MiscCollectionCreate"
 Option Explicit
 
-Function col(ParamArray Args() As Variant) As Collection
+Public Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
     Dim I As Long
 
@@ -12,11 +12,11 @@ Function col(ParamArray Args() As Variant) As Collection
 End Function
 
 
-Function zip(ParamArray Args() As Variant) As Collection
+Public Function zip(ParamArray Args() As Variant) As Collection
     Dim I As Long
     Dim J As Long
     
-    Dim N As Long
+    ' Dim N As Long
     Dim M As Long
     
 

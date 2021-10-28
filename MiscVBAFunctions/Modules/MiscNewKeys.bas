@@ -5,14 +5,15 @@ Option Explicit
 ' Use case is when we want to create a new sheet, but
 ' want to ensure we don't give a name that already exists in the workbook
 
-Function NewSheetName(Name As String, Optional WB As Workbook)
+Public Function NewSheetName(Name As String, Optional WB As Workbook)
 
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     ' max 31 characters
     NewSheetName = Left(Name, 31)
 
-    If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
+    ' If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
+    If Not hasKey(WB.Sheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
     Else
@@ -22,7 +23,9 @@ End Function
 
 Private Function TestGetNewKey()
 
-    Dim c As New Collection, I As Long
+    ' Dim c As New Collection, I As Long
+    Dim c As New Collection
+    Dim I As Long
     
     c.Add "bla", "name"
     For I = 1 To 100
@@ -35,7 +38,7 @@ Private Function TestGetNewKey()
 End Function
 
 
-Function GetNewKey(Name As String, Container, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
+Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
     ' get a key that does not exists in a container (dict or collection)
     ' we keep appending, 1, 2, 3, ..., 10, 11 until the key is unique
     ' MaxLength is used when the key has a restriction on the maximum length

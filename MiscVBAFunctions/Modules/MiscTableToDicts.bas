@@ -8,7 +8,7 @@ Private Sub TableToDictsTest()
     Debug.Print Dicts(2)("b"), 5
 End Sub
 
-Function TableToDicts(TableName As String, Optional WB As Workbook) As Collection
+Public Function TableToDicts(TableName As String, Optional WB As Workbook) As Collection
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -16,7 +16,9 @@ Function TableToDicts(TableName As String, Optional WB As Workbook) As Collectio
     
     Dim d As Dictionary
     
-    Dim Table As ListObject, lr As ListRow, lc As ListColumn
+    Dim Table As ListObject
+    Dim lr As ListRow
+    Dim lc As ListColumn
     Set Table = GetLO(TableName, WB)
     For Each lr In Table.ListRows
         Set d = New Dictionary
