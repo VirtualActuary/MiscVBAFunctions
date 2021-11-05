@@ -29,6 +29,7 @@ Function max(ByVal col As Collection) As Variant
     End If
     
     max = col(1)
+    Dim Entry As Variant
     
     For Each Entry In col
         If Entry > max Then
@@ -45,6 +46,7 @@ Function mean(ByVal col As Collection) As Variant
     End If
 
     mean = 0
+    Dim Entry As Variant
     
     For Each Entry In col
         mean = mean + Entry

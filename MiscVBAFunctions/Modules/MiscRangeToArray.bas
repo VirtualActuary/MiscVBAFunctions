@@ -37,22 +37,22 @@ Function RangeTo1DArray( _
     End If
     
     Values = r.Value
-    Dim I As Long, J As Long, counter As Long
+    Dim i As Long, J As Long, counter As Long
     counter = 0
-    For I = LBound(Values, 1) To UBound(Values, 1) ' rows
+    For i = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
-            If IsError(Values(I, J)) Then
+            If IsError(Values(i, J)) Then
                 ' if error, we cannot check if empty, we need to add it
-                arr(counter) = Values(I, J)
+                arr(counter) = Values(i, J)
                 counter = counter + 1
-            ElseIf Values(I, J) = "" And IgnoreEmpty Then
+            ElseIf Values(i, J) = "" And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
-                arr(counter) = Values(I, J)
+                arr(counter) = Values(i, J)
                 counter = counter + 1
             End If
         Next J
-    Next I
+    Next i
     
     RangeTo1DArray = arr
     

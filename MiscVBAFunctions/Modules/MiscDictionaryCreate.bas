@@ -7,22 +7,22 @@ Function dict(ParamArray Args() As Variant) As Dictionary
     Dim errmsg As String
     Set dict = New Dictionary
     
-    Dim I As Long
+    Dim i As Long
     Dim Cnt As Long
     Cnt = 0
-    For I = LBound(Args) To UBound(Args)
+    For i = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If I + 1 > UBound(Args) Then
+        If i + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dict.Add Args(I), Args(I + 1)
+        dict.Add Args(i), Args(i + 1)
 Cont:
-    Next I
+    Next i
 
 End Function
 
@@ -34,22 +34,22 @@ Function dicti(ParamArray Args() As Variant) As Dictionary
     Set dicti = New Dictionary
     dicti.CompareMode = TextCompare
     
-    Dim I As Long
+    Dim i As Long
     Dim Cnt As Long
     Cnt = 0
-    For I = LBound(Args) To UBound(Args)
+    For i = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If I + 1 > UBound(Args) Then
+        If i + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dicti.Add Args(I), Args(I + 1)
+        dicti.Add Args(i), Args(i + 1)
 Cont:
-    Next I
+    Next i
 
 End Function
 

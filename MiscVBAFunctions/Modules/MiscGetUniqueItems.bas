@@ -31,10 +31,10 @@ Function GetUniqueItems(arr() As Variant, _
             d.CompareMode = TextCompare
         End If
         
-        Dim I As Long
-        For I = LBound(arr) To UBound(arr)
-            If Not d.Exists(arr(I)) Then
-                d.Add arr(I), arr(I)
+        Dim i As Long
+        For i = LBound(arr) To UBound(arr)
+            If Not d.Exists(arr(i)) Then
+                d.Add arr(i), arr(i)
             End If
         Next
         
