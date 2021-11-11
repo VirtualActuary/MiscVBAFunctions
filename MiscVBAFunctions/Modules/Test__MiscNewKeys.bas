@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscAssign"
+Attribute VB_Name = "Test__MiscNewKeys"
 Option Explicit
 Option Private Module
 
@@ -32,45 +32,30 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_variant()
+'@TestMethod("MiscNewKeys")
+Private Sub Test_GetNewKey()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim i As Variant
-    
+    Dim c As New Collection
+    Dim d As New Collection
+    Dim i As Long
 
     'Act:
+    c.Add "bla", "name"
+    For i = 1 To 100
+        c.Add "bla", "name" & i
+    Next i
+    
+    d.Add "bla", "does"
+    d.Add "bla", "not"
+    d.Add "bla", "matter"
 
     'Assert:
-    Assert.AreEqual 5, assign(i, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(i, 1.4), "assign test succeeded"
-    
-    
-    'Assert.Succeed
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_object()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim x As Variant
-    Dim y As Variant
-    Dim i As Variant
-    Set i = col(4, 5, 6)
-    assign x, i
-    
-    'Assert:
-    Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, i)(2)
-
+    Assert.AreEqual "name101", GetNewKey("name", c)
+    Assert.AreEqual "NewName", GetNewKey("NewName", c)
+    Assert.AreEqual "not1", GetNewKey("not", d)
+    Assert.AreEqual "foo", GetNewKey("foo", d)
 
 TestExit:
     Exit Sub

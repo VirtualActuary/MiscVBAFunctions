@@ -775,59 +775,6 @@ Function TableToDicts(TableName As String, Optional WB As Workbook) As Collectio
     
 End Function
 
-'************"Test__Dictionary"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("Uncategorized")
-Private Sub Test_dictget()                        'TODO Rename test
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim d As Dictionary
-
-    'Act:
-
-    'Assert:
-    Assert.Succeed
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
 '************"Test__MiscAssign"
 
 Option Private Module
@@ -867,7 +814,7 @@ Private Sub Test_MiscAssign_variant()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim i As Integer
+    Dim i As Variant
     
 
     'Act:
@@ -1164,6 +1111,170 @@ TestFail:
     Resume TestExit
 End Sub
 
+'************"Test__MiscDictionary"
+
+Option Private Module
+
+'@TestModule
+'@Folder("Tests")
+
+Private Assert As Rubberduck.AssertClass
+Private Fakes As Rubberduck.FakesProvider
+
+'@ModuleInitialize
+Private Sub ModuleInitialize()
+    'this method runs once per module.
+    Set Assert = New Rubberduck.AssertClass
+    Set Fakes = New Rubberduck.FakesProvider
+End Sub
+
+'@ModuleCleanup
+Private Sub ModuleCleanup()
+    'this method runs once per module.
+    Set Assert = Nothing
+    Set Fakes = Nothing
+End Sub
+
+'@TestInitialize
+Private Sub TestInitialize()
+    'This method runs before every test in the module..
+End Sub
+
+'@TestCleanup
+Private Sub TestCleanup()
+    'this method runs after every test in the module.
+End Sub
+
+'@TestMethod("MiscDictionary")
+Private Sub Test_dictget()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim d As Dictionary
+    
+
+    'On Error Resume Next
+    'Debug.Print dictget(d, "c")
+    'Debug.Print Err.Number, 9 ' give error nr 9 if key not found
+    'On Error GoTo 0
+
+    'Act:
+    Set d = dict("a", 2, "b", ThisWorkbook)
+
+    'Assert:
+    Assert.AreEqual 2, dictget(d, "a")
+    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
+    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscDictionary")
+Private Sub Test_dictget_fail()
+    Const ExpectedError As Long = 9
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim d As Dictionary
+
+    'Act:
+    Set d = dict("a", 2, "b", ThisWorkbook)
+
+    dictget d, "c"
+    
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub
+
+'************"Test__MiscGetUniqueItems"
+
+Option Private Module
+
+'@TestModule
+'@Folder("Tests")
+
+Private Assert As Rubberduck.AssertClass
+Private Fakes As Rubberduck.FakesProvider
+
+'@ModuleInitialize
+Private Sub ModuleInitialize()
+    'this method runs once per module.
+    Set Assert = New Rubberduck.AssertClass
+    Set Fakes = New Rubberduck.FakesProvider
+End Sub
+
+'@ModuleCleanup
+Private Sub ModuleCleanup()
+    'this method runs once per module.
+    Set Assert = Nothing
+    Set Fakes = Nothing
+End Sub
+
+'@TestInitialize
+Private Sub TestInitialize()
+    'This method runs before every test in the module..
+End Sub
+
+'@TestCleanup
+Private Sub TestCleanup()
+    'this method runs after every test in the module.
+End Sub
+
+'@TestMethod("MiscGetUniqueItems")
+Private Sub Test_GetUniqueItems()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim arr1(3)
+    'Dim arr2(3)
+    'Dim arr3(3)
+    Dim arr4(3)
+    Dim arr5(3)
+    
+    
+    
+    
+    'arr2(0) = "a": arr2(1) = "b": arr2(2) = "c": arr2(3) = "B"
+    'Debug.Print UBound(GetUniqueItems(arr2), 1), 3 ' zero index + case sensitive
+    
+    'arr3(0) = "a": arr3(1) = "b": arr3(2) = "c": arr3(3) = "B"
+    'Debug.Print UBound(GetUniqueItems(arr3, False), 1), 2 ' zero index + case insensitive
+    
+    'arr4(0) = 1: arr4(1) = 2: arr4(2) = 3: arr4(3) = 2
+    'Debug.Print UBound(GetUniqueItems(arr4), 1), 2 ' zero index
+    
+    'arr5(0) = 1: arr5(1) = 1: arr5(2) = "a": arr5(3) = "a"
+    'Debug.Print UBound(GetUniqueItems(arr5), 1), 1 ' zero index
+
+    'Act:
+    arr1(0) = "a": arr1(1) = "b": arr1(2) = "c": arr1(3) = "b"
+    
+    arr4(0) = 1: arr4(1) = 2: arr4(2) = 3: arr4(3) = 2
+
+    'Assert:
+    Assert.AreEqual 2, UBound(GetUniqueItems(arr4)) ' zero index
+    Assert.AreEqual 3, GetUniqueItems(arr4)(2) ' zero index
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
 '************"Test__MiscHasKey"
 
 Option Private Module
@@ -1311,4 +1422,70 @@ TestFail:
     Else
         Resume Assert
     End If
+End Sub
+
+'************"Test__MiscNewKeys"
+
+Option Private Module
+
+'@TestModule
+'@Folder("Tests")
+
+Private Assert As Rubberduck.AssertClass
+Private Fakes As Rubberduck.FakesProvider
+
+'@ModuleInitialize
+Private Sub ModuleInitialize()
+    'this method runs once per module.
+    Set Assert = New Rubberduck.AssertClass
+    Set Fakes = New Rubberduck.FakesProvider
+End Sub
+
+'@ModuleCleanup
+Private Sub ModuleCleanup()
+    'this method runs once per module.
+    Set Assert = Nothing
+    Set Fakes = Nothing
+End Sub
+
+'@TestInitialize
+Private Sub TestInitialize()
+    'This method runs before every test in the module..
+End Sub
+
+'@TestCleanup
+Private Sub TestCleanup()
+    'this method runs after every test in the module.
+End Sub
+
+'@TestMethod("MiscNewKeys")
+Private Sub Test_GetNewKey()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim c As New Collection
+    Dim d As New Collection
+    Dim i As Long
+
+    'Act:
+    c.Add "bla", "name"
+    For i = 1 To 100
+        c.Add "bla", "name" & i
+    Next i
+    
+    d.Add "bla", "does"
+    d.Add "bla", "not"
+    d.Add "bla", "matter"
+
+    'Assert:
+    Assert.AreEqual "name101", GetNewKey("name", c)
+    Assert.AreEqual "NewName", GetNewKey("NewName", c)
+    Assert.AreEqual "not1", GetNewKey("not", d)
+    Assert.AreEqual "foo", GetNewKey("foo", d)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub
