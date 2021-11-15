@@ -48,7 +48,7 @@ def get_app_clean(xl_file=None):
         shutil.copytree(app_dir, flattened)
         bas_txt = ""
         for i in flattened.rglob("*"):
-            if os.path.splitext(i)[-1].lower() == ".bas":
+            if os.path.splitext(i)[-1].lower() == ".bas" and i[:6].lower() != "test__":
                 with open(i) as f:
                     bas_txt = bas_txt + f.read()
                 os.remove(i)
