@@ -177,17 +177,17 @@ End Function
 
 Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
-    Dim i As Long
+    Dim I As Long
 
-    For i = LBound(Args) To UBound(Args)
-        col.Add Args(i)
+    For I = LBound(Args) To UBound(Args)
+        col.Add Args(I)
     Next
 
 End Function
 
 
 Function zip(ParamArray Args() As Variant) As Collection
-    Dim i As Long
+    Dim I As Long
     Dim J As Long
     
     Dim N As Long
@@ -195,23 +195,23 @@ Function zip(ParamArray Args() As Variant) As Collection
     
 
     M = -1
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         If M = -1 Then
-            M = Args(i).Count
-        ElseIf Args(i).Count < M Then
-            M = Args(i).Count
+            M = Args(I).Count
+        ElseIf Args(I).Count < M Then
+            M = Args(I).Count
         End If
-    Next i
+    Next I
 
     Set zip = New Collection
     Dim ICol As Collection
-    For i = 1 To M
+    For I = 1 To M
         Set ICol = New Collection
         For J = LBound(Args) To UBound(Args)
-            ICol.Add Args(J).Item(i)
+            ICol.Add Args(J).Item(I)
         Next J
         zip.Add ICol
-    Next i
+    Next I
 End Function
 
 
@@ -288,22 +288,22 @@ Function dict(ParamArray Args() As Variant) As Dictionary
     Dim errmsg As String
     Set dict = New Dictionary
     
-    Dim i As Long
+    Dim I As Long
     Dim Cnt As Long
     Cnt = 0
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If i + 1 > UBound(Args) Then
+        If I + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dict.Add Args(i), Args(i + 1)
+        dict.Add Args(I), Args(I + 1)
 Cont:
-    Next i
+    Next I
 
 End Function
 
@@ -315,22 +315,22 @@ Function dicti(ParamArray Args() As Variant) As Dictionary
     Set dicti = New Dictionary
     dicti.CompareMode = TextCompare
     
-    Dim i As Long
+    Dim I As Long
     Dim Cnt As Long
     Cnt = 0
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If i + 1 > UBound(Args) Then
+        If I + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dicti.Add Args(i), Args(i + 1)
+        dicti.Add Args(I), Args(I + 1)
 Cont:
-    Next i
+    Next I
 
 End Function
 
@@ -426,10 +426,10 @@ Function GetUniqueItems(arr() As Variant, _
             d.CompareMode = TextCompare
         End If
         
-        Dim i As Long
-        For i = LBound(arr) To UBound(arr)
-            If Not d.Exists(arr(i)) Then
-                d.Add arr(i), arr(i)
+        Dim I As Long
+        For I = LBound(arr) To UBound(arr)
+            If Not d.Exists(arr(I)) Then
+                d.Add arr(I), arr(I)
             End If
         Next
         
@@ -651,12 +651,12 @@ End Function
 
 Private Function TestGetNewKey()
 
-    Dim c As New Collection, i As Long
+    Dim c As New Collection, I As Long
     
     c.Add "bla", "name"
-    For i = 1 To 100
-        c.Add "bla", "name" & i
-    Next i
+    For I = 1 To 100
+        c.Add "bla", "name" & I
+    Next I
     
     Debug.Print GetNewKey("name", c), "name101"
     Debug.Print GetNewKey("NewName", c), "NewName"
@@ -735,22 +735,22 @@ Function RangeTo1DArray( _
     End If
     
     Values = r.Value
-    Dim i As Long, J As Long, counter As Long
+    Dim I As Long, J As Long, counter As Long
     counter = 0
-    For i = LBound(Values, 1) To UBound(Values, 1) ' rows
+    For I = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
-            If IsError(Values(i, J)) Then
+            If IsError(Values(I, J)) Then
                 ' if error, we cannot check if empty, we need to add it
-                arr(counter) = Values(i, J)
+                arr(counter) = Values(I, J)
                 counter = counter + 1
-            ElseIf Values(i, J) = "" And IgnoreEmpty Then
+            ElseIf Values(I, J) = "" And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
-                arr(counter) = Values(i, J)
+                arr(counter) = Values(I, J)
                 counter = counter + 1
             End If
         Next J
-    Next i
+    Next I
     
     RangeTo1DArray = arr
     
@@ -897,14 +897,14 @@ Private Sub Test_MiscAssign_variant()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim i As Variant
+    Dim I As Variant
     
 
     'Act:
 
     'Assert:
-    Assert.AreEqual 5, assign(i, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(i, 1.4), "assign test succeeded"
+    Assert.AreEqual 5, assign(I, 5), "assign test succeeded"
+    Assert.AreEqual 1.4, assign(I, 1.4), "assign test succeeded"
     
     
     'Assert.Succeed
@@ -923,13 +923,13 @@ Private Sub Test_MiscAssign_object()
     'Arrange:
     Dim x As Variant
     Dim y As Variant
-    Dim i As Variant
-    Set i = col(4, 5, 6)
-    assign x, i
+    Dim I As Variant
+    Set I = col(4, 5, 6)
+    assign x, I
     
     'Assert:
     Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, i)(2)
+    Assert.AreEqual 5, assign(y, I)(2)
 
 
 TestExit:
@@ -1163,7 +1163,7 @@ TestFail:
 End Sub
 
 '@TestMethod("Uncategorized")
-Private Sub Test_zip()                        'TODO Rename test
+Private Sub Test_zip()
     On Error GoTo TestFail
     
     'Arrange:
@@ -1173,7 +1173,7 @@ Private Sub Test_zip()                        'TODO Rename test
 
     'Act:
     Set c1 = col(1, 2, 3)
-    Set c2 = col(4, 5, 6)
+    Set c2 = col(4, 5, 6, 7)
     
     Set cOut = zip(c1, c2)
 
@@ -1325,6 +1325,7 @@ Private Sub Test_GetUniqueItems()
     'Dim arr2(3)
     'Dim arr3(3)
     Dim arr4(3)
+    'arr4 = Array(1, 2, 3, 2)
     Dim arr5(3)
     
     
@@ -1348,8 +1349,8 @@ Private Sub Test_GetUniqueItems()
     arr4(0) = 1: arr4(1) = 2: arr4(2) = 3: arr4(3) = 2
 
     'Assert:
-    Assert.AreEqual 2, UBound(GetUniqueItems(arr4)) ' zero index
-    Assert.AreEqual 3, GetUniqueItems(arr4)(2) ' zero index
+    Assert.AreEqual 2, UBound(GetUniqueItems(arr1)) ' zero index
+    'Assert.AreEqual 3, GetUniqueItems(arr4)(2) ' zero index
 
 TestExit:
     Exit Sub
@@ -1407,7 +1408,7 @@ Private Sub test_HasKey_Collection()
     'Assert:
     Assert.AreEqual True, hasKey(c, "a") ' True for scalar
     Assert.AreEqual True, hasKey(c, "b") ' True for scalar
-    Assert.AreEqual True, hasKey(c, "A") ' True (even though case insensitive???)
+    Assert.AreEqual True, hasKey(c, "A") ' True for case insensitive
     'Assert.Succeed
 
 TestExit:
@@ -1548,13 +1549,13 @@ Private Sub Test_GetNewKey()
     'Arrange:
     Dim c As New Collection
     Dim d As New Collection
-    Dim i As Long
+    Dim I As Long
 
     'Act:
     c.Add "bla", "name"
-    For i = 1 To 100
-        c.Add "bla", "name" & i
-    Next i
+    For I = 1 To 100
+        c.Add "bla", "name" & I
+    Next I
     
     d.Add "bla", "does"
     d.Add "bla", "not"

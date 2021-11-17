@@ -37,14 +37,14 @@ Private Sub Test_MiscAssign_variant()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim i As Variant
+    Dim I As Variant
     
 
     'Act:
 
     'Assert:
-    Assert.AreEqual 5, assign(i, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(i, 1.4), "assign test succeeded"
+    Assert.AreEqual 5, assign(I, 5), "assign test succeeded"
+    Assert.AreEqual 1.4, assign(I, 1.4), "assign test succeeded"
     
     
     'Assert.Succeed
@@ -63,13 +63,13 @@ Private Sub Test_MiscAssign_object()
     'Arrange:
     Dim x As Variant
     Dim y As Variant
-    Dim i As Variant
-    Set i = col(4, 5, 6)
-    assign x, i
+    Dim I As Variant
+    Set I = col(4, 5, 6)
+    assign x, I
     
     'Assert:
     Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, i)(2)
+    Assert.AreEqual 5, assign(y, I)(2)
 
 
 TestExit:

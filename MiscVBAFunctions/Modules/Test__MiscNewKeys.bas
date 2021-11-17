@@ -39,13 +39,13 @@ Private Sub Test_GetNewKey()
     'Arrange:
     Dim c As New Collection
     Dim d As New Collection
-    Dim i As Long
+    Dim I As Long
 
     'Act:
     c.Add "bla", "name"
-    For i = 1 To 100
-        c.Add "bla", "name" & i
-    Next i
+    For I = 1 To 100
+        c.Add "bla", "name" & I
+    Next I
     
     d.Add "bla", "does"
     d.Add "bla", "not"

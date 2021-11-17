@@ -22,12 +22,12 @@ End Function
 
 Private Function TestGetNewKey()
 
-    Dim c As New Collection, i As Long
+    Dim c As New Collection, I As Long
     
     c.Add "bla", "name"
-    For i = 1 To 100
-        c.Add "bla", "name" & i
-    Next i
+    For I = 1 To 100
+        c.Add "bla", "name" & I
+    Next I
     
     Debug.Print GetNewKey("name", c), "name101"
     Debug.Print GetNewKey("NewName", c), "NewName"

@@ -3,17 +3,17 @@ Option Explicit
 
 Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
-    Dim i As Long
+    Dim I As Long
 
-    For i = LBound(Args) To UBound(Args)
-        col.Add Args(i)
+    For I = LBound(Args) To UBound(Args)
+        col.Add Args(I)
     Next
 
 End Function
 
 
 Function zip(ParamArray Args() As Variant) As Collection
-    Dim i As Long
+    Dim I As Long
     Dim J As Long
     
     Dim N As Long
@@ -21,23 +21,23 @@ Function zip(ParamArray Args() As Variant) As Collection
     
 
     M = -1
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         If M = -1 Then
-            M = Args(i).Count
-        ElseIf Args(i).Count < M Then
-            M = Args(i).Count
+            M = Args(I).Count
+        ElseIf Args(I).Count < M Then
+            M = Args(I).Count
         End If
-    Next i
+    Next I
 
     Set zip = New Collection
     Dim ICol As Collection
-    For i = 1 To M
+    For I = 1 To M
         Set ICol = New Collection
         For J = LBound(Args) To UBound(Args)
-            ICol.Add Args(J).Item(i)
+            ICol.Add Args(J).Item(I)
         Next J
         zip.Add ICol
-    Next i
+    Next I
 End Function
 
 

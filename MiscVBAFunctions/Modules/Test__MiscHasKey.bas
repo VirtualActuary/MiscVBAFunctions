@@ -47,7 +47,7 @@ Private Sub test_HasKey_Collection()
     'Assert:
     Assert.AreEqual True, hasKey(c, "a") ' True for scalar
     Assert.AreEqual True, hasKey(c, "b") ' True for scalar
-    Assert.AreEqual True, hasKey(c, "A") ' True (even though case insensitive???)
+    Assert.AreEqual True, hasKey(c, "A") ' True for case insensitive
     'Assert.Succeed
 
 TestExit:
