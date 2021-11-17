@@ -2,7 +2,8 @@ Attribute VB_Name = "MiscGetUniqueItems"
 Option Explicit
 
 Private Function TestGetUniqueItems()
-    Dim arr(3)
+    ' Dim arr(3)
+    Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
     Debug.Print UBound(GetUniqueItems(arr), 1), 2 ' zero index
@@ -21,7 +22,7 @@ Private Function TestGetUniqueItems()
     
 End Function
 
-Function GetUniqueItems(arr() As Variant, _
+Public Function GetUniqueItems(arr() As Variant, _
             Optional CaseSensitive As Boolean = True) As Variant
     If ArrayLen(arr) = 0 Then
         GetUniqueItems = Array()

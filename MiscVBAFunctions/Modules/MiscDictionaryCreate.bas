@@ -1,7 +1,7 @@
 Attribute VB_Name = "MiscDictionaryCreate"
 Option Explicit
 
-Function dict(ParamArray Args() As Variant) As Dictionary
+Public Function dict(ParamArray Args() As Variant) As Dictionary
     'Case sensitive dictionary
     
     Dim errmsg As String
@@ -27,7 +27,7 @@ Cont:
 End Function
 
 
-Function dicti(ParamArray Args() As Variant) As Dictionary
+Public Function dicti(ParamArray Args() As Variant) As Dictionary
     'Case insensitive dictionary
     
     Dim errmsg As String
