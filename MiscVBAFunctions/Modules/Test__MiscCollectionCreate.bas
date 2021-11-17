@@ -55,7 +55,7 @@ TestFail:
 End Sub
 
 '@TestMethod("Uncategorized")
-Private Sub Test_zip()                        'TODO Rename test
+Private Sub Test_zip()
     On Error GoTo TestFail
     
     'Arrange:
@@ -65,7 +65,7 @@ Private Sub Test_zip()                        'TODO Rename test
 
     'Act:
     Set c1 = col(1, 2, 3)
-    Set c2 = col(4, 5, 6)
+    Set c2 = col(4, 5, 6, 7)
     
     Set cOut = zip(c1, c2)
 
