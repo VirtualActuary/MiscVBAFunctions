@@ -49,7 +49,7 @@ def get_app_clean(xl_file=None):
         bas_txt = ""
         for i in flattened.rglob("*"):
             if os.path.splitext(i)[-1].lower() == ".bas":
-                if not os.path.splitext(i)[0].lower().startswith("test__"):
+                if not i.name.lower().startswith("test__"):
                     with open(i) as f:
                         bas_txt = bas_txt + f.read()
                 os.remove(i)

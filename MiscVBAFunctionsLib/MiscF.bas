@@ -10,89 +10,6 @@ Option Explicit
 'Dim WB
 'Dim WS
 
-'************"EarlyBindings"
-
-
-Option Compare Text
-
-'https://msdn.microsoft.com/en-us/library/aa390387(v=vs.85).aspx
-Private Const HKCR = &H80000000
-
-
-' Add references for this project programatically. If you are uncertain what to put here,
-' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
-' Microsoft ActiveX Data Objects 6.1 Library'), then run getPackageGUID("msado15.dll")
-' to see what options you have:
-'**********************************************************************************
-'* Add selected references to this project
-'**********************************************************************************
-Sub addEarlyBindings()
-    On Error GoTo ErrorHandler
-        If Not isBindingNameLoaded("ADODB") Then
-            'Microsoft ActiveX Data Objects 6.1
-            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6.1, 0
-        End If
-        
-        If Not isBindingNameLoaded("VBIDE") Then
-            'Microsoft Visual Basic for Applications Extensibility 5.3
-            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5.3, 0
-        End If
-        
-        
-        If Not isBindingNameLoaded("Scripting") Then
-            'Microsoft Scripting Runtime version 1.0
-            ThisWorkbook.VBProject.References.addFromGuid "{420B2830-E718-11CF-893D-00A0C9054228}", 1, 0
-        End If
-        
-    
-        If Not isBindingNameLoaded("VBScript_RegExp_55") Then
-            'Microsoft VBScript Regular Expressions 5.5
-            ThisWorkbook.VBProject.References.addFromGuid "{3F4DACA7-160D-11D2-A8E9-00104B365C9F}", 5, 5
-        End If
-        
-        If Not isBindingNameLoaded("Shell32") Then
-            'Microsoft Shell Controls And Automation
-            ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
-        End If
-    Exit Sub
-ErrorHandler:
-End Sub
-
-
-'**********************************************************************************
-'* Verify if a reference is loaded
-'**********************************************************************************
-Function isBindingNameLoaded(ref As String) As Boolean
-    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
-    isBindingNameLoaded = False
-    Dim xRef As Variant
-    For Each xRef In ThisWorkbook.VBProject.References
-        If xRef.Name = ref Then
-            isBindingNameLoaded = True
-        End If
-    Next xRef
-    
-End Function
-
-
-'**********************************************************************************
-'* Print all current active GUIDs
-'**********************************************************************************
-Private Sub printAllEarlyBindings()
-    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
-    Dim xRef As Variant
-    For Each xRef In ThisWorkbook.VBProject.References
-        Debug.Print "**************" & xRef.Name
-        Debug.Print xRef.Description
-        Debug.Print xRef.Major
-        Debug.Print xRef.Minor
-        Debug.Print xRef.FullPath
-        Debug.Print xRef.GUID
-        Debug.Print ""
-    Next xRef
-    
-End Sub
-
 '************"MiscAssign"
 ' Assign a value to a variable and also return that value. The goal of this function is to
 ' overcome the different `set` syntax for assigning an object vs. assigning a native type
@@ -177,17 +94,17 @@ End Function
 
 Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
-    Dim I As Long
+    Dim i As Long
 
-    For I = LBound(Args) To UBound(Args)
-        col.Add Args(I)
+    For i = LBound(Args) To UBound(Args)
+        col.Add Args(i)
     Next
 
 End Function
 
 
 Function zip(ParamArray Args() As Variant) As Collection
-    Dim I As Long
+    Dim i As Long
     Dim J As Long
     
     Dim N As Long
@@ -195,23 +112,23 @@ Function zip(ParamArray Args() As Variant) As Collection
     
 
     M = -1
-    For I = LBound(Args) To UBound(Args)
+    For i = LBound(Args) To UBound(Args)
         If M = -1 Then
-            M = Args(I).Count
-        ElseIf Args(I).Count < M Then
-            M = Args(I).Count
+            M = Args(i).Count
+        ElseIf Args(i).Count < M Then
+            M = Args(i).Count
         End If
-    Next I
+    Next i
 
     Set zip = New Collection
     Dim ICol As Collection
-    For I = 1 To M
+    For i = 1 To M
         Set ICol = New Collection
         For J = LBound(Args) To UBound(Args)
-            ICol.Add Args(J).Item(I)
+            ICol.Add Args(J).Item(i)
         Next J
         zip.Add ICol
-    Next I
+    Next i
 End Function
 
 
@@ -288,22 +205,22 @@ Function dict(ParamArray Args() As Variant) As Dictionary
     Dim errmsg As String
     Set dict = New Dictionary
     
-    Dim I As Long
+    Dim i As Long
     Dim Cnt As Long
     Cnt = 0
-    For I = LBound(Args) To UBound(Args)
+    For i = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If I + 1 > UBound(Args) Then
+        If i + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dict.Add Args(I), Args(I + 1)
+        dict.Add Args(i), Args(i + 1)
 Cont:
-    Next I
+    Next i
 
 End Function
 
@@ -315,22 +232,22 @@ Function dicti(ParamArray Args() As Variant) As Dictionary
     Set dicti = New Dictionary
     dicti.CompareMode = TextCompare
     
-    Dim I As Long
+    Dim i As Long
     Dim Cnt As Long
     Cnt = 0
-    For I = LBound(Args) To UBound(Args)
+    For i = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If I + 1 > UBound(Args) Then
+        If i + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dicti.Add Args(I), Args(I + 1)
+        dicti.Add Args(i), Args(i + 1)
 Cont:
-    Next I
+    Next i
 
 End Function
 
@@ -426,10 +343,10 @@ Function GetUniqueItems(arr() As Variant, _
             d.CompareMode = TextCompare
         End If
         
-        Dim I As Long
-        For I = LBound(arr) To UBound(arr)
-            If Not d.Exists(arr(I)) Then
-                d.Add arr(I), arr(I)
+        Dim i As Long
+        For i = LBound(arr) To UBound(arr)
+            If Not d.Exists(arr(i)) Then
+                d.Add arr(i), arr(i)
             End If
         Next
         
@@ -651,12 +568,12 @@ End Function
 
 Private Function TestGetNewKey()
 
-    Dim c As New Collection, I As Long
+    Dim c As New Collection, i As Long
     
     c.Add "bla", "name"
-    For I = 1 To 100
-        c.Add "bla", "name" & I
-    Next I
+    For i = 1 To 100
+        c.Add "bla", "name" & i
+    Next i
     
     Debug.Print GetNewKey("name", c), "name101"
     Debug.Print GetNewKey("NewName", c), "NewName"
@@ -735,22 +652,22 @@ Function RangeTo1DArray( _
     End If
     
     Values = r.Value
-    Dim I As Long, J As Long, counter As Long
+    Dim i As Long, J As Long, counter As Long
     counter = 0
-    For I = LBound(Values, 1) To UBound(Values, 1) ' rows
+    For i = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
-            If IsError(Values(I, J)) Then
+            If IsError(Values(i, J)) Then
                 ' if error, we cannot check if empty, we need to add it
-                arr(counter) = Values(I, J)
+                arr(counter) = Values(i, J)
                 counter = counter + 1
-            ElseIf Values(I, J) = "" And IgnoreEmpty Then
+            ElseIf Values(i, J) = "" And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
-                arr(counter) = Values(I, J)
+                arr(counter) = Values(i, J)
                 counter = counter + 1
             End If
         Next J
-    Next I
+    Next i
     
     RangeTo1DArray = arr
     
@@ -857,719 +774,3 @@ Function TableToDicts(TableName As String, Optional WB As Workbook) As Collectio
     Next lr
     
 End Function
-
-'************"Test__MiscAssign"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_variant()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim I As Variant
-    
-
-    'Act:
-
-    'Assert:
-    Assert.AreEqual 5, assign(I, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(I, 1.4), "assign test succeeded"
-    
-    
-    'Assert.Succeed
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_object()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim x As Variant
-    Dim y As Variant
-    Dim I As Variant
-    Set I = col(4, 5, 6)
-    assign x, I
-    
-    'Assert:
-    Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, I)(2)
-
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'************"Test__MiscCollection"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscCollection.min")
-Private Sub Test_min()
-    On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
-
-    'Assert:
-    Assert.AreEqual 4, min(col(7, 4, 5, 6)), "min test succeeded"
-    Assert.AreEqual 5, min(col(9, 5, 6)), "min test succeeded"
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscCollection.min")
-Private Sub Test_min_fail()
-    Const ExpectedError As Long = 91
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim c As Collection
-    'Act:
-    
-    
-    min c
-    
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Assert.Succeed
-        
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
-End Sub
-
-'@TestMethod("MiscCollection.max")
-Private Sub Test_max()
-    On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
-
-    'Assert:
-    Assert.AreEqual 6, max(col(4, 5, 6, 1, 2)), "max test succeeded"
-    Assert.AreEqual 6.1, max(col(5.3, 6.1)), "max test succeeded"
-
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscCollection.max")
-Private Sub Test_max_fail()
-    Const ExpectedError As Long = 91
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim c As Collection
-
-    'Act:
-    max c
-
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
-End Sub
-
-'@TestMethod("MiscCollection.mean")
-Private Sub Test_mean()
-    On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
-
-    'Assert:
-    Assert.AreEqual 4#, mean(col(4, 5, 6, 3, 2)), "mean test succeeded"
-    Assert.AreEqual 6#, mean(col(5, 7)), "mean test succeeded"
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscCollection.mean")
-Private Sub Test_mean_fail()
-    Const ExpectedError As Long = 91
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim c As Collection
-
-    'Act:
-    mean c
-
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
-End Sub
-
-'************"Test__MiscCollectionCreate"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscCollectionCreate")
-Private Sub Test_Col()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim c As Collection
-    'Act:
-    Set c = col(1, 3, 5)
-    'Assert:
-    'Assert.Succeed
-    
-    Assert.AreEqual 1, c(1), "col test succeeded"
-    Assert.AreEqual 3, c(2), "col test succeeded"
-    Assert.AreEqual 5, c(3), "col test succeeded"
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("Uncategorized")
-Private Sub Test_zip()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim c1 As Collection
-    Dim c2 As Collection
-    Dim cOut As Collection
-
-    'Act:
-    Set c1 = col(1, 2, 3)
-    Set c2 = col(4, 5, 6, 7)
-    
-    Set cOut = zip(c1, c2)
-
-    'Assert:
-    Assert.AreEqual 1, cOut(1)(1), "zip test succeeded"
-    Assert.AreEqual 4, cOut(1)(2), "zip test succeeded"
-    
-    Assert.AreEqual 2, cOut(2)(1), "zip test succeeded"
-    Assert.AreEqual 5, cOut(2)(2), "zip test succeeded"
-    
-    Assert.AreEqual 3, cOut(3)(1), "zip test succeeded"
-    Assert.AreEqual 6, cOut(3)(2), "zip test succeeded"
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'************"Test__MiscDictionary"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim d As Dictionary
-    
-
-    'On Error Resume Next
-    'Debug.Print dictget(d, "c")
-    'Debug.Print Err.Number, 9 ' give error nr 9 if key not found
-    'On Error GoTo 0
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget_fail()
-    Const ExpectedError As Long = 9
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim d As Dictionary
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    dictget d, "c"
-    
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
-End Sub
-
-'************"Test__MiscGetUniqueItems"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscGetUniqueItems")
-Private Sub Test_GetUniqueItems()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim arr1(3)
-    'Dim arr2(3)
-    'Dim arr3(3)
-    Dim arr4(3)
-    'arr4 = Array(1, 2, 3, 2)
-    Dim arr5(3)
-    
-    
-    
-    
-    'arr2(0) = "a": arr2(1) = "b": arr2(2) = "c": arr2(3) = "B"
-    'Debug.Print UBound(GetUniqueItems(arr2), 1), 3 ' zero index + case sensitive
-    
-    'arr3(0) = "a": arr3(1) = "b": arr3(2) = "c": arr3(3) = "B"
-    'Debug.Print UBound(GetUniqueItems(arr3, False), 1), 2 ' zero index + case insensitive
-    
-    'arr4(0) = 1: arr4(1) = 2: arr4(2) = 3: arr4(3) = 2
-    'Debug.Print UBound(GetUniqueItems(arr4), 1), 2 ' zero index
-    
-    'arr5(0) = 1: arr5(1) = 1: arr5(2) = "a": arr5(3) = "a"
-    'Debug.Print UBound(GetUniqueItems(arr5), 1), 1 ' zero index
-
-    'Act:
-    arr1(0) = "a": arr1(1) = "b": arr1(2) = "c": arr1(3) = "b"
-    
-    arr4(0) = 1: arr4(1) = 2: arr4(2) = 3: arr4(3) = 2
-
-    'Assert:
-    Assert.AreEqual 2, UBound(GetUniqueItems(arr1)) ' zero index
-    'Assert.AreEqual 3, GetUniqueItems(arr4)(2) ' zero index
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'************"Test__MiscHasKey"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Collection()
-    On Error GoTo TestFail
-    
-    
-    'Arrange:
-     Dim c As New Collection
-
-    'Act:
-    c.Add "foo", "a"
-    c.Add col("x", "y", "z"), "b"
-    
-    'Assert:
-    Assert.AreEqual True, hasKey(c, "a") ' True for scalar
-    Assert.AreEqual True, hasKey(c, "b") ' True for scalar
-    Assert.AreEqual True, hasKey(c, "A") ' True for case insensitive
-    'Assert.Succeed
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Workbook()
-    On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
-
-    'Assert:
-    Assert.AreEqual True, hasKey(Workbooks, ThisWorkbook.Name)
-    'Assert.Succeed
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Dictionary()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim d As New Dictionary
-    
-    'Act:
-    d.Add "a", "foo"
-    d.Add "b", col("x", "y", "z")
-
-    'Assert:
-    Assert.AreEqual True, hasKey(d, "a") ' True for scalar
-    Assert.AreEqual True, hasKey(d, "b") ' True for scalar
-    Assert.AreEqual False, hasKey(d, "A") ' False - case sensitive by default
-    
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Dictionary_object()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim dObj As Object
-    Set dObj = CreateObject("Scripting.Dictionary")
-    'Act:
-    dObj.Add "a", "foo"
-    dObj.Add "b", col("x", "y", "z")
-
-    'Assert:
-    Assert.AreEqual True, hasKey(dObj, "a") ' True for scalar
-    Assert.AreEqual True, hasKey(dObj, "b") ' True for scalar
-    Assert.AreEqual False, hasKey(dObj, "A") ' False - case sensitive by default
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Dictionary_fail()                        'TODO Rename test
-    Const ExpectedError As Long = 9              'TODO Change to expected error number
-    On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
-    hasKey 5, "a"
-    hasKey ThisWorkbook, "A"
-
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
-End Sub
-
-'************"Test__MiscNewKeys"
-
-Option Private Module
-
-'@TestModule
-'@Folder("Tests")
-
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
-
-'@ModuleInitialize
-Private Sub ModuleInitialize()
-    'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
-End Sub
-
-'@ModuleCleanup
-Private Sub ModuleCleanup()
-    'this method runs once per module.
-    Set Assert = Nothing
-    Set Fakes = Nothing
-End Sub
-
-'@TestInitialize
-Private Sub TestInitialize()
-    'This method runs before every test in the module..
-End Sub
-
-'@TestCleanup
-Private Sub TestCleanup()
-    'this method runs after every test in the module.
-End Sub
-
-'@TestMethod("MiscNewKeys")
-Private Sub Test_GetNewKey()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim c As New Collection
-    Dim d As New Collection
-    Dim I As Long
-
-    'Act:
-    c.Add "bla", "name"
-    For I = 1 To 100
-        c.Add "bla", "name" & I
-    Next I
-    
-    d.Add "bla", "does"
-    d.Add "bla", "not"
-    d.Add "bla", "matter"
-
-    'Assert:
-    Assert.AreEqual "name101", GetNewKey("name", c)
-    Assert.AreEqual "NewName", GetNewKey("NewName", c)
-    Assert.AreEqual "not1", GetNewKey("not", d)
-    Assert.AreEqual "foo", GetNewKey("foo", d)
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
