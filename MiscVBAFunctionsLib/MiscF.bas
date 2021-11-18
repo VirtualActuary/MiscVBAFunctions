@@ -10,6 +10,135 @@ Option Explicit
 'Dim WB
 'Dim WS
 
+
+'************"EarlyBindings"
+
+
+Option Compare Text
+
+'https://msdn.microsoft.com/en-us/library/aa390387(v=vs.85).aspx
+Private Const HKCR = &H80000000
+
+
+' Add references for this project programatically. If you are uncertain what to put here,
+' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
+' Microsoft ActiveX Data Objects 6.1 Library'), then run getPackageGUID("msado15.dll")
+' to see what options you have:
+'**********************************************************************************
+'* Add selected references to this project
+'**********************************************************************************
+Sub addEarlyBindings()
+    On Error GoTo ErrorHandler
+        If Not isBindingNameLoaded("ADODB") Then
+            'Microsoft ActiveX Data Objects 6.1
+            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6.1, 0
+        End If
+        
+        If Not isBindingNameLoaded("VBIDE") Then
+            'Microsoft Visual Basic for Applications Extensibility 5.3
+            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5.3, 0
+        End If
+        
+        
+        If Not isBindingNameLoaded("Scripting") Then
+            'Microsoft Scripting Runtime version 1.0
+            ThisWorkbook.VBProject.References.addFromGuid "{420B2830-E718-11CF-893D-00A0C9054228}", 1, 0
+        End If
+        
+    
+        If Not isBindingNameLoaded("VBScript_RegExp_55") Then
+            'Microsoft VBScript Regular Expressions 5.5
+            ThisWorkbook.VBProject.References.addFromGuid "{3F4DACA7-160D-11D2-A8E9-00104B365C9F}", 5, 5
+        End If
+        
+        If Not isBindingNameLoaded("Shell32") Then
+            'Microsoft Shell Controls And Automation
+            ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
+        End If
+    Exit Sub
+ErrorHandler:
+End Sub
+
+
+'**********************************************************************************
+'* Verify if a reference is loaded
+'**********************************************************************************
+Function isBindingNameLoaded(ref As String) As Boolean
+    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+    isBindingNameLoaded = False
+    Dim xRef As Variant
+    For Each xRef In ThisWorkbook.VBProject.References
+        If xRef.Name = ref Then
+            isBindingNameLoaded = True
+        End If
+    Next xRef
+    
+End Function
+
+
+'**********************************************************************************
+'* Print all current active GUIDs
+'**********************************************************************************
+Private Sub printAllEarlyBindings()
+    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+    Dim xRef As Variant
+    For Each xRef In ThisWorkbook.VBProject.References
+        Debug.Print "**************" & xRef.Name
+        Debug.Print xRef.Description
+        Debug.Print xRef.Major
+        Debug.Print xRef.Minor
+        Debug.Print xRef.FullPath
+        Debug.Print xRef.GUID
+        Debug.Print ""
+    Next xRef
+    
+End Sub
+
+'************"EnsureDictIUtil"
+
+
+Function EnsureDictI(Container As Variant) As Object
+    Dim key As Variant
+    Dim Item As Variant
+    
+    If TypeOf Container Is Collection Then
+        Dim c As Collection
+        Set c = New Collection
+        
+        For Each Item In Container
+            If TypeOf Item Is Collection Or TypeOf Item Is Dictionary Then
+                c.Add EnsureDictI(Item)
+            Else
+                c.Add Item
+            End If
+        Next Item
+        
+        Set EnsureDictI = c
+        
+    ElseIf TypeOf Container Is Dictionary Then
+        Dim d As Dictionary
+        Set d = New Dictionary
+        d.CompareMode = TextCompare
+        
+        For Each key In Container.Keys
+            If TypeOf Container.Item(key) Is Collection Or TypeOf Container.Item(key) Is Dictionary Then
+                d.Add key, EnsureDictI(Container.Item(key))
+            Else
+                d.Add key, Container.Item(key)
+            End If
+        Next key
+        
+        Set EnsureDictI = d
+    Else
+    
+        Dim errmsg As String
+        errmsg = "ConvertToTextCompare only supports type 'Dictionary' and 'Collection'"
+        On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Container) & "'": On Error GoTo 0
+        Err.Raise 5, , errmsg
+        
+    End If
+End Function
+
 '************"MiscAssign"
 ' Assign a value to a variable and also return that value. The goal of this function is to
 ' overcome the different `set` syntax for assigning an object vs. assigning a native type
@@ -94,17 +223,17 @@ End Function
 
 Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
-    Dim i As Long
+    Dim I As Long
 
-    For i = LBound(Args) To UBound(Args)
-        col.Add Args(i)
+    For I = LBound(Args) To UBound(Args)
+        col.Add Args(I)
     Next
 
 End Function
 
 
 Function zip(ParamArray Args() As Variant) As Collection
-    Dim i As Long
+    Dim I As Long
     Dim J As Long
     
     Dim N As Long
@@ -112,23 +241,23 @@ Function zip(ParamArray Args() As Variant) As Collection
     
 
     M = -1
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         If M = -1 Then
-            M = Args(i).Count
-        ElseIf Args(i).Count < M Then
-            M = Args(i).Count
+            M = Args(I).Count
+        ElseIf Args(I).Count < M Then
+            M = Args(I).Count
         End If
-    Next i
+    Next I
 
     Set zip = New Collection
     Dim ICol As Collection
-    For i = 1 To M
+    For I = 1 To M
         Set ICol = New Collection
         For J = LBound(Args) To UBound(Args)
-            ICol.Add Args(J).Item(i)
+            ICol.Add Args(J).Item(I)
         Next J
         zip.Add ICol
-    Next i
+    Next I
 End Function
 
 
@@ -205,22 +334,22 @@ Function dict(ParamArray Args() As Variant) As Dictionary
     Dim errmsg As String
     Set dict = New Dictionary
     
-    Dim i As Long
+    Dim I As Long
     Dim Cnt As Long
     Cnt = 0
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If i + 1 > UBound(Args) Then
+        If I + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dict.Add Args(i), Args(i + 1)
+        dict.Add Args(I), Args(I + 1)
 Cont:
-    Next i
+    Next I
 
 End Function
 
@@ -232,22 +361,22 @@ Function dicti(ParamArray Args() As Variant) As Dictionary
     Set dicti = New Dictionary
     dicti.CompareMode = TextCompare
     
-    Dim i As Long
+    Dim I As Long
     Dim Cnt As Long
     Cnt = 0
-    For i = LBound(Args) To UBound(Args)
+    For I = LBound(Args) To UBound(Args)
         Cnt = Cnt + 1
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
-        If i + 1 > UBound(Args) Then
+        If I + 1 > UBound(Args) Then
             errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(i) & "`": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
             Err.Raise 9, , errmsg
         End If
         
-        dicti.Add Args(i), Args(i + 1)
+        dicti.Add Args(I), Args(I + 1)
 Cont:
-    Next i
+    Next I
 
 End Function
 
@@ -343,10 +472,10 @@ Function GetUniqueItems(arr() As Variant, _
             d.CompareMode = TextCompare
         End If
         
-        Dim i As Long
-        For i = LBound(arr) To UBound(arr)
-            If Not d.Exists(arr(i)) Then
-                d.Add arr(i), arr(i)
+        Dim I As Long
+        For I = LBound(arr) To UBound(arr)
+            If Not d.Exists(arr(I)) Then
+                d.Add arr(I), arr(I)
             End If
         Next
         
@@ -568,12 +697,12 @@ End Function
 
 Private Function TestGetNewKey()
 
-    Dim c As New Collection, i As Long
+    Dim c As New Collection, I As Long
     
     c.Add "bla", "name"
-    For i = 1 To 100
-        c.Add "bla", "name" & i
-    Next i
+    For I = 1 To 100
+        c.Add "bla", "name" & I
+    Next I
     
     Debug.Print GetNewKey("name", c), "name101"
     Debug.Print GetNewKey("NewName", c), "NewName"
@@ -652,22 +781,22 @@ Function RangeTo1DArray( _
     End If
     
     Values = r.Value
-    Dim i As Long, J As Long, counter As Long
+    Dim I As Long, J As Long, counter As Long
     counter = 0
-    For i = LBound(Values, 1) To UBound(Values, 1) ' rows
+    For I = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
-            If IsError(Values(i, J)) Then
+            If IsError(Values(I, J)) Then
                 ' if error, we cannot check if empty, we need to add it
-                arr(counter) = Values(i, J)
+                arr(counter) = Values(I, J)
                 counter = counter + 1
-            ElseIf Values(i, J) = "" And IgnoreEmpty Then
+            ElseIf Values(I, J) = "" And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
-                arr(counter) = Values(i, J)
+                arr(counter) = Values(I, J)
                 counter = counter + 1
             End If
         Next J
-    Next i
+    Next I
     
     RangeTo1DArray = arr
     
