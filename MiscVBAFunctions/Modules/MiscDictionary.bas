@@ -20,7 +20,7 @@ Private Function testDictget()
 End Function
 
 
-Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
+Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
         
     If d.Exists(key) Then
         assign dictget, d.Item(key)

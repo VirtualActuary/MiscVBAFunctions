@@ -6,7 +6,7 @@ Private Sub testCreateTextFile()
     ' TODO: assertion
 End Sub
 
-Function CreateTextFile(Content As String, FilePath As String)
+Public Function CreateTextFile(ByVal Content As String, ByVal FilePath As String)
     ' Creates a new / overwrites an existing text file with Content
     
     Dim oFile As Integer

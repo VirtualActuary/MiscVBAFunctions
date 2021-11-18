@@ -15,7 +15,7 @@ UnFreeze:
     
 End Sub
 
-Sub FreezePanes(r As Range)
+Public Sub FreezePanes(r As Range)
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet
@@ -42,7 +42,7 @@ Sub FreezePanes(r As Range)
     CurrentActiveSheet.Activate
 End Sub
 
-Sub UnFreezePanes(WS As Worksheet)
+Public Sub UnFreezePanes(WS As Worksheet)
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet

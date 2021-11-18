@@ -145,7 +145,8 @@ End Function
 ' like Int, Double etc. Additionally this function has similar functionality to Python's
 ' walrus operator: https://towardsdatascience.com/the-walrus-operator-7971cd339d7d
 
-Function assign(ByRef var As Variant, ByRef val As Variant)
+
+Public Function assign(ByRef var As Variant, ByRef val As Variant)
     If IsObject(val) Then 'Object
         Set var = val
         Set assign = val
@@ -221,7 +222,7 @@ End Function
 '************"MiscCollectionCreate"
 
 
-Function col(ParamArray Args() As Variant) As Collection
+Public Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
     Dim I As Long
 
@@ -232,11 +233,11 @@ Function col(ParamArray Args() As Variant) As Collection
 End Function
 
 
-Function zip(ParamArray Args() As Variant) As Collection
+Public Function zip(ParamArray Args() As Variant) As Collection
     Dim I As Long
     Dim J As Long
     
-    Dim N As Long
+    ' Dim N As Long
     Dim M As Long
     
 
@@ -271,7 +272,7 @@ Private Sub testCreateTextFile()
     ' TODO: assertion
 End Sub
 
-Function CreateTextFile(Content As String, FilePath As String)
+Public Function CreateTextFile(ByVal Content As String, ByVal FilePath As String)
     ' Creates a new / overwrites an existing text file with Content
     
     Dim oFile As Integer
@@ -305,7 +306,7 @@ Private Function testDictget()
 End Function
 
 
-Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
+Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
         
     If d.Exists(key) Then
         assign dictget, d.Item(key)
@@ -328,7 +329,7 @@ End Function
 '************"MiscDictionaryCreate"
 
 
-Function dict(ParamArray Args() As Variant) As Dictionary
+Public Function dict(ParamArray Args() As Variant) As Dictionary
     'Case sensitive dictionary
     
     Dim errmsg As String
@@ -354,7 +355,7 @@ Cont:
 End Function
 
 
-Function dicti(ParamArray Args() As Variant) As Dictionary
+Public Function dicti(ParamArray Args() As Variant) As Dictionary
     'Case insensitive dictionary
     
     Dim errmsg As String
@@ -398,7 +399,7 @@ UnFreeze:
     
 End Sub
 
-Sub FreezePanes(r As Range)
+Public Sub FreezePanes(r As Range)
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet
@@ -425,7 +426,7 @@ Sub FreezePanes(r As Range)
     CurrentActiveSheet.Activate
 End Sub
 
-Sub UnFreezePanes(WS As Worksheet)
+Public Sub UnFreezePanes(WS As Worksheet)
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet
@@ -443,7 +444,8 @@ End Sub
 
 
 Private Function TestGetUniqueItems()
-    Dim arr(3)
+    ' Dim arr(3)
+    Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
     Debug.Print UBound(GetUniqueItems(arr), 1), 2 ' zero index
@@ -462,7 +464,7 @@ Private Function TestGetUniqueItems()
     
 End Function
 
-Function GetUniqueItems(arr() As Variant, _
+Public Function GetUniqueItems(arr() As Variant, _
             Optional CaseSensitive As Boolean = True) As Variant
     If ArrayLen(arr) = 0 Then
         GetUniqueItems = Array()
@@ -508,10 +510,11 @@ Private Sub TestGroupOnIndentations()
 
 End Sub
 
-Sub GroupRowsOnIndentations(r As Range)
+Public Sub GroupRowsOnIndentations(r As Range)
     ' groups the rows based on indentations of the cells in the range
     
-    Dim ri As Range, WS As Worksheet
+    ' Dim ri As Range, WS As Worksheet
+    Dim ri As Range
     For Each ri In r
         ri.EntireRow.OutlineLevel = ri.IndentLevel + 1
     Next ri
@@ -519,10 +522,11 @@ Sub GroupRowsOnIndentations(r As Range)
 End Sub
 
 
-Sub GroupColumnsOnIndentations(r As Range)
+Public Sub GroupColumnsOnIndentations(r As Range)
     ' groups the columns based on indentations of the cells in the range
     
-    Dim ri As Range, WS As Worksheet
+    ' Dim ri As Range, WS As Worksheet
+    Dim ri As Range
     For Each ri In r
         ri.EntireColumn.OutlineLevel = ri.IndentLevel + 1
     Next ri
@@ -538,16 +542,18 @@ Private Sub TestRemoveGroupings()
 End Sub
 
 
-Sub RemoveRowGroupings(WS As Worksheet)
-    Dim r As Range, ri As Range
+Public Sub RemoveRowGroupings(WS As Worksheet)
+    Dim r As Range
+    Dim ri As Range
     Set r = WS.UsedRange ' todo: better way to find last "active" cell
     For Each ri In r.Columns(1)
         ri.EntireRow.OutlineLevel = 1
     Next ri
 End Sub
 
-Sub RemoveColumnGroupings(WS As Worksheet)
-    Dim r As Range, ri As Range
+Public Sub RemoveColumnGroupings(WS As Worksheet)
+    Dim r As Range
+    Dim ri As Range
     Set r = WS.UsedRange ' todo: better way to find last "active" cell
     For Each ri In r.Rows(1)
         ri.EntireColumn.OutlineLevel = 1
@@ -603,7 +609,7 @@ Private Sub TestHasKey()
 End Sub
 
 
-Public Function hasKey(Container, key As Variant) As Boolean
+Public Function hasKey(Container As Variant, key As Variant) As Boolean
     Dim ErrX As Integer
     Dim hasKeyFlag As Boolean
     Dim emptyFlag As Boolean
@@ -629,11 +635,12 @@ Public Function hasKey(Container, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via .Item
-        If emptyFlag Then ' Item was Empty/non-existant
-            hasKey = False
-        Else
-            hasKey = True ' Item was not Empty
-        End If
+        'If emptyFlag Then ' Item was Empty/non-existant
+        '    hasKey = False
+        'Else
+        '    hasKey = True ' Item was not Empty
+        'End If
+        hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 Then ' Retrieval Error, but .Item is correct access method stil. 424: Method not exist; 438: Compilation error
         hasKey = False
@@ -650,11 +657,12 @@ Public Function hasKey(Container, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via ()
-        If emptyFlag Then ' Item was Empty/non-existant
-            hasKey = False
-        Else
-            hasKey = True ' Item was not Empty
-        End If
+        'If emptyFlag Then ' Item was Empty/non-existant
+        '    hasKey = False
+        'Else
+        '    hasKey = True ' Item was not Empty
+        'End If
+        hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 And ErrX <> 13 Then ' Retrieval Error, but () is correct access method stil. 424: Method not exist; 438: Compilation error; 13: Variant bracketed ()
         hasKey = False
@@ -680,14 +688,15 @@ End Function
 ' Use case is when we want to create a new sheet, but
 ' want to ensure we don't give a name that already exists in the workbook
 
-Function NewSheetName(Name As String, Optional WB As Workbook)
+Public Function NewSheetName(Name As String, Optional WB As Workbook)
 
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     ' max 31 characters
     NewSheetName = Left(Name, 31)
 
-    If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
+    ' If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
+    If Not hasKey(WB.Sheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
     Else
@@ -697,7 +706,9 @@ End Function
 
 Private Function TestGetNewKey()
 
-    Dim c As New Collection, I As Long
+    ' Dim c As New Collection, I As Long
+    Dim c As New Collection
+    Dim I As Long
     
     c.Add "bla", "name"
     For I = 1 To 100
@@ -710,7 +721,7 @@ Private Function TestGetNewKey()
 End Function
 
 
-Function GetNewKey(Name As String, Container, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
+Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
     ' get a key that does not exists in a container (dict or collection)
     ' we keep appending, 1, 2, 3, ..., 10, 11 until the key is unique
     ' MaxLength is used when the key has a restriction on the maximum length
@@ -762,7 +773,7 @@ End Function
 
 
 
-Function RangeTo1DArray( _
+Public Function RangeTo1DArray( _
               r As Range _
             , Optional IgnoreEmpty As Boolean = True _
             ) As Variant()
@@ -781,7 +792,9 @@ Function RangeTo1DArray( _
     End If
     
     Values = r.Value
-    Dim I As Long, J As Long, counter As Long
+    Dim I As Long
+    Dim J As Long
+    Dim counter As Long
     counter = 0
     For I = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
@@ -789,7 +802,7 @@ Function RangeTo1DArray( _
                 ' if error, we cannot check if empty, we need to add it
                 arr(counter) = Values(I, J)
                 counter = counter + 1
-            ElseIf Values(I, J) = "" And IgnoreEmpty Then
+            ElseIf Values(I, J) = vbNullString And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
                 arr(counter) = Values(I, J)
@@ -807,7 +820,7 @@ End Function
 '************"MiscRemoveGridLines"
 
 
-Sub RemoveGridLines(WS As Worksheet)
+Public Sub RemoveGridLines(WS As Worksheet)
     Dim view As WorksheetView
     For Each view In WS.Parent.Windows(1).SheetViews
         If view.Sheet.Name = WS.Name Then
@@ -820,7 +833,7 @@ End Sub
 '************"MiscString"
 
 
-Function randomString(length)
+Public Function randomString(length As Variant)
     Dim s As String
     While Len(s) < length
         s = s & Hex(Rnd * 16777216)
@@ -832,10 +845,12 @@ End Function
 '************"MiscTables"
 
 
-Function HasLO(Name As String, Optional WB As Workbook) As Boolean
+Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
 
     If WB Is Nothing Then Set WB = ThisWorkbook
-    Dim WS As Worksheet, LO As ListObject
+    ' Dim WS As Worksheet, LO As ListObject
+    Dim WS As Worksheet
+    Dim LO As ListObject
     
     For Each WS In WB.Sheets
         For Each LO In WS.ListObjects
@@ -852,10 +867,11 @@ End Function
 
 
 ' get list object only using it's name from within a workbook
-Function GetLO(Name As String, Optional WB As Workbook) As ListObject
+Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
 
     If WB Is Nothing Then Set WB = ThisWorkbook
-    Dim WS As Worksheet, LO As ListObject
+    Dim WS As Worksheet
+    Dim LO As ListObject
     
     For Each WS In WB.Sheets
         For Each LO In WS.ListObjects
@@ -883,7 +899,7 @@ Private Sub TableToDictsTest()
     Debug.Print Dicts(2)("b"), 5
 End Sub
 
-Function TableToDicts(TableName As String, Optional WB As Workbook) As Collection
+Public Function TableToDicts(TableName As String, Optional WB As Workbook) As Collection
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -891,7 +907,9 @@ Function TableToDicts(TableName As String, Optional WB As Workbook) As Collectio
     
     Dim d As Dictionary
     
-    Dim Table As ListObject, lr As ListRow, lc As ListColumn
+    Dim Table As ListObject
+    Dim lr As ListRow
+    Dim lc As ListColumn
     Set Table = GetLO(TableName, WB)
     For Each lr In Table.ListRows
         Set d = New Dictionary
