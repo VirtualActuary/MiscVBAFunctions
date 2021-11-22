@@ -13,11 +13,11 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     NewSheetName = Left(Name, 31)
 
     ' If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
-    If Not hasKey(WB.Sheets, NewSheetName) Then
+    If Not hasKey(WB.Worksheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
     Else
-        NewSheetName = GetNewKey(Name, WB.Sheets, 31)
+        NewSheetName = GetNewKey(Name, WB.Worksheets, 31)
     End If
 End Function
 

@@ -8,7 +8,7 @@ Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
     Dim WS As Worksheet
     Dim LO As ListObject
     
-    For Each WS In WB.Sheets
+    For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
             If Name = LO.Name Then
                 HasLO = True
@@ -29,7 +29,7 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
     Dim WS As Worksheet
     Dim LO As ListObject
     
-    For Each WS In WB.Sheets
+    For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
             If Name = LO.Name Then
                 Set GetLO = LO

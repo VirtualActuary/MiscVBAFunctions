@@ -7,7 +7,7 @@ Private Sub test()
     On Error GoTo UnFreeze
     
     Dim WS As Worksheet
-    Set WS = ThisWorkbook.Sheets("Sheet1")
+    Set WS = ThisWorkbook.Workheets("Sheet1")
     FreezePanes WS.Range("D4")
     
 UnFreeze:

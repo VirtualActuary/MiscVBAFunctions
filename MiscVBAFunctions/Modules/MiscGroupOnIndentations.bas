@@ -36,9 +36,9 @@ End Sub
 
 Private Sub TestRemoveGroupings()
     ' Test rows
-    RemoveRowGroupings ThisWorkbook.Sheets("GroupOnIndentations")
+    RemoveRowGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
     ' Test columns
-    RemoveColumnGroupings ThisWorkbook.Sheets("GroupOnIndentations")
+    RemoveColumnGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
 End Sub
 
 

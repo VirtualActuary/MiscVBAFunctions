@@ -10,7 +10,6 @@ Option Explicit
 'Dim WB
 'Dim WS
 
-
 '************"EarlyBindings"
 
 
@@ -391,7 +390,7 @@ Private Sub test()
     On Error GoTo UnFreeze
     
     Dim WS As Worksheet
-    Set WS = ThisWorkbook.Sheets("Sheet1")
+    Set WS = ThisWorkbook.Workheets("Sheet1")
     FreezePanes WS.Range("D4")
     
 UnFreeze:
@@ -536,9 +535,9 @@ End Sub
 
 Private Sub TestRemoveGroupings()
     ' Test rows
-    RemoveRowGroupings ThisWorkbook.Sheets("GroupOnIndentations")
+    RemoveRowGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
     ' Test columns
-    RemoveColumnGroupings ThisWorkbook.Sheets("GroupOnIndentations")
+    RemoveColumnGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
 End Sub
 
 
@@ -696,11 +695,11 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     NewSheetName = Left(Name, 31)
 
     ' If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
-    If Not hasKey(WB.Sheets, NewSheetName) Then
+    If Not hasKey(WB.Worksheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
     Else
-        NewSheetName = GetNewKey(Name, WB.Sheets, 31)
+        NewSheetName = GetNewKey(Name, WB.Worksheets, 31)
     End If
 End Function
 
@@ -823,7 +822,7 @@ End Function
 Public Sub RemoveGridLines(WS As Worksheet)
     Dim view As WorksheetView
     For Each view In WS.Parent.Windows(1).SheetViews
-        If view.Sheet.Name = WS.Name Then
+        If view.Worksheet.Name = WS.Name Then
             view.DisplayGridlines = False
             Exit Sub
         End If
@@ -852,7 +851,7 @@ Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
     Dim WS As Worksheet
     Dim LO As ListObject
     
-    For Each WS In WB.Sheets
+    For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
             If Name = LO.Name Then
                 HasLO = True
@@ -873,7 +872,7 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
     Dim WS As Worksheet
     Dim LO As ListObject
     
-    For Each WS In WB.Sheets
+    For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
             If Name = LO.Name Then
                 Set GetLO = LO
