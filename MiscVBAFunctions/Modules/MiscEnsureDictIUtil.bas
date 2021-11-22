@@ -1,4 +1,4 @@
-Attribute VB_Name = "EnsureDictIUtil"
+Attribute VB_Name = "MiscEnsureDictIUtil"
 Option Explicit
 
 Function EnsureDictI(Container As Variant) As Object
