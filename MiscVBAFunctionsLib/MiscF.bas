@@ -190,11 +190,8 @@ End Function
 Public Function zip(ParamArray Args() As Variant) As Collection
     Dim I As Long
     Dim J As Long
-    
-    ' Dim N As Long
     Dim M As Long
     
-
     M = -1
     For I = LBound(Args) To UBound(Args)
         If M = -1 Then
@@ -443,7 +440,6 @@ End Sub
 
 
 Private Function TestGetUniqueItems()
-    ' Dim arr(3)
     Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
@@ -511,8 +507,7 @@ End Sub
 
 Public Sub GroupRowsOnIndentations(r As Range)
     ' groups the rows based on indentations of the cells in the range
-    
-    ' Dim ri As Range, WS As Worksheet
+
     Dim ri As Range
     For Each ri In r
         ri.EntireRow.OutlineLevel = ri.IndentLevel + 1
@@ -523,8 +518,7 @@ End Sub
 
 Public Sub GroupColumnsOnIndentations(r As Range)
     ' groups the columns based on indentations of the cells in the range
-    
-    ' Dim ri As Range, WS As Worksheet
+
     Dim ri As Range
     For Each ri In r
         ri.EntireColumn.OutlineLevel = ri.IndentLevel + 1
@@ -634,11 +628,6 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via .Item
-        'If emptyFlag Then ' Item was Empty/non-existant
-        '    hasKey = False
-        'Else
-        '    hasKey = True ' Item was not Empty
-        'End If
         hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 Then ' Retrieval Error, but .Item is correct access method stil. 424: Method not exist; 438: Compilation error
@@ -656,11 +645,6 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via ()
-        'If emptyFlag Then ' Item was Empty/non-existant
-        '    hasKey = False
-        'Else
-        '    hasKey = True ' Item was not Empty
-        'End If
         hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 And ErrX <> 13 Then ' Retrieval Error, but () is correct access method stil. 424: Method not exist; 438: Compilation error; 13: Variant bracketed ()
@@ -694,7 +678,6 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     ' max 31 characters
     NewSheetName = Left(Name, 31)
 
-    ' If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
     If Not hasKey(WB.Worksheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
@@ -705,7 +688,6 @@ End Function
 
 Private Function TestGetNewKey()
 
-    ' Dim c As New Collection, I As Long
     Dim c As New Collection
     Dim I As Long
     

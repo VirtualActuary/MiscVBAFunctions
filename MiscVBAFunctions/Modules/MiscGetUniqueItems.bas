@@ -2,7 +2,6 @@ Attribute VB_Name = "MiscGetUniqueItems"
 Option Explicit
 
 Private Function TestGetUniqueItems()
-    ' Dim arr(3)
     Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"

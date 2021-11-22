@@ -12,8 +12,7 @@ End Sub
 
 Public Sub GroupRowsOnIndentations(r As Range)
     ' groups the rows based on indentations of the cells in the range
-    
-    ' Dim ri As Range, WS As Worksheet
+
     Dim ri As Range
     For Each ri In r
         ri.EntireRow.OutlineLevel = ri.IndentLevel + 1
@@ -24,8 +23,7 @@ End Sub
 
 Public Sub GroupColumnsOnIndentations(r As Range)
     ' groups the columns based on indentations of the cells in the range
-    
-    ' Dim ri As Range, WS As Worksheet
+
     Dim ri As Range
     For Each ri In r
         ri.EntireColumn.OutlineLevel = ri.IndentLevel + 1

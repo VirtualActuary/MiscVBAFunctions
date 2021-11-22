@@ -72,11 +72,6 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via .Item
-        'If emptyFlag Then ' Item was Empty/non-existant
-        '    hasKey = False
-        'Else
-        '    hasKey = True ' Item was not Empty
-        'End If
         hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 Then ' Retrieval Error, but .Item is correct access method stil. 424: Method not exist; 438: Compilation error
@@ -94,11 +89,6 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via ()
-        'If emptyFlag Then ' Item was Empty/non-existant
-        '    hasKey = False
-        'Else
-        '    hasKey = True ' Item was not Empty
-        'End If
         hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 And ErrX <> 13 Then ' Retrieval Error, but () is correct access method stil. 424: Method not exist; 438: Compilation error; 13: Variant bracketed ()
