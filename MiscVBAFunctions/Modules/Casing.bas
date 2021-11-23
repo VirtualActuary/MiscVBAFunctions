@@ -6,3 +6,4 @@ Attribute VB_Name = "Casing"
 'Dim I
 'Dim WB
 'Dim WS
+'Dim Columns
