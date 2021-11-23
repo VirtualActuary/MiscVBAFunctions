@@ -9,7 +9,6 @@ Option Explicit
 'Dim I
 'Dim WB
 'Dim WS
-'Dim Columns
 
 '************"EarlyBindings"
 
@@ -97,7 +96,10 @@ End Sub
 '************"MiscArray"
 
 
-Public Function ErrorToNullStringTransformation(tableArr As Variant) As Variant
+' Functions for 1D and 2D arrays only.
+' Replaces all Errors in the input array with vbNullString.
+' The input array is modified (pass by referance) and the function returns the array
+Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Variant
     If is2D(tableArr) Then
         ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
     Else
@@ -106,7 +108,13 @@ Public Function ErrorToNullStringTransformation(tableArr As Variant) As Variant
 End Function
 
 
-Public Function EnsureDotSeparatorTransformation(tableArr As Variant) As Variant
+' Functions for 1D and 2D arrays only.
+' Converts the decimal seperator in the float input to a "." for each entry in the input array
+' and returns the result as a string.
+' Only works when converting from the system's decimal seperator.
+' Custom seperators not supported.
+' The input array is modified (pass by referance) and the function returns the array.
+Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Variant
     If is2D(tableArr) Then
         EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
     Else
@@ -115,11 +123,14 @@ Public Function EnsureDotSeparatorTransformation(tableArr As Variant) As Variant
 End Function
 
 
-Public Function DateToStringTransformation(tableArr As Variant) As Variant
+' Functions for 1D and 2D arrays only.
+' Converts all Date/DateTime entries in the input array to string.
+' The input array is modified (pass by referance) and the function returns the array.
+Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt As String = "yyyy-mm-dd") As Variant
     If is2D(tableArr) Then
-        DateToStringTransformation = DateToString2D(tableArr)
+        DateToStringTransformation = DateToString2D(tableArr, fmt)
     Else
-        DateToStringTransformation = DateToString1D(tableArr)
+        DateToStringTransformation = DateToString1D(tableArr, fmt)
     End If
 End Function
 
@@ -135,19 +146,11 @@ Err:
 End Function
 
 
-Private Function dateToString(d As Date) As String
-    If d = Int(d) Then ' no hours, etc:
-        dateToString = Format(d, "yyyy-mm-dd")
-    Else ' add hours and seconds - VBA can't keep more details in any case...
-        dateToString = Format(d, "yyyy-mm-dd hh:mm:ss")
-    End If
+Private Function dateToString(d As Date, fmt As String) As String
+    dateToString = Format(d, fmt)
 End Function
 
 
-' Converts the decimal seperator in the float input to a "."
-' and returns the result as a string.
-' Only works when converting from the system's decimal seperator.
-' Custom seperators not supported.
 Private Function decStr(x As Variant) As String
      decStr = CStr(x)
 
@@ -208,12 +211,12 @@ Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
 End Function
 
 
-Private Function DateToString2D(tableArr As Variant) As Variant
+Private Function DateToString2D(tableArr As Variant, fmt As String) As Variant
     Dim I As Long, J As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         For J = LBound(tableArr, 2) To UBound(tableArr, 2)
             If IsDate(tableArr(I, J)) Then ' format dates as strings to avoid some user's stupid default date settings
-                tableArr(I, J) = dateToString(CDate(tableArr(I, J)))
+                tableArr(I, J) = dateToString(CDate(tableArr(I, J)), fmt)
             End If
         Next J
     Next I
@@ -221,11 +224,11 @@ Private Function DateToString2D(tableArr As Variant) As Variant
 End Function
 
 
-Private Function DateToString1D(tableArr As Variant) As Variant
+Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
     Dim I As Long, J As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
-            tableArr(I) = dateToString(CDate(tableArr(I)))
+            tableArr(I) = dateToString(CDate(tableArr(I)), fmt)
         End If
     Next I
     DateToString1D = tableArr

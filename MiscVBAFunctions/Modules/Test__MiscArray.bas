@@ -109,6 +109,9 @@ Private Sub Test_DateToStringTransformation()
     'Arrange:
     Dim arr(2, 2)
     Dim arrSecond(3)
+    Dim arrThird(1)
+    Dim arrFourth(1)
+    Dim arrFifth(1)
 
     'Act:
     arr(0, 0) = CDate("2021-1-2"): arr(0, 1) = CDate("2021-01-28 10:2")
@@ -117,17 +120,24 @@ Private Sub Test_DateToStringTransformation()
 
     arrSecond(0) = 1.2: arrSecond(1) = 2.1: arrSecond(2) = CDate("2021-3-28 10:2:10")
     DateToStringTransformation arrSecond
-
+    
+    arrThird(0) = CDate("2021-01-28 10:2:10")
+    arrFourth(0) = CDate("2021-01-28 10:2:10")
+    arrFifth(0) = CDate("2021-01-28 10:2:10")
+    
     'Assert:
-    Assert.Succeed
     Assert.AreEqual "2021-01-02", arr(0, 0)
-    Assert.AreEqual "2021-01-28 10:02:00", arr(0, 1)
+    Assert.AreEqual "2021-01-28", arr(0, 1)
     Assert.AreEqual 13, arr(1, 0)
     Assert.AreEqual 2.5, arr(1, 1)
     
     Assert.AreEqual 1.2, arrSecond(0)
     Assert.AreEqual 2.1, arrSecond(1)
-    Assert.AreEqual "2021-03-28 10:02:10", arrSecond(2)
+    Assert.AreEqual "2021-03-28", arrSecond(2)
+    
+    Assert.AreEqual "2021-01", DateToStringTransformation(arrThird, "yyyy-mm")(0)
+    Assert.AreEqual "2021/01/28", DateToStringTransformation(arrFourth, "yyyy/mm/dd")(0)
+    Assert.AreEqual "2021-01-28 10:02:10", DateToStringTransformation(arrFifth, "yyyy-mm-dd hh:mm:ss")(0)
 
 TestExit:
     Exit Sub
