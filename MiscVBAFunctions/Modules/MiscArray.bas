@@ -1,7 +1,7 @@
 Attribute VB_Name = "MiscArray"
 Option Explicit
 
-Function ErrorToNullStringTransformation(tableArr As Variant) As Variant
+Public Function ErrorToNullStringTransformation(tableArr As Variant) As Variant
     If is2D(tableArr) Then
         ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
     Else
@@ -10,7 +10,7 @@ Function ErrorToNullStringTransformation(tableArr As Variant) As Variant
 End Function
 
 
-Function EnsureDotSeparatorTransformation(tableArr As Variant) As Variant
+Public Function EnsureDotSeparatorTransformation(tableArr As Variant) As Variant
     If is2D(tableArr) Then
         EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
     Else
@@ -19,7 +19,7 @@ Function EnsureDotSeparatorTransformation(tableArr As Variant) As Variant
 End Function
 
 
-Function DateToStringTransformation(tableArr As Variant) As Variant
+Public Function DateToStringTransformation(tableArr As Variant) As Variant
     If is2D(tableArr) Then
         DateToStringTransformation = DateToString2D(tableArr)
     Else
@@ -32,7 +32,7 @@ End Function
 ' 3D is not supported
 Private Function is2D(arr As Variant)
     On Error GoTo Err
-    is2D = (UBound(arr, 2) > 1)
+    is2D = (UBound(arr, 2) - LBound(arr, 2) > 1)
     Exit Function
 Err:
     is2D = False
@@ -121,7 +121,7 @@ Private Function DateToString2D(tableArr As Variant) As Variant
             End If
         Next J
     Next I
-    DateToStringTransformation = tableArr
+    DateToString2D = tableArr
 End Function
 
 
@@ -132,5 +132,5 @@ Private Function DateToString1D(tableArr As Variant) As Variant
             tableArr(I) = dateToString(CDate(tableArr(I)))
         End If
     Next I
-    DateToStringTransformation = tableArr
+    DateToString1D = tableArr
 End Function

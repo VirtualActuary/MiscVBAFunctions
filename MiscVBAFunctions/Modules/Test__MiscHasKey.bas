@@ -33,7 +33,7 @@ Private Sub TestCleanup()
 End Sub
 
 '@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Collection()
+Private Sub Test_HasKey_Collection()
     On Error GoTo TestFail
     
     
@@ -58,7 +58,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Workbook()
+Private Sub Test_HasKey_Workbook()
     On Error GoTo TestFail
     
     'Arrange:
@@ -77,7 +77,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Dictionary()
+Private Sub Test_HasKey_Dictionary()
     On Error GoTo TestFail
     
     'Arrange:
@@ -101,7 +101,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Dictionary_object()
+Private Sub Test_HasKey_Dictionary_object()
     On Error GoTo TestFail
     
     'Arrange:
@@ -124,7 +124,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscHasKey")
-Private Sub test_HasKey_Dictionary_fail()                        'TODO Rename test
+Private Sub Test_HasKey_Dictionary_fail()                        'TODO Rename test
     Const ExpectedError As Long = 9              'TODO Change to expected error number
     On Error GoTo TestFail
     

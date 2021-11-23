@@ -32,12 +32,11 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("Uncategorized")
-Private Sub TestMethod1()                        'TODO Rename test
+'@TestMethod("MiscArray")
+Private Sub Test_EnsureDotSeparatorTransformation()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim tst As Variant
     Dim I As Long, J As Long
     Dim arr(2, 2)
     
@@ -51,6 +50,7 @@ Private Sub TestMethod1()                        'TODO Rename test
     arr2(0) = 1.2: arr2(1) = 2.1: arr2(2) = 3.8
     EnsureDotSeparatorTransformation arr2
     
+    
     'Assert:
     Assert.AreEqual "100.2", arr(0, 0)
     Assert.AreEqual "1.9", arr(0, 1)
@@ -61,6 +61,74 @@ Private Sub TestMethod1()                        'TODO Rename test
     Assert.AreEqual "2.1", arr2(1)
     Assert.AreEqual "3.8", arr2(2)
     
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ErrorToNullStringTransformation()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim arr(2, 2)
+    Dim arrSecond(3)
+    
+    'Act:
+    arr(0, 0) = 100.2: arr(0, 1) = CVErr(xlErrName)
+    arr(1, 0) = 2.1: arr(1, 1) = CVErr(xlErrNA)
+    ErrorToNullStringTransformation arr
+
+    arrSecond(0) = 1.2: arrSecond(1) = CVErr(xlErrRef): arrSecond(2) = 3.8
+    ErrorToNullStringTransformation arrSecond
+
+
+    'Assert:
+    Assert.AreEqual 100.2, arr(0, 0)
+    Assert.AreEqual vbNullString, arr(0, 1)
+    Assert.AreEqual 2.1, arr(1, 0)
+    Assert.AreEqual vbNullString, arr(1, 1)
+    
+    Assert.AreEqual 1.2, arrSecond(0)
+    Assert.AreEqual vbNullString, arrSecond(1)
+    Assert.AreEqual 3.8, arrSecond(2)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_DateToStringTransformation()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim arr(2, 2)
+    Dim arrSecond(3)
+
+    'Act:
+    arr(0, 0) = CDate("2021-1-2"): arr(0, 1) = CDate("2021-01-28 10:2")
+    arr(1, 0) = 13: arr(1, 1) = 2.5
+    DateToStringTransformation arr
+
+    arrSecond(0) = 1.2: arrSecond(1) = 2.1: arrSecond(2) = CDate("2021-3-28 10:2:10")
+    DateToStringTransformation arrSecond
+
+    'Assert:
+    Assert.Succeed
+    Assert.AreEqual "2021-01-02", arr(0, 0)
+    Assert.AreEqual "2021-01-28 10:02:00", arr(0, 1)
+    Assert.AreEqual 13, arr(1, 0)
+    Assert.AreEqual 2.5, arr(1, 1)
+    
+    Assert.AreEqual 1.2, arrSecond(0)
+    Assert.AreEqual 2.1, arrSecond(1)
+    Assert.AreEqual "2021-03-28 10:02:10", arrSecond(2)
+
 TestExit:
     Exit Sub
 TestFail:

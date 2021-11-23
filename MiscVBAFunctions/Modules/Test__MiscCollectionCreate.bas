@@ -54,7 +54,7 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("Uncategorized")
+'@TestMethod("MiscCollectionCreate")
 Private Sub Test_zip()
     On Error GoTo TestFail
     
