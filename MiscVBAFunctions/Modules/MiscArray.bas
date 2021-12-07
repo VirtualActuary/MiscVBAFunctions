@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscArray"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 ' Functions for 1D and 2D arrays only.
@@ -82,7 +83,7 @@ End Function
 
 
 Private Function ErrorToNull1D(tableArr As Variant) As Variant
-    Dim I As Long, J As Long
+    Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsError(tableArr(I)) Then ' set all error values to an empty string
             tableArr(I) = vbNullString
@@ -106,7 +107,7 @@ End Function
 
 
 Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
-    Dim I As Long, J As Long
+    Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsNumeric(tableArr(I)) Then ' force numeric values to use . as decimal separator
             tableArr(I) = decStr(tableArr(I))
@@ -130,7 +131,7 @@ End Function
 
 
 Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
-    Dim I As Long, J As Long
+    Dim I As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
             tableArr(I) = dateToString(CDate(tableArr(I)), fmt)

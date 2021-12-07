@@ -1,11 +1,7 @@
-Attribute VB_Name = "EarlyBindings"
+Attribute VB_Name = "MiscEarlyBindings"
+'@IgnoreModule ImplicitByRefModifier
 
 Option Explicit
-Option Compare Text
-
-'https://msdn.microsoft.com/en-us/library/aa390387(v=vs.85).aspx
-Private Const HKCR = &H80000000
-
 
 ' Add references for this project programatically. If you are uncertain what to put here,
 ' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
@@ -42,6 +38,7 @@ Sub addEarlyBindings()
             'Microsoft Shell Controls And Automation
             ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
         End If
+                
     Exit Sub
 ErrorHandler:
 End Sub
@@ -50,12 +47,12 @@ End Sub
 '**********************************************************************************
 '* Verify if a reference is loaded
 '**********************************************************************************
-Function isBindingNameLoaded(ref As String) As Boolean
+Private Function isBindingNameLoaded(ref As String) As Boolean
     ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
     isBindingNameLoaded = False
     Dim xRef As Variant
     For Each xRef In ThisWorkbook.VBProject.References
-        If xRef.Name = ref Then
+        If LCase(xRef.Name) = LCase(ref) Then
             isBindingNameLoaded = True
         End If
     Next xRef

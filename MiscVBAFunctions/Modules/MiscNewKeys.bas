@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscNewKeys"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 ' this module is used to generate new keys to a container (collections, dict, sheets, etc)
@@ -20,7 +21,7 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     End If
 End Function
 
-Private Function TestGetNewKey()
+Private Sub TestGetNewKey()
 
     Dim c As New Collection
     Dim I As Long
@@ -33,7 +34,7 @@ Private Function TestGetNewKey()
     Debug.Print GetNewKey("name", c), "name101"
     Debug.Print GetNewKey("NewName", c), "NewName"
 
-End Function
+End Sub
 
 
 Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String

@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscGroupOnIndentations"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Private Sub TestGroupOnIndentations()

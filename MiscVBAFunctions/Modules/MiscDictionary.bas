@@ -1,7 +1,8 @@
 Attribute VB_Name = "MiscDictionary"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-Private Function testDictget()
+Private Sub testDictget()
 
     Dim d As Dictionary
     Set d = dict("a", 2, "b", ThisWorkbook)
@@ -17,7 +18,7 @@ Private Function testDictget()
         Debug.Print Err.Number, 9 ' give error nr 9 if key not found
     On Error GoTo 0
 
-End Function
+End Sub
 
 
 Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant

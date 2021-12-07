@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscRangeToArray"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 ' Converts a range to a normalized array.

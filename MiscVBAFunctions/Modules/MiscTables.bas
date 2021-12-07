@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscTables"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean

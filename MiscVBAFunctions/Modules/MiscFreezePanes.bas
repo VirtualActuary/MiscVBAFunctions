@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscFreezePanes"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 
@@ -7,7 +8,7 @@ Private Sub test()
     On Error GoTo UnFreeze
     
     Dim WS As Worksheet
-    Set WS = ThisWorkbook.Workheets("Sheet1")
+    Set WS = ThisWorkbook.Worksheets("Sheet1")
     FreezePanes WS.Range("D4")
     
 UnFreeze:
