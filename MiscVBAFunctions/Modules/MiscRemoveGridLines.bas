@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscRemoveGridLines"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Public Sub RemoveGridLines(WS As Worksheet)

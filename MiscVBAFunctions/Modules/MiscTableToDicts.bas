@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscTableToDicts"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Private Sub TableToDictsTest()

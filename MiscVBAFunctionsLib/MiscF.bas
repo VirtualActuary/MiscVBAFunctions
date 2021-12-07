@@ -10,90 +10,8 @@ Option Explicit
 'Dim WB
 'Dim WS
 
-'************"EarlyBindings"
-
-
-Option Compare Text
-
-'https://msdn.microsoft.com/en-us/library/aa390387(v=vs.85).aspx
-Private Const HKCR = &H80000000
-
-
-' Add references for this project programatically. If you are uncertain what to put here,
-' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
-' Microsoft ActiveX Data Objects 6.1 Library'), then run getPackageGUID("msado15.dll")
-' to see what options you have:
-'**********************************************************************************
-'* Add selected references to this project
-'**********************************************************************************
-Sub addEarlyBindings()
-    On Error GoTo ErrorHandler
-        If Not isBindingNameLoaded("ADODB") Then
-            'Microsoft ActiveX Data Objects 6.1
-            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6.1, 0
-        End If
-        
-        If Not isBindingNameLoaded("VBIDE") Then
-            'Microsoft Visual Basic for Applications Extensibility 5.3
-            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5.3, 0
-        End If
-        
-        
-        If Not isBindingNameLoaded("Scripting") Then
-            'Microsoft Scripting Runtime version 1.0
-            ThisWorkbook.VBProject.References.addFromGuid "{420B2830-E718-11CF-893D-00A0C9054228}", 1, 0
-        End If
-        
-    
-        If Not isBindingNameLoaded("VBScript_RegExp_55") Then
-            'Microsoft VBScript Regular Expressions 5.5
-            ThisWorkbook.VBProject.References.addFromGuid "{3F4DACA7-160D-11D2-A8E9-00104B365C9F}", 5, 5
-        End If
-        
-        If Not isBindingNameLoaded("Shell32") Then
-            'Microsoft Shell Controls And Automation
-            ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
-        End If
-    Exit Sub
-ErrorHandler:
-End Sub
-
-
-'**********************************************************************************
-'* Verify if a reference is loaded
-'**********************************************************************************
-Function isBindingNameLoaded(ref As String) As Boolean
-    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
-    isBindingNameLoaded = False
-    Dim xRef As Variant
-    For Each xRef In ThisWorkbook.VBProject.References
-        If xRef.Name = ref Then
-            isBindingNameLoaded = True
-        End If
-    Next xRef
-    
-End Function
-
-
-'**********************************************************************************
-'* Print all current active GUIDs
-'**********************************************************************************
-Private Sub printAllEarlyBindings()
-    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
-    Dim xRef As Variant
-    For Each xRef In ThisWorkbook.VBProject.References
-        Debug.Print "**************" & xRef.Name
-        Debug.Print xRef.Description
-        Debug.Print xRef.Major
-        Debug.Print xRef.Minor
-        Debug.Print xRef.FullPath
-        Debug.Print xRef.GUID
-        Debug.Print ""
-    Next xRef
-    
-End Sub
-
 '************"MiscArray"
+'@IgnoreModule ImplicitByRefModifier
 
 
 ' Functions for 1D and 2D arrays only.
@@ -177,7 +95,7 @@ End Function
 
 
 Private Function ErrorToNull1D(tableArr As Variant) As Variant
-    Dim I As Long, J As Long
+    Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsError(tableArr(I)) Then ' set all error values to an empty string
             tableArr(I) = vbNullString
@@ -201,7 +119,7 @@ End Function
 
 
 Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
-    Dim I As Long, J As Long
+    Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsNumeric(tableArr(I)) Then ' force numeric values to use . as decimal separator
             tableArr(I) = decStr(tableArr(I))
@@ -225,7 +143,7 @@ End Function
 
 
 Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
-    Dim I As Long, J As Long
+    Dim I As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
             tableArr(I) = dateToString(CDate(tableArr(I)), fmt)
@@ -364,7 +282,7 @@ Private Sub testCreateTextFile()
     ' TODO: assertion
 End Sub
 
-Public Function CreateTextFile(ByVal Content As String, ByVal FilePath As String)
+Public Sub CreateTextFile(ByVal Content As String, ByVal FilePath As String)
     ' Creates a new / overwrites an existing text file with Content
     
     Dim oFile As Integer
@@ -374,12 +292,13 @@ Public Function CreateTextFile(ByVal Content As String, ByVal FilePath As String
         Print #oFile, Content
     Close #oFile
 
-End Function
+End Sub
 
 '************"MiscDictionary"
+'@IgnoreModule ImplicitByRefModifier
 
 
-Private Function testDictget()
+Private Sub testDictget()
 
     Dim d As Dictionary
     Set d = dict("a", 2, "b", ThisWorkbook)
@@ -395,7 +314,7 @@ Private Function testDictget()
         Debug.Print Err.Number, 9 ' give error nr 9 if key not found
     On Error GoTo 0
 
-End Function
+End Sub
 
 
 Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
@@ -474,7 +393,89 @@ Cont:
 End Function
 
 
+'************"MiscEarlyBindings"
+'@IgnoreModule ImplicitByRefModifier
+
+
+Option Compare Text
+
+' Add references for this project programatically. If you are uncertain what to put here,
+' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
+' Microsoft ActiveX Data Objects 6.1 Library'), then run getPackageGUID("msado15.dll")
+' to see what options you have:
+'**********************************************************************************
+'* Add selected references to this project
+'**********************************************************************************
+Sub addEarlyBindings()
+    On Error GoTo ErrorHandler
+        If Not isBindingNameLoaded("ADODB") Then
+            'Microsoft ActiveX Data Objects 6.1
+            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6.1, 0
+        End If
+        
+        If Not isBindingNameLoaded("VBIDE") Then
+            'Microsoft Visual Basic for Applications Extensibility 5.3
+            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5.3, 0
+        End If
+        
+        
+        If Not isBindingNameLoaded("Scripting") Then
+            'Microsoft Scripting Runtime version 1.0
+            ThisWorkbook.VBProject.References.addFromGuid "{420B2830-E718-11CF-893D-00A0C9054228}", 1, 0
+        End If
+        
+    
+        If Not isBindingNameLoaded("VBScript_RegExp_55") Then
+            'Microsoft VBScript Regular Expressions 5.5
+            ThisWorkbook.VBProject.References.addFromGuid "{3F4DACA7-160D-11D2-A8E9-00104B365C9F}", 5, 5
+        End If
+        
+        If Not isBindingNameLoaded("Shell32") Then
+            'Microsoft Shell Controls And Automation
+            ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
+        End If
+                
+    Exit Sub
+ErrorHandler:
+End Sub
+
+
+'**********************************************************************************
+'* Verify if a reference is loaded
+'**********************************************************************************
+Private Function isBindingNameLoaded(ref As String) As Boolean
+    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+    isBindingNameLoaded = False
+    Dim xRef As Variant
+    For Each xRef In ThisWorkbook.VBProject.References
+        If LCase(xRef.Name) = LCase(ref) Then
+            isBindingNameLoaded = True
+        End If
+    Next xRef
+    
+End Function
+
+
+'**********************************************************************************
+'* Print all current active GUIDs
+'**********************************************************************************
+Private Sub printAllEarlyBindings()
+    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+    Dim xRef As Variant
+    For Each xRef In ThisWorkbook.VBProject.References
+        Debug.Print "**************" & xRef.Name
+        Debug.Print xRef.Description
+        Debug.Print xRef.Major
+        Debug.Print xRef.Minor
+        Debug.Print xRef.FullPath
+        Debug.Print xRef.GUID
+        Debug.Print ""
+    Next xRef
+    
+End Sub
+
 '************"MiscEnsureDictIUtil"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Function EnsureDictI(Container As Variant) As Object
@@ -519,7 +520,80 @@ Function EnsureDictI(Container As Variant) As Object
     End If
 End Function
 
+'************"MiscExcel"
+
+
+
+
+Public Function ExcelBook( _
+      Path As String _
+    , Optional MustExist As Boolean = False _
+    , Optional ReadOnly As Boolean = False _
+    , Optional SaveOnError As Boolean = False _
+    , Optional CloseOnError As Boolean = False _
+    ) As Workbook
+    ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
+    
+    On Error GoTo finally
+    
+    If fso.FileExists(Path) Then
+    
+        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
+    
+    Else
+        
+        If MustExist Then
+            Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+        Else
+            Set ExcelBook = Workbooks.Add
+            
+            If SaveOnError Then
+                ExcelBook.SaveAs Path
+            End If
+        End If
+        
+    End If
+    
+    Exit Function
+    
+finally:
+    If SaveOnError Then
+        ExcelBook.Save
+    End If
+    
+    If CloseOnError Then
+        ExcelBook.Close (False)
+    End If
+    
+End Function
+
+Function OpenWorkbook( _
+      Path As String _
+    , Optional ReadOnly As Boolean = False _
+    ) As Workbook
+    
+    
+    If hasKey(Workbooks, fso.GetFileName(Path)) Then
+        Set OpenWorkbook = Workbooks(fso.GetFileName(Path))
+        
+        ' check if the workbook is actually the one specified in path
+        ' use AbsolutePathName to remove any relative path references  (\..\ / \.\)
+        If LCase(OpenWorkbook.FullName) <> LCase(fso.GetAbsolutePathName(Path)) Then
+            Debug.Print fso.GetAbsolutePathName(Path)
+            Err.Raise 457, , "Existing workbook with the same name is already open: '" & fso.GetFileName(Path) & "'"
+        End If
+        
+        If ReadOnly And OpenWorkbook.ReadOnly = False Then
+            Err.Raise -999, , "Workbook'" & fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
+        End If
+    Else
+        Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
+    End If
+End Function
+
+
 '************"MiscFreezePanes"
+'@IgnoreModule ImplicitByRefModifier
 
 
 
@@ -528,7 +602,7 @@ Private Sub test()
     On Error GoTo UnFreeze
     
     Dim WS As Worksheet
-    Set WS = ThisWorkbook.Workheets("Sheet1")
+    Set WS = ThisWorkbook.Worksheets("Sheet1")
     FreezePanes WS.Range("D4")
     
 UnFreeze:
@@ -577,10 +651,15 @@ Public Sub UnFreezePanes(WS As Worksheet)
     CurrentActiveSheet.Activate
 End Sub
 
+'************"MiscFSO"
+' allows us to use FSO functions anywhere in the project
+Public fso As New FileSystemObject
+
 '************"MiscGetUniqueItems"
+'@IgnoreModule ImplicitByRefModifier
 
 
-Private Function TestGetUniqueItems()
+Private Sub TestGetUniqueItems()
     Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
@@ -598,7 +677,7 @@ Private Function TestGetUniqueItems()
     arr(0) = 1: arr(1) = 1: arr(2) = "a": arr(3) = "a"
     Debug.Print UBound(GetUniqueItems(arr), 1), 1 ' zero index
     
-End Function
+End Sub
 
 Public Function GetUniqueItems(arr() As Variant, _
             Optional CaseSensitive As Boolean = True) As Variant
@@ -634,7 +713,9 @@ Private Function ArrayLen(arr As Variant, _
 End Function
 
 
+
 '************"MiscGroupOnIndentations"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Private Sub TestGroupOnIndentations()
@@ -696,6 +777,7 @@ End Sub
 
 
 '************"MiscHasKey"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Private Sub TestHasKey()
@@ -806,6 +888,7 @@ End Function
 
 
 '************"MiscNewKeys"
+'@IgnoreModule ImplicitByRefModifier
 
 
 ' this module is used to generate new keys to a container (collections, dict, sheets, etc)
@@ -827,7 +910,7 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     End If
 End Function
 
-Private Function TestGetNewKey()
+Private Sub TestGetNewKey()
 
     Dim c As New Collection
     Dim I As Long
@@ -840,7 +923,7 @@ Private Function TestGetNewKey()
     Debug.Print GetNewKey("name", c), "name101"
     Debug.Print GetNewKey("NewName", c), "NewName"
 
-End Function
+End Sub
 
 
 Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
@@ -875,7 +958,169 @@ Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLeng
     End If
 End Function
 
+'************"MiscPowerQuery"
+'@IgnoreModule ImplicitByRefModifier
+
+
+' Helpful functions to help with Power Query manipulations in VBA
+
+Private Sub MiscPowerQueryTests()
+    Debug.Print doesQueryExist("foo"), False
+End Sub
+
+
+Public Function doesQueryExist(ByVal queryName As String, Optional WB As Workbook) As Boolean
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    ' Helper function to check if a query with the given name already exists
+    Dim qry As WorkbookQuery
+    For Each qry In WB.queries
+        If (qry.Name = queryName) Then
+            doesQueryExist = True
+            Exit Function
+        End If
+    Next
+    doesQueryExist = False
+End Function
+
+
+Public Function getQuery(Name As String, Optional WB As Workbook) As WorkbookQuery
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim qry As WorkbookQuery
+    For Each qry In WB.queries
+        If qry.Name = Name Then
+            Set getQuery = qry
+            Exit Function
+        End If
+    Next qry
+    
+    Err.Raise 999, , "Query " & Name & " does not exist"
+    
+End Function
+
+
+Public Function updateQuery(Name As String, queryFormula As String, Optional WB As Workbook) As WorkbookQuery
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    ' updates a query to the new formula
+    ' if the query doesn't exist, a new one is created
+    
+    If doesQueryExist(Name, WB) Then
+        Set updateQuery = getQuery(Name, WB)
+        updateQuery.formula = queryFormula
+    Else
+        Set updateQuery = WB.queries.Add(Name, queryFormula)
+    End If
+    
+End Function
+
+Public Function updateQueryAndRefreshListObject(Name As String, queryFormula As String, Optional WB As Workbook) As WorkbookQuery
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    ' updates a power query query
+    ' Also waits for the query to refresh before continuing the code
+    
+    ' assumes the ListObject and Query has the same name
+    Set updateQueryAndRefreshListObject = updateQuery(Name, queryFormula, WB)
+    
+    WaitForListObjectRefresh Name, WB
+    
+End Function
+
+
+Public Sub WaitForListObjectRefresh(Name As String, Optional WB As Workbook)
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    ' Refreshes the query before continuing the code
+    
+    Dim LO As ListObject
+    Set LO = GetLO(Name, WB)
+    Dim BGRefresh As Boolean
+    With LO.QueryTable
+        BGRefresh = .BackgroundQuery
+        .BackgroundQuery = False
+        .Refresh
+        .BackgroundQuery = BGRefresh
+    End With
+    
+End Sub
+
+Public Sub loadToWorkbook(queryName As String, Optional WB As Workbook)
+    
+    ' loads a query to a sheet in the workbook
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim LO As ListObject
+    If HasLO(queryName, WB) Then
+        Set LO = GetLO(queryName, WB)
+        LO.Refresh
+    Else
+        Dim WS As Worksheet
+        Set WS = WB.Worksheets.Add(After:=ActiveSheet)
+        WS.Name = NewSheetName(queryName, ThisWorkbook)
+        
+        With WS.ListObjects.Add(SourceType:=0, Source:= _
+            "OLEDB;Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=" & queryName & ";Extended Properties=""""" _
+            , Destination:=Range("$A$1")).QueryTable
+            .CommandType = xlCmdSql
+            .CommandText = Array("SELECT * FROM [" & queryName & "]")
+            .RowNumbers = False
+            .FillAdjacentFormulas = False
+            .PreserveFormatting = True
+            .RefreshOnFileOpen = False
+            .BackgroundQuery = True
+            .RefreshStyle = xlInsertDeleteCells
+            .SavePassword = False
+            .SaveData = True
+            .AdjustColumnWidth = True
+            .RefreshPeriod = 0
+            .PreserveColumnInfo = True
+            .ListObject.DisplayName = queryName
+            .Refresh BackgroundQuery:=False
+        End With
+        
+    End If
+    
+End Sub
+
+Function addToWorkbookConnections(Query As WorkbookQuery, Optional WB As Workbook) As WorkbookConnection
+    ' adds a query to workbookconnections so that it can be used in pivot tables
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim ConnectionName As String, CommandString As String, CommandText As String, CommandType
+    ConnectionName = "Query - " & Query.Name
+    CommandString = "OLEDB;Provider=Microsoft.Mashup.OleDb.1;Data Source=$Workbook$;Location=" & Query.Name & ";Extended Properties="""""
+    CommandText = "SELECT * FROM [" & Query.Name & "]"
+    CommandType = 2
+    
+    ' This code loads the query to the workbook connections
+    If hasKey(WB.Connections, ConnectionName) Then
+        Set addToWorkbookConnections = WB.Connections(ConnectionName)
+        addToWorkbookConnections.OLEDBConnection.Connection = CommandString
+        addToWorkbookConnections.OLEDBConnection.CommandText = CommandText
+        addToWorkbookConnections.OLEDBConnection.CommandType = CommandType
+    Else
+        Set addToWorkbookConnections = _
+        WB.Connections.Add2(ConnectionName, _
+            "Connection to the '" & Query.Name & "' query in the workbook.", _
+            CommandString _
+            , CommandText, CommandType)
+        ' should not be loaded to the data model, else we cannot link two pivots to the same cache linking from this query
+    End If
+
+End Function
+
+
+
+Sub refreshAllQueriesAndPivots(Optional WB As Workbook)
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    WB.RefreshAll
+End Sub
+
+
+
 '************"MiscRangeToArray"
+'@IgnoreModule ImplicitByRefModifier
 
 
 ' Converts a range to a normalized array.
@@ -940,6 +1185,7 @@ End Function
 
 
 '************"MiscRemoveGridLines"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Public Sub RemoveGridLines(WS As Worksheet)
@@ -953,6 +1199,7 @@ Public Sub RemoveGridLines(WS As Worksheet)
 End Sub
 
 '************"MiscString"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Public Function randomString(length As Variant)
@@ -965,6 +1212,7 @@ End Function
 
 
 '************"MiscTables"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
@@ -1012,6 +1260,7 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
 End Function
 
 '************"MiscTableToDicts"
+'@IgnoreModule ImplicitByRefModifier
 
 
 Private Sub TableToDictsTest()

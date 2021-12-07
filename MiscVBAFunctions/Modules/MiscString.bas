@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscString"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Public Function randomString(length As Variant)

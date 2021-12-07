@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscEnsureDictIUtil"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Function EnsureDictI(Container As Variant) As Object

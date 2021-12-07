@@ -1,4 +1,5 @@
 Attribute VB_Name = "MiscHasKey"
+'@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
 Private Sub TestHasKey()
