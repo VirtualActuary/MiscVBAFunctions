@@ -10,6 +10,230 @@ Option Explicit
 'Dim WB
 'Dim WS
 
+'************"EarlyBindings"
+
+
+Option Compare Text
+
+'https://msdn.microsoft.com/en-us/library/aa390387(v=vs.85).aspx
+Private Const HKCR = &H80000000
+
+
+' Add references for this project programatically. If you are uncertain what to put here,
+' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
+' Microsoft ActiveX Data Objects 6.1 Library'), then run getPackageGUID("msado15.dll")
+' to see what options you have:
+'**********************************************************************************
+'* Add selected references to this project
+'**********************************************************************************
+Sub addEarlyBindings()
+    On Error GoTo ErrorHandler
+        If Not isBindingNameLoaded("ADODB") Then
+            'Microsoft ActiveX Data Objects 6.1
+            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6.1, 0
+        End If
+        
+        If Not isBindingNameLoaded("VBIDE") Then
+            'Microsoft Visual Basic for Applications Extensibility 5.3
+            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5.3, 0
+        End If
+        
+        
+        If Not isBindingNameLoaded("Scripting") Then
+            'Microsoft Scripting Runtime version 1.0
+            ThisWorkbook.VBProject.References.addFromGuid "{420B2830-E718-11CF-893D-00A0C9054228}", 1, 0
+        End If
+        
+    
+        If Not isBindingNameLoaded("VBScript_RegExp_55") Then
+            'Microsoft VBScript Regular Expressions 5.5
+            ThisWorkbook.VBProject.References.addFromGuid "{3F4DACA7-160D-11D2-A8E9-00104B365C9F}", 5, 5
+        End If
+        
+        If Not isBindingNameLoaded("Shell32") Then
+            'Microsoft Shell Controls And Automation
+            ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
+        End If
+    Exit Sub
+ErrorHandler:
+End Sub
+
+
+'**********************************************************************************
+'* Verify if a reference is loaded
+'**********************************************************************************
+Function isBindingNameLoaded(ref As String) As Boolean
+    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+    isBindingNameLoaded = False
+    Dim xRef As Variant
+    For Each xRef In ThisWorkbook.VBProject.References
+        If xRef.Name = ref Then
+            isBindingNameLoaded = True
+        End If
+    Next xRef
+    
+End Function
+
+
+'**********************************************************************************
+'* Print all current active GUIDs
+'**********************************************************************************
+Private Sub printAllEarlyBindings()
+    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+    Dim xRef As Variant
+    For Each xRef In ThisWorkbook.VBProject.References
+        Debug.Print "**************" & xRef.Name
+        Debug.Print xRef.Description
+        Debug.Print xRef.Major
+        Debug.Print xRef.Minor
+        Debug.Print xRef.FullPath
+        Debug.Print xRef.GUID
+        Debug.Print ""
+    Next xRef
+    
+End Sub
+
+'************"MiscArray"
+
+
+' Functions for 1D and 2D arrays only.
+' Replaces all Errors in the input array with vbNullString.
+' The input array is modified (pass by referance) and the function returns the array
+Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Variant
+    If is2D(tableArr) Then
+        ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
+    Else
+        ErrorToNullStringTransformation = ErrorToNull1D(tableArr)
+    End If
+End Function
+
+
+' Functions for 1D and 2D arrays only.
+' Converts the decimal seperator in the float input to a "." for each entry in the input array
+' and returns the result as a string.
+' Only works when converting from the system's decimal seperator.
+' Custom seperators not supported.
+' The input array is modified (pass by referance) and the function returns the array.
+Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Variant
+    If is2D(tableArr) Then
+        EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
+    Else
+        EnsureDotSeparatorTransformation = EnsureDotSeparator1D(tableArr)
+    End If
+End Function
+
+
+' Functions for 1D and 2D arrays only.
+' Converts all Date/DateTime entries in the input array to string.
+' The input array is modified (pass by referance) and the function returns the array.
+Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt As String = "yyyy-mm-dd") As Variant
+    If is2D(tableArr) Then
+        DateToStringTransformation = DateToString2D(tableArr, fmt)
+    Else
+        DateToStringTransformation = DateToString1D(tableArr, fmt)
+    End If
+End Function
+
+
+' Check if a collection is 1D or 2D.
+' 3D is not supported
+Private Function is2D(arr As Variant)
+    On Error GoTo Err
+    is2D = (UBound(arr, 2) - LBound(arr, 2) > 1)
+    Exit Function
+Err:
+    is2D = False
+End Function
+
+
+Private Function dateToString(d As Date, fmt As String) As String
+    dateToString = Format(d, fmt)
+End Function
+
+
+Private Function decStr(x As Variant) As String
+     decStr = CStr(x)
+
+     'Frikin ridiculous loops for VBA
+     If IsNumeric(x) Then
+        decStr = Replace(decStr, Format(0, "."), ".")
+        ' Format(0, ".") gives the system decimal separator
+     End If
+
+End Function
+
+
+Private Function ErrorToNull2D(tableArr As Variant) As Variant
+    Dim I As Long, J As Long
+    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
+        For J = LBound(tableArr, 2) To UBound(tableArr, 2)
+            If IsError(tableArr(I, J)) Then ' set all error values to an empty string
+                tableArr(I, J) = vbNullString
+            End If
+        Next J
+    Next I
+    ErrorToNull2D = tableArr
+End Function
+
+
+Private Function ErrorToNull1D(tableArr As Variant) As Variant
+    Dim I As Long, J As Long
+    For I = LBound(tableArr) To UBound(tableArr)
+        If IsError(tableArr(I)) Then ' set all error values to an empty string
+            tableArr(I) = vbNullString
+        End If
+    Next I
+    ErrorToNull1D = tableArr
+End Function
+
+
+Private Function EnsureDotSeparator2D(tableArr As Variant) As Variant
+    Dim I As Long, J As Long
+    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
+        For J = LBound(tableArr, 2) To UBound(tableArr, 2)
+            If IsNumeric(tableArr(I, J)) Then ' force numeric values to use . as decimal separator
+                tableArr(I, J) = decStr(tableArr(I, J))
+            End If
+        Next J
+    Next I
+    EnsureDotSeparator2D = tableArr
+End Function
+
+
+Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
+    Dim I As Long, J As Long
+    For I = LBound(tableArr) To UBound(tableArr)
+        If IsNumeric(tableArr(I)) Then ' force numeric values to use . as decimal separator
+            tableArr(I) = decStr(tableArr(I))
+        End If
+    Next I
+    EnsureDotSeparator1D = tableArr
+End Function
+
+
+Private Function DateToString2D(tableArr As Variant, fmt As String) As Variant
+    Dim I As Long, J As Long
+    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
+        For J = LBound(tableArr, 2) To UBound(tableArr, 2)
+            If IsDate(tableArr(I, J)) Then ' format dates as strings to avoid some user's stupid default date settings
+                tableArr(I, J) = dateToString(CDate(tableArr(I, J)), fmt)
+            End If
+        Next J
+    Next I
+    DateToString2D = tableArr
+End Function
+
+
+Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
+    Dim I As Long, J As Long
+    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
+        If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
+            tableArr(I) = dateToString(CDate(tableArr(I)), fmt)
+        End If
+    Next I
+    DateToString1D = tableArr
+End Function
+
 '************"MiscAssign"
 ' Assign a value to a variable and also return that value. The goal of this function is to
 ' overcome the different `set` syntax for assigning an object vs. assigning a native type
@@ -26,6 +250,69 @@ Public Function assign(ByRef var As Variant, ByRef val As Variant)
         assign = val
     End If
 End Function
+
+'************"MiscCollection"
+
+
+
+Function min(ByVal col As Collection) As Variant
+    
+    If col Is Nothing Then
+        Err.Raise Number:=91, _
+              Description:="Collection input can't be empty"
+    End If
+    
+    Dim Entry As Variant
+    min = col(1)
+    
+    For Each Entry In col
+        If Entry < min Then
+            min = Entry
+        End If
+    Next Entry
+    
+    
+    
+End Function
+
+Function max(ByVal col As Collection) As Variant
+    If col Is Nothing Then
+        Err.Raise Number:=91, _
+              Description:="Collection input can't be empty"
+    End If
+    
+    max = col(1)
+    Dim Entry As Variant
+    
+    For Each Entry In col
+        If Entry > max Then
+            max = Entry
+        End If
+    Next Entry
+
+End Function
+
+Function mean(ByVal col As Collection) As Variant
+    If col Is Nothing Then
+        Err.Raise Number:=91, _
+              Description:="Collection input can't be empty"
+    End If
+
+    mean = 0
+    Dim Entry As Variant
+    
+    For Each Entry In col
+        mean = mean + Entry
+    Next Entry
+    
+    mean = mean / col.Count
+    
+End Function
+
+
+
+
+
 
 '************"MiscCollectionCreate"
 
@@ -44,11 +331,8 @@ End Function
 Public Function zip(ParamArray Args() As Variant) As Collection
     Dim I As Long
     Dim J As Long
-    
-    ' Dim N As Long
     Dim M As Long
     
-
     M = -1
     For I = LBound(Args) To UBound(Args)
         If M = -1 Then
@@ -104,7 +388,6 @@ Private Function testDictget()
     Debug.Print dictget(d, "a"), 2 ' returns 2
     Debug.Print dictget(d, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
     
-    ' Debug.Print dictget(d, "c", ""), "" ' returns default value if key not found
     Debug.Print dictget(d, "c", vbNullString), vbNullString ' returns default value if key not found
     
     On Error Resume Next
@@ -191,6 +474,51 @@ Cont:
 End Function
 
 
+'************"MiscEnsureDictIUtil"
+
+
+Function EnsureDictI(Container As Variant) As Object
+    Dim key As Variant
+    Dim Item As Variant
+    
+    If TypeOf Container Is Collection Then
+        Dim c As Collection
+        Set c = New Collection
+        
+        For Each Item In Container
+            If TypeOf Item Is Collection Or TypeOf Item Is Dictionary Then
+                c.Add EnsureDictI(Item)
+            Else
+                c.Add Item
+            End If
+        Next Item
+        
+        Set EnsureDictI = c
+        
+    ElseIf TypeOf Container Is Dictionary Then
+        Dim d As Dictionary
+        Set d = New Dictionary
+        d.CompareMode = TextCompare
+        
+        For Each key In Container.Keys
+            If TypeOf Container.Item(key) Is Collection Or TypeOf Container.Item(key) Is Dictionary Then
+                d.Add key, EnsureDictI(Container.Item(key))
+            Else
+                d.Add key, Container.Item(key)
+            End If
+        Next key
+        
+        Set EnsureDictI = d
+    Else
+    
+        Dim errmsg As String
+        errmsg = "ConvertToTextCompare only supports type 'Dictionary' and 'Collection'"
+        On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Container) & "'": On Error GoTo 0
+        Err.Raise 5, , errmsg
+        
+    End If
+End Function
+
 '************"MiscFreezePanes"
 
 
@@ -200,7 +528,7 @@ Private Sub test()
     On Error GoTo UnFreeze
     
     Dim WS As Worksheet
-    Set WS = ThisWorkbook.Sheets("Sheet1")
+    Set WS = ThisWorkbook.Workheets("Sheet1")
     FreezePanes WS.Range("D4")
     
 UnFreeze:
@@ -253,7 +581,6 @@ End Sub
 
 
 Private Function TestGetUniqueItems()
-    ' Dim arr(3)
     Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
@@ -321,8 +648,7 @@ End Sub
 
 Public Sub GroupRowsOnIndentations(r As Range)
     ' groups the rows based on indentations of the cells in the range
-    
-    ' Dim ri As Range, WS As Worksheet
+
     Dim ri As Range
     For Each ri In r
         ri.EntireRow.OutlineLevel = ri.IndentLevel + 1
@@ -333,8 +659,7 @@ End Sub
 
 Public Sub GroupColumnsOnIndentations(r As Range)
     ' groups the columns based on indentations of the cells in the range
-    
-    ' Dim ri As Range, WS As Worksheet
+
     Dim ri As Range
     For Each ri In r
         ri.EntireColumn.OutlineLevel = ri.IndentLevel + 1
@@ -345,9 +670,9 @@ End Sub
 
 Private Sub TestRemoveGroupings()
     ' Test rows
-    RemoveRowGroupings ThisWorkbook.Sheets("GroupOnIndentations")
+    RemoveRowGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
     ' Test columns
-    RemoveColumnGroupings ThisWorkbook.Sheets("GroupOnIndentations")
+    RemoveColumnGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
 End Sub
 
 
@@ -444,11 +769,6 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via .Item
-        'If emptyFlag Then ' Item was Empty/non-existant
-        '    hasKey = False
-        'Else
-        '    hasKey = True ' Item was not Empty
-        'End If
         hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 Then ' Retrieval Error, but .Item is correct access method stil. 424: Method not exist; 438: Compilation error
@@ -466,11 +786,6 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     On Error GoTo 0
     
     If ErrX = 0 Then ' No error trying to Access Key via ()
-        'If emptyFlag Then ' Item was Empty/non-existant
-        '    hasKey = False
-        'Else
-        '    hasKey = True ' Item was not Empty
-        'End If
         hasKey = Not emptyFlag
         Exit Function
     ElseIf ErrX <> 424 And ErrX <> 438 And ErrX <> 13 Then ' Retrieval Error, but () is correct access method stil. 424: Method not exist; 438: Compilation error; 13: Variant bracketed ()
@@ -504,7 +819,6 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     ' max 31 characters
     NewSheetName = Left(Name, 31)
 
-    ' If Not Fn.hasKey(WB.Sheets, NewSheetName) Then
     If Not hasKey(WB.Sheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
@@ -515,7 +829,6 @@ End Function
 
 Private Function TestGetNewKey()
 
-    ' Dim c As New Collection, I As Long
     Dim c As New Collection
     Dim I As Long
     
@@ -632,7 +945,7 @@ End Function
 Public Sub RemoveGridLines(WS As Worksheet)
     Dim view As WorksheetView
     For Each view In WS.Parent.Windows(1).SheetViews
-        If view.Sheet.Name = WS.Name Then
+        If view.Worksheet.Name = WS.Name Then
             view.DisplayGridlines = False
             Exit Sub
         End If
@@ -661,7 +974,7 @@ Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
     Dim WS As Worksheet
     Dim LO As ListObject
     
-    For Each WS In WB.Sheets
+    For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
             If Name = LO.Name Then
                 HasLO = True
@@ -682,7 +995,7 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
     Dim WS As Worksheet
     Dim LO As ListObject
     
-    For Each WS In WB.Sheets
+    For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
             If Name = LO.Name Then
                 Set GetLO = LO

@@ -49,8 +49,9 @@ def get_app_clean(xl_file=None):
         bas_txt = ""
         for i in flattened.rglob("*"):
             if os.path.splitext(i)[-1].lower() == ".bas":
-                with open(i) as f:
-                    bas_txt = bas_txt + f.read()
+                if not i.name.lower().startswith("test__"):
+                    with open(i) as f:
+                        bas_txt = bas_txt + f.read()
                 os.remove(i)
         bas_txt = (
                       f'Attribute VB_Name = "{app_short_name}"\n'

@@ -10,7 +10,6 @@ Private Function testDictget()
     Debug.Print dictget(d, "a"), 2 ' returns 2
     Debug.Print dictget(d, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
     
-    ' Debug.Print dictget(d, "c", ""), "" ' returns default value if key not found
     Debug.Print dictget(d, "c", vbNullString), vbNullString ' returns default value if key not found
     
     On Error Resume Next
