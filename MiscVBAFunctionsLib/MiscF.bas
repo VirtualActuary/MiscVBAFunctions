@@ -403,7 +403,6 @@ End Function
 '@IgnoreModule ImplicitByRefModifier
 
 
-Option Compare Text
 
 ' Add references for this project programatically. If you are uncertain what to put here,
 ' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
