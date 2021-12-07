@@ -1,6 +1,12 @@
 Attribute VB_Name = "MiscF"
 Option Explicit
 
+'************"aFSO"
+' allows us to use FSO functions anywhere in the project
+' Use a* so this is on top of the fn. MiscF library
+
+Public fso As New FileSystemObject
+
 '************"Casing"
 ' Uncomment and comment block to get casing back for the project
 
@@ -650,10 +656,6 @@ Public Sub UnFreezePanes(WS As Worksheet)
     
     CurrentActiveSheet.Activate
 End Sub
-
-'************"MiscFSO"
-' allows us to use FSO functions anywhere in the project
-Public fso As New FileSystemObject
 
 '************"MiscGetUniqueItems"
 '@IgnoreModule ImplicitByRefModifier
