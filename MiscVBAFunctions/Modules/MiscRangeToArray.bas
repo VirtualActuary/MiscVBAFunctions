@@ -61,4 +61,23 @@ Public Function RangeTo1DArray( _
     
 End Function
 
+Private Function TestRangeTo2DArray()
+    Debug.Print RangeTo2DArray(Range("A1"))(1, 1) ' should not throw an error
+    Debug.Print RangeTo2DArray(Range("A1:B1"))(1, 2) ' should not throw an error
+    Debug.Print RangeTo2DArray(Range("A1:A2"))(2, 1) ' should not throw an error
+    Debug.Print RangeTo2DArray(Range("A1:B2"))(2, 2) ' should not throw an error
+End Function
 
+Public Function RangeTo2DArray(r As Range) As Variant
+    ' ensure a range is converted to a 2-dimensional array
+    ' special treatment on edge cases where a range is a 1x1 scalar
+    If r.Cells.Count = 1 Then
+        Dim arr() As Variant
+        ReDim arr(1 To 1, 1 To 1) ' make it base 1, similar to what .value does for non-scalars
+        arr(1, 1) = r.Value
+        RangeTo2DArray = arr
+    Else
+        RangeTo2DArray = r.Value
+    End If
+    
+End Function

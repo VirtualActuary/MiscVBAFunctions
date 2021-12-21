@@ -57,6 +57,20 @@ Function mean(ByVal col As Collection) As Variant
 End Function
 
 
-
+Function IsValueInCollection(col As Collection, val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
+    Dim ValI As Variant
+    For Each ValI In col
+        ' only check if not an object:
+        If Not IsObject(ValI) Then
+            If CaseSensitive Then
+                IsValueInCollection = ValI = val
+            Else
+                IsValueInCollection = LCase(ValI) = LCase(val)
+            End If
+            ' exit if found
+            If IsValueInCollection Then Exit Function
+        End If
+    Next ValI
+End Function
 
 
