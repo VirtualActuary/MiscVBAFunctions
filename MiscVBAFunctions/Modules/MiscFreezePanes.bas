@@ -5,14 +5,11 @@ Option Explicit
 
 Private Sub test()
     
-    On Error GoTo UnFreeze
     
     Dim WS As Worksheet
-    Set WS = ThisWorkbook.Worksheets("Sheet1")
-    FreezePanes WS.Range("D4")
+    Set WS = ThisWorkbook.Worksheets(1)
+    FreezePanes WS.Range("D6")
     
-UnFreeze:
-    UnFreezePanes WS
     
 End Sub
 

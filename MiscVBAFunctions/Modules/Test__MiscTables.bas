@@ -7,12 +7,15 @@ Option Private Module
 
 Private Assert As Rubberduck.AssertClass
 Private Fakes As Rubberduck.FakesProvider
+Private WB As Workbook
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
     Set Assert = New Rubberduck.AssertClass
     Set Fakes = New Rubberduck.FakesProvider
+    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
+    
 End Sub
 
 '@ModuleCleanup
@@ -20,6 +23,8 @@ Private Sub ModuleCleanup()
     'this method runs once per module.
     Set Assert = Nothing
     Set Fakes = Nothing
+    WB.Close False
+    
 End Sub
 
 '@TestInitialize
@@ -37,9 +42,8 @@ Private Sub TestHasLO_and_GetLO()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim WB As Workbook, LO As ListObject
+    
     'Act:
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
     
     'Assert:
     Assert.AreEqual True, HasLO("Table1", WB) ' Correct case
@@ -48,7 +52,6 @@ Private Sub TestHasLO_and_GetLO()
     Assert.AreEqual "Table1", GetLO("taBLe1", WB).Name ' Should get the correct name even with a different casing
     
 TestExit:
-    WB.Close False
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
