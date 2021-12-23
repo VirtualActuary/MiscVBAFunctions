@@ -51,8 +51,14 @@ Public Function TableToDicts(TableName As String, _
     
 End Function
 
+Private Sub TestTableToArray()
+    TableToArray "foo"
+End Sub
 
-Private Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
     If HasLO(Name, WB) Then
         Dim LO As ListObject
         Set LO = GetLO(Name, WB)
@@ -68,5 +74,16 @@ Private Function TableToArray(Name As String, Optional WB As Workbook) As Varian
         TableToArray = RangeTo2DArray(WB.Names(Name).RefersToRange)
         Exit Function
     End If
+    
+    Dim WS As Worksheet
+    ' this will find the first occurrence of the table called 'Name'
+    For Each WS In WB.Worksheets
+        If hasKey(WS.Names, Name) Then
+            TableToArray = RangeTo2DArray(WS.Names(Name).RefersToRange)
+            Exit Function
+        End If
+    Next WS
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Table '" & Name & "' not found in workbook '" & WB.Name & "'")
     
 End Function

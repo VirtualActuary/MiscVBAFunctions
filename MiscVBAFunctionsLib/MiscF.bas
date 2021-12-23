@@ -1655,9 +1655,11 @@ Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
     End If
     
     Dim WS As Worksheet
+    ' this will find the first occurrence of the table called 'Name'
     For Each WS In WB.Worksheets
         If hasKey(WS.Names, Name) Then
             TableToArray = RangeTo2DArray(WS.Names(Name).RefersToRange)
+            Exit Function
         End If
     Next WS
     
