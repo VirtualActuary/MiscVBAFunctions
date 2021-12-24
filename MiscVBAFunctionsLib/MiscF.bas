@@ -9,13 +9,20 @@ Public fso As New FileSystemObject
 
 '************"Casing"
 ' Uncomment and comment block to get casing back for the project
-
-
+'
+'
 'Dim J
 'Dim I
 'Dim M
 'Dim WB
 'Dim WS
+'Dim dict ' for now... :/
+'Dim r ' for now... :/
+'Dim Keys
+'Dim Columns
+'Dim Values
+'Dim Column
+'Dim ColumnName
 
 '************"MiscArray"
 '@IgnoreModule ImplicitByRefModifier
@@ -937,9 +944,9 @@ Public Sub FreezePanes(r As Range)
         If .FreezePanes = True Then
             .FreezePanes = False
         End If
-        Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
+        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.GoTo r
+        Application.Goto r
         .FreezePanes = True
     End With
     
@@ -1536,7 +1543,6 @@ End Function
 Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
 
     If WB Is Nothing Then Set WB = ThisWorkbook
-    ' Dim WS As Worksheet, LO As ListObject
     Dim WS As Worksheet
     Dim LO As ListObject
     
@@ -1572,10 +1578,53 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
     
     If GetLO Is Nothing Then
         ' 9: Subscript out of range
-        Err.Raise 9, , "List object '" & Name & "' not found in workbook '" & WB.Name & "'"
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "List object '" & Name & "' not found in workbook '" & WB.Name & "'")
     End If
 
 End Function
+
+
+Private Sub TestTableToArray()
+    TableToArray "foo"
+End Sub
+
+Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+    TableToArray = RangeTo2DArray(TableRange(Name, WB))
+End Function
+
+Function TableRange(Name As String, Optional WB As Workbook) As Range
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    If HasLO(Name, WB) Then
+        Dim LO As ListObject
+        Set LO = GetLO(Name, WB)
+        If LO.DataBodyRange Is Nothing Then
+            Set TableRange = LO.HeaderRowRange
+        Else
+            Set TableRange = LO.Range
+        End If
+        Exit Function
+    End If
+    
+    If hasKey(WB.Names, Name) Then
+        Set TableRange = WB.Names(Name).RefersToRange
+        Exit Function
+    End If
+    
+    Dim WS As Worksheet
+    ' this will find the first occurrence of the table called 'Name'
+    For Each WS In WB.Worksheets
+        If hasKey(WS.Names, Name) Then
+            Set TableRange = WS.Names(Name).RefersToRange
+            Exit Function
+        End If
+    Next WS
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Table '" & Name & "' not found in workbook '" & WB.Name & "'")
+    
+End Function
+
 
 '************"MiscTableToDicts"
 '@IgnoreModule ImplicitByRefModifier
@@ -1588,9 +1637,31 @@ Private Sub TableToDictsTest()
     Debug.Print Dicts(2)("b"), 5
 End Sub
 
-Public Function TableToDicts(TableName As String, _
-        Optional WB As Workbook, _
-        Optional Columns As Collection) As Collection
+Public Function TableToDictsLogSource( _
+          TableName As String _
+        , Optional WB As Workbook _
+        , Optional Columns As Collection _
+        ) As Collection
+    
+    ' Similar to TableToDicts, but also stores the source of each row _
+      in a dictionary with key `__source__`
+    
+    Set TableToDictsLogSource = TableToDicts(TableName, WB, Columns)
+    Dim dict As Dictionary
+    Dim RowIndex As Long
+    RowIndex = 0
+    For Each dict In TableToDictsLogSource
+        RowIndex = RowIndex + 1
+        dict.Add "__source__", dicti("workbook", WB, "table", TableName, "RowIndex", RowIndex)
+    Next dict
+End Function
+
+
+Public Function TableToDicts( _
+          TableName As String _
+        , Optional WB As Workbook _
+        , Optional Columns As Collection _
+        ) As Collection
     
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/8e1b9709a380d71eaf0d59bd0c2882c8501e9540/aa_py_xl/data_util.py#L21
     
@@ -1630,39 +1701,256 @@ Public Function TableToDicts(TableName As String, _
     
 End Function
 
-Private Sub TestTableToArray()
-    TableToArray "foo"
-End Sub
+Private Function TestGetTableRowIndex()
+    Dim Table As Collection
+    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
+    Debug.Print GetTableRowIndex(Table, col("a", "b"), col(3, 4)), 2
+    Debug.Print GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")), 3
+End Function
 
-Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+
+Function TableLookupValue( _
+        Table As Variant _
+      , Columns As Collection _
+      , Values As Collection _
+      , ValueColName As String _
+      , Optional default As Variant = Empty _
+      , Optional WB As Workbook _
+      ) As Variant
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
-    If HasLO(Name, WB) Then
-        Dim LO As ListObject
-        Set LO = GetLO(Name, WB)
-        If LO.DataBodyRange Is Nothing Then
-            TableToArray = RangeTo2DArray(LO.HeaderRowRange)
-        Else
-            TableToArray = RangeTo2DArray(LO.Range)
-        End If
-        Exit Function
-    End If
+    ' Returns the value from the ValueColName column in a TableToDicts object _
+      given the value In the lookup column _
+      a default value can be assigned For when no lookup Is found _
+      other it returns a runtime Error
     
-    If hasKey(WB.Names, Name) Then
-        TableToArray = RangeTo2DArray(WB.Names(Name).RefersToRange)
-        Exit Function
-    End If
+    Dim dict As Dictionary
+    Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
+    TableLookupValue = dictget(dict, ValueColName, default)
+
+End Function
+
+Function GetTableRowRange(TableName As String, Columns As Collection, Values As Collection, Optional WB As Workbook) As Range
     
-    Dim WS As Worksheet
-    ' this will find the first occurrence of the table called 'Name'
-    For Each WS In WB.Worksheets
-        If hasKey(WS.Names, Name) Then
-            TableToArray = RangeTo2DArray(WS.Names(Name).RefersToRange)
-            Exit Function
-        End If
-    Next WS
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, a runtime error is raised
     
-    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Table '" & Name & "' not found in workbook '" & WB.Name & "'")
+    Dim RowNumber As Long
+    RowNumber = GetTableRowIndex(TableName, Columns, Values, WB) ' this will throw a runtime error if not found
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    ' Intersect of table range and entirerow
+    ' +1 as header is not included in GetTableRowIndex
+    Set GetTableRowRange = Intersect(TableR, TableR(RowNumber + 1, 1).EntireRow)
     
 End Function
+
+
+Function GetTableColumnRange(TableName As String, Column As String, Optional WB As Workbook) As Range
+    
+    ' Returns the range of a table's column, inlcuding the header
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    Dim I As Long
+    For I = 1 To TableR.Columns.Count
+        If LCase(TableR(1, I).Value) = LCase(Column) Then
+            GoTo found
+        End If
+    Next J
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
+found:
+    ' Intersect of table range and entirecolumn
+    Set GetTableColumnRange = Intersect(TableR, TableR(1, I).EntireColumn)
+
+End Function
+
+
+Function TableLookupCell(TableName As String, Columns As Collection, Values As Collection, Column As String, Optional WB As Workbook) As Range
+    
+    Set TableLookupCell = Intersect(GetTableRowRange(TableName, Columns, Values, WB), GetTableColumnRange(TableName, Column, WB))
+
+End Function
+
+Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As Collection
+    
+    If TypeOf Table Is Collection Then ' assume if collection, it's already a TableDicts object
+        Set EnsureTableDicts = Table
+    Else
+        Set EnsureTableDicts = TableToDicts(CStr(Table), WB)
+    End If
+
+End Function
+
+
+Function GetTableRowIndex(Table As Variant, Columns As Collection, Values As Collection, Optional WB As Workbook) As Long
+    ' Table can either be a TableToDicts collection, _
+      or the name of the table to find
+    
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, row -1 is returned
+    
+    Dim dict As Dictionary
+    Dim keyValuePair As Collection
+    Dim isMatch As Boolean
+    Dim RowNumber As Long
+    
+    For Each dict In EnsureTableDicts(Table, WB)
+        isMatch = True
+        RowNumber = RowNumber + 1
+        For Each keyValuePair In zip(Columns, Values)
+            If dict(keyValuePair(1)) <> keyValuePair(2) Then
+                isMatch = False
+            End If
+        Next keyValuePair
+        If isMatch = True Then Exit For
+    Next dict
+    
+    If isMatch Then
+        GetTableRowIndex = RowNumber
+    Else
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, ":")
+    End If
+    
+End Function
+
+
+Sub GotoRowInTable(TableName As String, Columns As Collection, Values As Collection, Optional WB As Workbook)
+    Application.Goto GetTableRowRange(TableName, Columns, Values, WB), True
+End Sub
+
+'************"Module1"
+
+
+Private Sub testBubbleSort()
+    Dim coll As Collection
+    Set coll = fn.col("variables_10", "variables", "variables_2")
+    Set coll = bubbleSort(coll)
+    ' this will currently put {table}_10 before {table}_2
+    ' need to fix this for implementations > {table}_9
+    Debug.Print coll(1), "variables"
+    Debug.Print coll(2), "variables_2" ' :/
+    Debug.Print coll(3), "variables_10" ' :/
+    
+End Sub
+
+Public Function bubbleSort(coll As Collection) As Collection
+    
+    ' from: https://github.com/austinleedavis/VBA-utilities/blob/f23f1096d8df0dfdc740e5a3bec36525d61a3ffc/Collections.bas#L73
+    ' this is an easy implementation but a slow sorting algorithm
+    ' do not use for large collections
+    
+    Dim sortedColl As Collection
+    Set sortedColl = New Collection
+    Dim vItm As Variant
+    ' copy the collection"
+    For Each vItm In coll
+        sortedColl.Add vItm
+    Next vItm
+
+    Dim I As Long, J As Long
+    Dim vTemp As Variant
+
+    'Two loops to bubble sort
+    For I = 1 To sortedColl.Count - 1
+        For J = I + 1 To sortedColl.Count
+            If sortedColl(I) > sortedColl(J) Then
+                'store the lesser item
+               vTemp = sortedColl(J)
+                'remove the lesser item
+               sortedColl.Remove J
+                're-add the lesser item before the
+               'greater Item
+               sortedColl.Add vTemp, vTemp, I
+            End If
+        Next J
+    Next I
+    
+    Set bubbleSort = sortedColl
+    
+End Function
+
+Function getMatchingTables(baseName As String, WB As Workbook) As Collection
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Set getMatchingTables = New Collection
+    Dim TableName As Variant
+    For Each TableName In getAllTables(WB)
+        If matchBaseNameAndUnderscoreNumeric(CStr(TableName), baseName) Then
+            getMatchingTables.Add TableName
+        End If
+    Next TableName
+    
+End Function
+
+Private Sub testMatchBaseName()
+    Debug.Print matchBaseNameAndUnderscoreNumeric("variables", "Variables"), True
+    Debug.Print matchBaseNameAndUnderscoreNumeric("variables_", "Variables"), False
+    Debug.Print matchBaseNameAndUnderscoreNumeric("variables_1", "Variables"), True
+    Debug.Print matchBaseNameAndUnderscoreNumeric("variables_2", "Variables"), True
+    Debug.Print matchBaseNameAndUnderscoreNumeric("variables_100", "Variables"), True
+    Debug.Print matchBaseNameAndUnderscoreNumeric("variables_100e", "Variables"), False
+End Sub
+
+Function matchBaseNameAndUnderscoreNumeric(Name As String, baseName As String) As Boolean
+    
+    matchBaseNameAndUnderscoreNumeric = LCase(Name) = LCase(baseName) Or _
+           (startsWith(LCase(Name), LCase(baseName)) And _
+                Mid(Name, Len(baseName) + 1, 1) = "_" And _
+                IsNumeric(Mid(Name, Len(baseName) + 2)))
+End Function
+
+
+Function getAllTables(WB As Workbook) As Collection
+    Set getAllTables = New Collection
+    
+    Dim WS As Worksheet
+    Dim LO As ListObject
+    For Each WS In WB.Worksheets
+        For Each LO In WS.ListObjects
+            getAllTables.Add LO.Name
+        Next LO
+    Next WS
+    
+    Dim Name As Name
+    For Each Name In WB.Names
+        getAllTables.Add Name.Name
+    Next Name
+    
+End Function
+
+
+Function tableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
+    ' Converts a table's column to a 1-dimensional array
+    
+    Dim arr() As Variant
+    ReDim arr(TableDicts.Count - 1) ' zero indexed
+    Dim dict As Dictionary
+    Dim counter As Long
+    For Each dict In TableDicts
+        arr(counter) = fn.dictget(dict, ColumnName)
+        counter = counter + 1 ' zero indexing
+    Next dict
+    
+    tableColumnToArray = arr
+End Function
+
+Sub allocateTableColumnToArray(TableDicts As Collection, ColumnName As String, arrToAllocate As Variant)
+    Dim arr() As Variant
+    arr = tableColumnToArray(TableDicts, ColumnName)
+    ReDim arrToAllocate(UBound(arr))
+    Dim I As Long
+    For I = LBound(arr) To UBound(arr)
+        arrToAllocate(I) = arr(I)
+    Next I
+End Sub
+

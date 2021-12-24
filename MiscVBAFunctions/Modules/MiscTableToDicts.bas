@@ -9,9 +9,31 @@ Private Sub TableToDictsTest()
     Debug.Print Dicts(2)("b"), 5
 End Sub
 
-Public Function TableToDicts(TableName As String, _
-        Optional WB As Workbook, _
-        Optional Columns As Collection) As Collection
+Public Function TableToDictsLogSource( _
+          TableName As String _
+        , Optional WB As Workbook _
+        , Optional Columns As Collection _
+        ) As Collection
+    
+    ' Similar to TableToDicts, but also stores the source of each row _
+      in a dictionary with key `__source__`
+    
+    Set TableToDictsLogSource = TableToDicts(TableName, WB, Columns)
+    Dim dict As Dictionary
+    Dim RowIndex As Long
+    RowIndex = 0
+    For Each dict In TableToDictsLogSource
+        RowIndex = RowIndex + 1
+        dict.Add "__source__", dicti("workbook", WB, "table", TableName, "RowIndex", RowIndex)
+    Next dict
+End Function
+
+
+Public Function TableToDicts( _
+          TableName As String _
+        , Optional WB As Workbook _
+        , Optional Columns As Collection _
+        ) As Collection
     
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/8e1b9709a380d71eaf0d59bd0c2882c8501e9540/aa_py_xl/data_util.py#L21
     
@@ -51,39 +73,129 @@ Public Function TableToDicts(TableName As String, _
     
 End Function
 
-Private Sub TestTableToArray()
-    TableToArray "foo"
-End Sub
+Private Function TestGetTableRowIndex()
+    Dim Table As Collection
+    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
+    Debug.Print GetTableRowIndex(Table, col("a", "b"), col(3, 4)), 2
+    Debug.Print GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")), 3
+End Function
 
-Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+
+Function TableLookupValue( _
+        Table As Variant _
+      , Columns As Collection _
+      , Values As Collection _
+      , ValueColName As String _
+      , Optional default As Variant = Empty _
+      , Optional WB As Workbook _
+      ) As Variant
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
-    If HasLO(Name, WB) Then
-        Dim LO As ListObject
-        Set LO = GetLO(Name, WB)
-        If LO.DataBodyRange Is Nothing Then
-            TableToArray = RangeTo2DArray(LO.HeaderRowRange)
-        Else
-            TableToArray = RangeTo2DArray(LO.Range)
-        End If
-        Exit Function
-    End If
+    ' Returns the value from the ValueColName column in a TableToDicts object _
+      given the value In the lookup column _
+      a default value can be assigned For when no lookup Is found _
+      other it returns a runtime Error
     
-    If hasKey(WB.Names, Name) Then
-        TableToArray = RangeTo2DArray(WB.Names(Name).RefersToRange)
-        Exit Function
-    End If
+    Dim dict As Dictionary
+    Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
+    TableLookupValue = dictget(dict, ValueColName, default)
+
+End Function
+
+Function GetTableRowRange(TableName As String, Columns As Collection, Values As Collection, Optional WB As Workbook) As Range
     
-    Dim WS As Worksheet
-    ' this will find the first occurrence of the table called 'Name'
-    For Each WS In WB.Worksheets
-        If hasKey(WS.Names, Name) Then
-            TableToArray = RangeTo2DArray(WS.Names(Name).RefersToRange)
-            Exit Function
-        End If
-    Next WS
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, a runtime error is raised
     
-    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Table '" & Name & "' not found in workbook '" & WB.Name & "'")
+    Dim RowNumber As Long
+    RowNumber = GetTableRowIndex(TableName, Columns, Values, WB) ' this will throw a runtime error if not found
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    ' Intersect of table range and entirerow
+    ' +1 as header is not included in GetTableRowIndex
+    Set GetTableRowRange = Intersect(TableR, TableR(RowNumber + 1, 1).EntireRow)
     
 End Function
+
+
+Function GetTableColumnRange(TableName As String, Column As String, Optional WB As Workbook) As Range
+    
+    ' Returns the range of a table's column, inlcuding the header
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    Dim I As Long
+    For I = 1 To TableR.Columns.Count
+        If LCase(TableR(1, I).Value) = LCase(Column) Then
+            GoTo found
+        End If
+    Next J
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
+found:
+    ' Intersect of table range and entirecolumn
+    Set GetTableColumnRange = Intersect(TableR, TableR(1, I).EntireColumn)
+
+End Function
+
+
+Function TableLookupCell(TableName As String, Columns As Collection, Values As Collection, Column As String, Optional WB As Workbook) As Range
+    
+    Set TableLookupCell = Intersect(GetTableRowRange(TableName, Columns, Values, WB), GetTableColumnRange(TableName, Column, WB))
+
+End Function
+
+Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As Collection
+    
+    If TypeOf Table Is Collection Then ' assume if collection, it's already a TableDicts object
+        Set EnsureTableDicts = Table
+    Else
+        Set EnsureTableDicts = TableToDicts(CStr(Table), WB)
+    End If
+
+End Function
+
+
+Function GetTableRowIndex(Table As Variant, Columns As Collection, Values As Collection, Optional WB As Workbook) As Long
+    ' Table can either be a TableToDicts collection, _
+      or the name of the table to find
+    
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, row -1 is returned
+    
+    Dim dict As Dictionary
+    Dim keyValuePair As Collection
+    Dim isMatch As Boolean
+    Dim RowNumber As Long
+    
+    For Each dict In EnsureTableDicts(Table, WB)
+        isMatch = True
+        RowNumber = RowNumber + 1
+        For Each keyValuePair In zip(Columns, Values)
+            If dict(keyValuePair(1)) <> keyValuePair(2) Then
+                isMatch = False
+            End If
+        Next keyValuePair
+        If isMatch = True Then Exit For
+    Next dict
+    
+    If isMatch Then
+        GetTableRowIndex = RowNumber
+    Else
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, ":")
+    End If
+    
+End Function
+
+
+Sub GotoRowInTable(TableName As String, Columns As Collection, Values As Collection, Optional WB As Workbook)
+    Application.Goto GetTableRowRange(TableName, Columns, Values, WB), True
+End Sub
