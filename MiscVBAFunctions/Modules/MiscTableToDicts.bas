@@ -102,10 +102,17 @@ Function TableLookupValue( _
       A default value can be assigned For when no lookup Is found _
       Otherwise it returns a runtime Error
     
+    ' for when GetTableRowIndex fails
+    If Not IsEmpty(default) Then On Error GoTo SetDefault
+    
     Dim dict As Dictionary
     Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
     TableLookupValue = dictget(dict, ValueColName, default)
-
+    
+    Exit Function
+SetDefault:
+    TableLookupValue = default
+    
 End Function
 
 Function GetTableRowRange( _
@@ -216,7 +223,7 @@ Function GetTableRowIndex( _
     If isMatch Then
         GetTableRowIndex = RowNumber
     Else
-        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, ":")
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Columns-values pairs did not find a match")
     End If
     
 End Function

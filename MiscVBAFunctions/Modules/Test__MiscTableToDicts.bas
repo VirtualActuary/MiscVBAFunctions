@@ -180,6 +180,8 @@ Private Sub TestTableLookupValue()
     'Assert:
     ' look for the value in column 'c' where column 'a' = 3 and column 'b' = 4:
     Assert.AreEqual CLng(6), CLng(TableLookupValue(Table, col("a", "b"), col(3, 4), "c"))
+    ' Also test for when no lookup is found and default is given:
+    Assert.AreEqual "foo", TableLookupValue(Table, col("a", "b"), col(3, 400), "c", "foo")
 
 TestExit:
     Exit Sub
