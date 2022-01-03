@@ -142,7 +142,7 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     Dim dict As Dictionary
     Dim counter As Long
     For Each dict In TableDicts
-        arr(counter) = fn.dictget(dict, ColumnName)
+        arr(counter) = dictget(dict, ColumnName)
         counter = counter + 1 ' zero indexing
     Next dict
     

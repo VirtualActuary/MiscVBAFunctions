@@ -149,7 +149,7 @@ Function GetTableColumnRange( _
         If LCase(TableR(1, I).Value) = LCase(Column) Then
             GoTo found
         End If
-    Next J
+    Next I
     
     Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
 found:
