@@ -15,16 +15,21 @@ Public Function TableToDictsLogSource( _
         , Optional Columns As Collection _
         ) As Collection
     
-    ' Similar to TableToDicts, but also stores the source of each row _
-      in a dictionary with key `__source__`
-    
+'Similar to TableToDicts, but also stores the source of each row _
+in a dictionary with key `__source__`
+
+'The `__source__` object contains the following keys: _
+ - `Workbook`: the Workbook object with the table _
+ - `Table`: the name of the table within the workbook _
+ - `RowIndex`: the row index of the current entry of the table
+
     Set TableToDictsLogSource = TableToDicts(TableName, WB, Columns)
     Dim dict As Dictionary
     Dim RowIndex As Long
     RowIndex = 0
     For Each dict In TableToDictsLogSource
         RowIndex = RowIndex + 1
-        dict.Add "__source__", dicti("workbook", WB, "table", TableName, "RowIndex", RowIndex)
+        dict.Add "__source__", dicti("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
     Next dict
 End Function
 
@@ -94,8 +99,8 @@ Function TableLookupValue( _
     
     ' Returns the value from the ValueColName column in a TableToDicts object _
       given the value In the lookup column _
-      a default value can be assigned For when no lookup Is found _
-      other it returns a runtime Error
+      A default value can be assigned For when no lookup Is found _
+      Otherwise it returns a runtime Error
     
     Dim dict As Dictionary
     Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
@@ -103,7 +108,12 @@ Function TableLookupValue( _
 
 End Function
 
-Function GetTableRowRange(TableName As String, Columns As Collection, Values As Collection, Optional WB As Workbook) As Range
+Function GetTableRowRange( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    ) As Range
     
     ' Given a table name, Columns and Values to match _
       this function returns the row in which these values matches
@@ -123,9 +133,13 @@ Function GetTableRowRange(TableName As String, Columns As Collection, Values As 
 End Function
 
 
-Function GetTableColumnRange(TableName As String, Column As String, Optional WB As Workbook) As Range
+Function GetTableColumnRange( _
+      TableName As String _
+    , Column As String _
+    , Optional WB As Workbook _
+    ) As Range
     
-    ' Returns the range of a table's column, inlcuding the header
+' Returns the range of a table's column, including the header
     
     Dim TableR As Range
     Set TableR = TableRange(TableName, WB)
@@ -145,7 +159,13 @@ found:
 End Function
 
 
-Function TableLookupCell(TableName As String, Columns As Collection, Values As Collection, Column As String, Optional WB As Workbook) As Range
+Public Function TableLookupCell( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Column As String _
+    , Optional WB As Workbook _
+    ) As Range
     
     Set TableLookupCell = Intersect(GetTableRowRange(TableName, Columns, Values, WB), GetTableColumnRange(TableName, Column, WB))
 
@@ -162,14 +182,20 @@ Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As 
 End Function
 
 
-Function GetTableRowIndex(Table As Variant, Columns As Collection, Values As Collection, Optional WB As Workbook) As Long
+Function GetTableRowIndex( _
+      Table As Variant _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    ) As Long
+    
     ' Table can either be a TableToDicts collection, _
       or the name of the table to find
     
     ' Given a table name, Columns and Values to match _
       this function returns the row in which these values matches
     ' Comparison is case sensitive
-    ' If no match is found, row -1 is returned
+    ' If no match is found, SubscriptOutOfRange error is raised
     
     Dim dict As Dictionary
     Dim keyValuePair As Collection
@@ -195,7 +221,11 @@ Function GetTableRowIndex(Table As Variant, Columns As Collection, Values As Col
     
 End Function
 
-
-Sub GotoRowInTable(TableName As String, Columns As Collection, Values As Collection, Optional WB As Workbook)
+Public Sub GotoRowInTable( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    )
     Application.Goto GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub

@@ -50,12 +50,30 @@ Private Sub TestTableToArray()
     TableToArray "foo"
 End Sub
 
-Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+Function TableToArray( _
+      Name As String _
+    , Optional WB As Workbook _
+    ) As Variant()
+    
     TableToArray = RangeTo2DArray(TableRange(Name, WB))
+    
 End Function
 
-Function TableRange(Name As String, Optional WB As Workbook) As Range
+Public Function TableRange( _
+        Name As String _
+      , Optional WB As Workbook _
+      ) As Range
     
+'Returns the range (including headers of a table named `Name` in workbook `WB`): _
+- It first looks for a list object called `Name` _
+  - If the `.DataBodyRange` property is nothing the table range will only be the headers _
+- Then it looks for a named range in the Workbook scope called `Name` and returns the _
+  range this named range is referring to _
+- Then it looks for a worksheet scoped named range called `Name`. The first occurrence _
+  will be returned _
+If no tables found, a `SubscriptOutOfRange` error (9) is raised _
+The name of the table to be found is case insensitive
+  
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     If HasLO(Name, WB) Then
