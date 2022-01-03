@@ -105,3 +105,46 @@ The name of the table to be found is case insensitive
     
 End Function
 
+
+Function GetAllTables(WB As Workbook) As Collection
+    Set GetAllTables = New Collection
+    
+    ' Returns all (potential) tables in a workbook
+    
+    Dim WS As Worksheet
+    Dim LO As ListObject
+    For Each WS In WB.Worksheets
+        For Each LO In WS.ListObjects
+            GetAllTables.Add LO.Name
+        Next LO
+    Next WS
+    
+    Dim Name As Name
+    For Each Name In WB.Names
+        GetAllTables.Add Name.Name
+    Next Name
+    
+    For Each WS In WB.Worksheets
+        For Each Name In WS.Names
+            ' remove the sheetname prefix to get the table name
+            GetAllTables.Add Mid(Name.Name, InStr(Name.Name, "!") + 1)
+        Next Name
+    Next WS
+    
+End Function
+
+
+Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
+    ' Converts a table's column to a 1-dimensional array
+    
+    Dim arr() As Variant
+    ReDim arr(TableDicts.Count - 1) ' zero indexed
+    Dim dict As Dictionary
+    Dim counter As Long
+    For Each dict In TableDicts
+        arr(counter) = fn.dictget(dict, ColumnName)
+        counter = counter + 1 ' zero indexing
+    Next dict
+    
+    TableColumnToArray = arr
+End Function
