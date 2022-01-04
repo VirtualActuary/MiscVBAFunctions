@@ -29,9 +29,9 @@ Public Sub FreezePanes(r As Range)
         If .FreezePanes = True Then
             .FreezePanes = False
         End If
-        Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
+        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.GoTo r
+        Application.Goto r
         .FreezePanes = True
     End With
     

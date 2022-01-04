@@ -37,6 +37,6 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
             errmsg = errmsg & "not in dictionary"
         On Error GoTo 0
         
-        Err.Raise 9, , errmsg
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, errmsg)
     End If
 End Function

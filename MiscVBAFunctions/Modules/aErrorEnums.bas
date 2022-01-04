@@ -1,14 +1,7 @@
-Attribute VB_Name = "MiscErrorEnums"
-
-' #####################################################################
-' ##### This module is version controlled in RunnerModule/Modules #####
-' #####################################################################
-
-'@Folder("error handling")
+Attribute VB_Name = "aErrorEnums"
+' Use a* so this is on top of the fn. MiscF library
 
 Option Explicit
-
-
 Enum ErrNr
     '********************************************
     'These are internal error codes collected from

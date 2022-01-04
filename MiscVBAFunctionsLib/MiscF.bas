@@ -1,6 +1,132 @@
 Attribute VB_Name = "MiscF"
 Option Explicit
 
+'************"aErrorEnums"
+' Use a* so this is on top of the fn. MiscF library
+
+
+Enum ErrNr
+    '********************************************
+    'These are internal error codes collected from
+    'https://bettersolutions.com/vba/error-handling/error-codes.htm
+    '********************************************
+    ReturnWithoutGoSub = 3
+    InvalidProcedureCall = 5
+    Overflow = 6
+    OutOfMemory_ = 7
+    SubscriptOutOfRange = 9
+    ThisArrayIsFixedOrTemporarilyLocked = 10
+    DivisionByZero = 11
+    TypeMismatch = 13
+    OutOfStringSpace = 14
+    ExpressionTooComplex = 16
+    CantPerformRequestedOperation = 17
+    UserInterruptOccurred = 18
+    ResumeWithoutError = 20
+    OutOfStackSpace = 28
+    SubFunctionOrPropertyNotDefined = 35
+    TooManyDLLApplicationClients = 47
+    ErrorInLoadingDLL = 48
+    BadDLLCallingConvention = 49
+    InternalError = 51
+    BadFileNameOrNumber = 52
+    FileNotFound = 53
+    BadFileMode = 54
+    FileAlreadyOpen = 55
+    DeviceIOError = 57
+    FileAlreadyExists = 58
+    BadRecordLength = 59
+    DiskFull = 61
+    InputPastEndOfFile = 62
+    BadRecordNumber = 63
+    TooManyFiles = 67
+    DeviceUnavailable = 68
+    PermissionDenied = 70
+    DiskNotReady = 71
+    CantRenameWithDifferentDrive = 74
+    PathFileAccessError = 75
+    PathNotFound = 76
+    ObjectVariableOrWithBlockVariableNotSet = 91
+    ForLoopNotInitialized = 92
+    InvalidPatternString = 93
+    InvalidUseOfNull = 94
+    CantCallFriendProcedureOnAnObjectThatIsNotAnInstanceOfTheDefiningClass = 97
+    SystemDLLCouldNotBeLoaded = 298
+    CantUseCharacterDeviceNamesInSpecifiedFileNames = 320
+    InvalidFileFormat = 321
+    CantCreateNecessaryTemporaryFile = 322
+    InvalidFormatInResourceFile = 325
+    DataValueNamedNotFound = 327
+    IllegalParameterCantWriteArrays = 328
+    CouldNotAccessSystemRegistry = 335
+    ActiveXComponentNotCorrectlyRegistered = 336
+    ActiveXComponentNotFound = 337
+    ActiveXComponentDidNotRunCorrectly = 338
+    ObjectAlreadyLoaded = 360
+    CantLoadOrUnloadThisObject = 361
+    ActiveXControlSpecifiedNotFound = 363
+    ObjectWasUnloaded = 364
+    UnableToUnloadWithinThisContext = 365
+    TheSpecifiedFileIsOutOfDateThisProgramRequiresALaterVersion = 368
+    TheSpecifiedObjectCantBeUsedAsAnOwnerFormForShow = 371
+    InvalidPropertyValue = 380
+    InvalidPropertyarrayIndex = 381
+    PropertySetCantBeExecutedAtRunTime = 382
+    PropertySetCantBeUsedWithAReadonlyProperty = 383
+    NeedPropertyArrayIndex = 385
+    PropertySetNotPermitted = 387
+    PropertyGetCantBeExecutedAtRunTime = 393
+    PropertyGetCantBeExecutedOnWriteonlyProperty = 394
+    FormAlreadyDisplayedCantShowModally = 400
+    CodeMustCloseTopmostModalFormFirst = 402
+    PermissionToUseObjectDenied = 419
+    PropertyNotFound = 422
+    PropertyOrMethodNotFound = 423
+    ObjectRequired = 424
+    InvalidObjectUse = 425
+    ActiveXComponentCantCreateObjectOrReturnReferenceToThisObject = 429
+    ClassDoesntSupportAutomation = 430
+    FileNameOrClassNameNotFoundDuringAutomationOperation = 432
+    ObjectDoesntSupportThisPropertyOrMethod = 438
+    AutomationError = 440
+    ConnectionToTypeLibraryOrObjectLibraryForRemoteProcessHasBeenLost = 442
+    AutomationObjectDoesntHaveADefaultValue = 443
+    ObjectDoesntSupportThisAction = 445
+    ObjectDoesntSupportNamedArguments = 446
+    ObjectDoesntSupportCurrentLocaleSetting = 447
+    NamedArgumentNotFound = 448
+    ArgumentNotOptionalOrInvalidPropertyAssignment = 449
+    WrongNumberOfArgumentsOrInvalidPropertyAssignment = 450
+    ObjectNotACollection = 451
+    InvalidOrdinal = 452
+    SpecifiedDLLFunctionNotFound = 453
+    CodeResourceNotFound = 454
+    CodeResourceLockError = 455
+    ThisKeyIsAlreadyAssociatedWithAnElementOfThisCollection = 457
+    VariableUsesATypeNotSupportedInVisualBasic = 458
+    ThisComponentDoesntSupportEvents = 459
+    InvalidClipboardFormat = 460
+    SpecifiedFormatDoesntMatchFormatOfData = 461
+    CantCreateAutoRedrawImage = 480
+    InvalidPicture = 481
+    PrinterError = 482
+    PrinterDriverDoesNotSupportSpecifiedProperty = 483
+    ProblemGettingPrinterInformationFromTheSystemMakeSureThePrinterIsSetUpCorrectly = 484
+    InvalidPictureType = 485
+    CantPrintFormImageToThisTypeOfPrinter = 486
+    CantEmptyClipboard = 520
+    CantOpenClipboard = 521
+    CantSaveFileToTEMPDirectory = 735
+    SearchTextNotFound = 744
+    ReplacementsTooLong = 746
+    OutOfMemory = 31001
+    NoObject = 31004
+    ClassIsNotSet = 31018
+    UnableToActivateObject = 31027
+    UnableToCreateEmbeddedObject = 31032
+    ErrorSavingToFile = 31036
+End Enum
+
 '************"aFSO"
 ' allows us to use FSO functions anywhere in the project
 ' Use a* so this is on top of the fn. MiscF library
@@ -9,13 +135,20 @@ Public fso As New FileSystemObject
 
 '************"Casing"
 ' Uncomment and comment block to get casing back for the project
-
-
+'
+'
 'Dim J
 'Dim I
 'Dim M
 'Dim WB
 'Dim WS
+'Dim dict ' for now... :/
+'Dim r ' for now... :/
+'Dim Keys
+'Dim Columns
+'Dim Values
+'Dim Column
+'Dim ColumnName
 
 '************"MiscArray"
 '@IgnoreModule ImplicitByRefModifier
@@ -295,6 +428,60 @@ End Function
 
 
 
+'************"MiscCollectionSort"
+
+
+
+Private Sub TestBubbleSort()
+    Dim coll As Collection
+    Set coll = col("variables10", "variables", "variables2", "variables_10", "variables_2")
+    Set coll = BubbleSort(coll)
+    
+    Debug.Print coll(1), "variables"
+    Debug.Print coll(2), "variables10" ' :/
+    Debug.Print coll(3), "variables2" ' :/
+    Debug.Print coll(4), "variables_10" ' :/
+    Debug.Print coll(5), "variables_2" ' :/
+    
+End Sub
+
+
+Public Function BubbleSort(coll As Collection) As Collection
+    
+    ' from: https://github.com/austinleedavis/VBA-utilities/blob/f23f1096d8df0dfdc740e5a3bec36525d61a3ffc/Collections.bas#L73
+    ' this is an easy implementation but a slow sorting algorithm
+    ' do not use for large collections
+    
+    Dim SortedColl As Collection
+    Set SortedColl = New Collection
+    Dim vItm As Variant
+    ' copy the collection"
+    For Each vItm In coll
+        SortedColl.Add vItm
+    Next vItm
+
+    Dim I As Long, J As Long
+    Dim vTemp As Variant
+
+    'Two loops to bubble sort
+    For I = 1 To SortedColl.Count - 1
+        For J = I + 1 To SortedColl.Count
+            If SortedColl(I) > SortedColl(J) Then ' 1 = I is larger than J
+                'store the lesser item
+               assign vTemp, SortedColl(J) ' assign
+                'remove the lesser item
+               SortedColl.Remove J
+                're-add the lesser item before the greater Item
+               SortedColl.Add vTemp, , I
+            End If
+        Next J
+    Next I
+    
+    Set BubbleSort = SortedColl
+    
+End Function
+
+
 '************"MiscCreateTextFile"
 
 
@@ -354,7 +541,7 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
             errmsg = errmsg & "not in dictionary"
         On Error GoTo 0
         
-        Err.Raise 9, , errmsg
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, errmsg)
     End If
 End Function
 
@@ -539,139 +726,6 @@ Function EnsureDictI(Container As Variant) As Object
         
     End If
 End Function
-
-'************"MiscErrorEnums"
-
-' #####################################################################
-' ##### This module is version controlled in RunnerModule/Modules #####
-' #####################################################################
-
-'@Folder("error handling")
-
-
-
-
-Enum ErrNr
-    '********************************************
-    'These are internal error codes collected from
-    'https://bettersolutions.com/vba/error-handling/error-codes.htm
-    '********************************************
-    ReturnWithoutGoSub = 3
-    InvalidProcedureCall = 5
-    Overflow = 6
-    OutOfMemory_ = 7
-    SubscriptOutOfRange = 9
-    ThisArrayIsFixedOrTemporarilyLocked = 10
-    DivisionByZero = 11
-    TypeMismatch = 13
-    OutOfStringSpace = 14
-    ExpressionTooComplex = 16
-    CantPerformRequestedOperation = 17
-    UserInterruptOccurred = 18
-    ResumeWithoutError = 20
-    OutOfStackSpace = 28
-    SubFunctionOrPropertyNotDefined = 35
-    TooManyDLLApplicationClients = 47
-    ErrorInLoadingDLL = 48
-    BadDLLCallingConvention = 49
-    InternalError = 51
-    BadFileNameOrNumber = 52
-    FileNotFound = 53
-    BadFileMode = 54
-    FileAlreadyOpen = 55
-    DeviceIOError = 57
-    FileAlreadyExists = 58
-    BadRecordLength = 59
-    DiskFull = 61
-    InputPastEndOfFile = 62
-    BadRecordNumber = 63
-    TooManyFiles = 67
-    DeviceUnavailable = 68
-    PermissionDenied = 70
-    DiskNotReady = 71
-    CantRenameWithDifferentDrive = 74
-    PathFileAccessError = 75
-    PathNotFound = 76
-    ObjectVariableOrWithBlockVariableNotSet = 91
-    ForLoopNotInitialized = 92
-    InvalidPatternString = 93
-    InvalidUseOfNull = 94
-    CantCallFriendProcedureOnAnObjectThatIsNotAnInstanceOfTheDefiningClass = 97
-    SystemDLLCouldNotBeLoaded = 298
-    CantUseCharacterDeviceNamesInSpecifiedFileNames = 320
-    InvalidFileFormat = 321
-    CantCreateNecessaryTemporaryFile = 322
-    InvalidFormatInResourceFile = 325
-    DataValueNamedNotFound = 327
-    IllegalParameterCantWriteArrays = 328
-    CouldNotAccessSystemRegistry = 335
-    ActiveXComponentNotCorrectlyRegistered = 336
-    ActiveXComponentNotFound = 337
-    ActiveXComponentDidNotRunCorrectly = 338
-    ObjectAlreadyLoaded = 360
-    CantLoadOrUnloadThisObject = 361
-    ActiveXControlSpecifiedNotFound = 363
-    ObjectWasUnloaded = 364
-    UnableToUnloadWithinThisContext = 365
-    TheSpecifiedFileIsOutOfDateThisProgramRequiresALaterVersion = 368
-    TheSpecifiedObjectCantBeUsedAsAnOwnerFormForShow = 371
-    InvalidPropertyValue = 380
-    InvalidPropertyarrayIndex = 381
-    PropertySetCantBeExecutedAtRunTime = 382
-    PropertySetCantBeUsedWithAReadonlyProperty = 383
-    NeedPropertyArrayIndex = 385
-    PropertySetNotPermitted = 387
-    PropertyGetCantBeExecutedAtRunTime = 393
-    PropertyGetCantBeExecutedOnWriteonlyProperty = 394
-    FormAlreadyDisplayedCantShowModally = 400
-    CodeMustCloseTopmostModalFormFirst = 402
-    PermissionToUseObjectDenied = 419
-    PropertyNotFound = 422
-    PropertyOrMethodNotFound = 423
-    ObjectRequired = 424
-    InvalidObjectUse = 425
-    ActiveXComponentCantCreateObjectOrReturnReferenceToThisObject = 429
-    ClassDoesntSupportAutomation = 430
-    FileNameOrClassNameNotFoundDuringAutomationOperation = 432
-    ObjectDoesntSupportThisPropertyOrMethod = 438
-    AutomationError = 440
-    ConnectionToTypeLibraryOrObjectLibraryForRemoteProcessHasBeenLost = 442
-    AutomationObjectDoesntHaveADefaultValue = 443
-    ObjectDoesntSupportThisAction = 445
-    ObjectDoesntSupportNamedArguments = 446
-    ObjectDoesntSupportCurrentLocaleSetting = 447
-    NamedArgumentNotFound = 448
-    ArgumentNotOptionalOrInvalidPropertyAssignment = 449
-    WrongNumberOfArgumentsOrInvalidPropertyAssignment = 450
-    ObjectNotACollection = 451
-    InvalidOrdinal = 452
-    SpecifiedDLLFunctionNotFound = 453
-    CodeResourceNotFound = 454
-    CodeResourceLockError = 455
-    ThisKeyIsAlreadyAssociatedWithAnElementOfThisCollection = 457
-    VariableUsesATypeNotSupportedInVisualBasic = 458
-    ThisComponentDoesntSupportEvents = 459
-    InvalidClipboardFormat = 460
-    SpecifiedFormatDoesntMatchFormatOfData = 461
-    CantCreateAutoRedrawImage = 480
-    InvalidPicture = 481
-    PrinterError = 482
-    PrinterDriverDoesNotSupportSpecifiedProperty = 483
-    ProblemGettingPrinterInformationFromTheSystemMakeSureThePrinterIsSetUpCorrectly = 484
-    InvalidPictureType = 485
-    CantPrintFormImageToThisTypeOfPrinter = 486
-    CantEmptyClipboard = 520
-    CantOpenClipboard = 521
-    CantSaveFileToTEMPDirectory = 735
-    SearchTextNotFound = 744
-    ReplacementsTooLong = 746
-    OutOfMemory = 31001
-    NoObject = 31004
-    ClassIsNotSet = 31018
-    UnableToActivateObject = 31027
-    UnableToCreateEmbeddedObject = 31032
-    ErrorSavingToFile = 31036
-End Enum
 
 '************"MiscErrorMessage"
 
@@ -937,9 +991,9 @@ Public Sub FreezePanes(r As Range)
         If .FreezePanes = True Then
             .FreezePanes = False
         End If
-        Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
+        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.GoTo r
+        Application.Goto r
         .FreezePanes = True
     End With
     
@@ -1536,7 +1590,6 @@ End Function
 Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
 
     If WB Is Nothing Then Set WB = ThisWorkbook
-    ' Dim WS As Worksheet, LO As ListObject
     Dim WS As Worksheet
     Dim LO As ListObject
     
@@ -1572,9 +1625,113 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
     
     If GetLO Is Nothing Then
         ' 9: Subscript out of range
-        Err.Raise 9, , "List object '" & Name & "' not found in workbook '" & WB.Name & "'"
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "List object '" & Name & "' not found in workbook '" & WB.Name & "'")
     End If
 
+End Function
+
+
+Private Sub TestTableToArray()
+    TableToArray "foo"
+End Sub
+
+Function TableToArray( _
+      Name As String _
+    , Optional WB As Workbook _
+    ) As Variant()
+    
+    TableToArray = RangeTo2DArray(TableRange(Name, WB))
+    
+End Function
+
+Public Function TableRange( _
+        Name As String _
+      , Optional WB As Workbook _
+      ) As Range
+    
+'Returns the range (including headers of a table named `Name` in workbook `WB`): _
+- It first looks for a list object called `Name` _
+  - If the `.DataBodyRange` property is nothing the table range will only be the headers _
+- Then it looks for a named range in the Workbook scope called `Name` and returns the _
+  range this named range is referring to _
+- Then it looks for a worksheet scoped named range called `Name`. The first occurrence _
+  will be returned _
+If no tables found, a `SubscriptOutOfRange` error (9) is raised _
+The name of the table to be found is case insensitive
+  
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    If HasLO(Name, WB) Then
+        Dim LO As ListObject
+        Set LO = GetLO(Name, WB)
+        If LO.DataBodyRange Is Nothing Then
+            Set TableRange = LO.HeaderRowRange
+        Else
+            Set TableRange = LO.Range
+        End If
+        Exit Function
+    End If
+    
+    If hasKey(WB.Names, Name) Then
+        Set TableRange = WB.Names(Name).RefersToRange
+        Exit Function
+    End If
+    
+    Dim WS As Worksheet
+    ' this will find the first occurrence of the table called 'Name'
+    For Each WS In WB.Worksheets
+        If hasKey(WS.Names, Name) Then
+            Set TableRange = WS.Names(Name).RefersToRange
+            Exit Function
+        End If
+    Next WS
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Table '" & Name & "' not found in workbook '" & WB.Name & "'")
+    
+End Function
+
+
+Function GetAllTables(WB As Workbook) As Collection
+    Set GetAllTables = New Collection
+    
+    ' Returns all (potential) tables in a workbook
+    
+    Dim WS As Worksheet
+    Dim LO As ListObject
+    For Each WS In WB.Worksheets
+        For Each LO In WS.ListObjects
+            GetAllTables.Add LO.Name
+        Next LO
+    Next WS
+    
+    Dim Name As Name
+    For Each Name In WB.Names
+        GetAllTables.Add Name.Name
+    Next Name
+    
+    For Each WS In WB.Worksheets
+        For Each Name In WS.Names
+            ' remove the sheetname prefix to get the table name
+            GetAllTables.Add Mid(Name.Name, InStr(Name.Name, "!") + 1)
+        Next Name
+    Next WS
+    
+End Function
+
+
+Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
+    ' Converts a table's column to a 1-dimensional array
+    
+    Dim arr() As Variant
+    ReDim arr(TableDicts.Count - 1) ' zero indexed
+    Dim dict As Dictionary
+    Dim counter As Long
+    For Each dict In TableDicts
+        arr(counter) = dictget(dict, ColumnName)
+        counter = counter + 1 ' zero indexing
+    Next dict
+    
+    TableColumnToArray = arr
 End Function
 
 '************"MiscTableToDicts"
@@ -1588,9 +1745,36 @@ Private Sub TableToDictsTest()
     Debug.Print Dicts(2)("b"), 5
 End Sub
 
-Public Function TableToDicts(TableName As String, _
-        Optional WB As Workbook, _
-        Optional Columns As Collection) As Collection
+Public Function TableToDictsLogSource( _
+          TableName As String _
+        , Optional WB As Workbook _
+        , Optional Columns As Collection _
+        ) As Collection
+    
+'Similar to TableToDicts, but also stores the source of each row _
+in a dictionary with key `__source__`
+
+'The `__source__` object contains the following keys: _
+ - `Workbook`: the Workbook object with the table _
+ - `Table`: the name of the table within the workbook _
+ - `RowIndex`: the row index of the current entry of the table
+
+    Set TableToDictsLogSource = TableToDicts(TableName, WB, Columns)
+    Dim dict As Dictionary
+    Dim RowIndex As Long
+    RowIndex = 0
+    For Each dict In TableToDictsLogSource
+        RowIndex = RowIndex + 1
+        dict.Add "__source__", dicti("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
+    Next dict
+End Function
+
+
+Public Function TableToDicts( _
+          TableName As String _
+        , Optional WB As Workbook _
+        , Optional Columns As Collection _
+        ) As Collection
     
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/8e1b9709a380d71eaf0d59bd0c2882c8501e9540/aa_py_xl/data_util.py#L21
     
@@ -1630,39 +1814,161 @@ Public Function TableToDicts(TableName As String, _
     
 End Function
 
-Private Sub TestTableToArray()
-    TableToArray "foo"
-End Sub
+Private Function TestGetTableRowIndex()
+    Dim Table As Collection
+    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
+    Debug.Print GetTableRowIndex(Table, col("a", "b"), col(3, 4)), 2
+    Debug.Print GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")), 3
+End Function
 
-Function TableToArray(Name As String, Optional WB As Workbook) As Variant()
+
+Function TableLookupValue( _
+        Table As Variant _
+      , Columns As Collection _
+      , Values As Collection _
+      , ValueColName As String _
+      , Optional default As Variant = Empty _
+      , Optional WB As Workbook _
+      ) As Variant
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
-    If HasLO(Name, WB) Then
-        Dim LO As ListObject
-        Set LO = GetLO(Name, WB)
-        If LO.DataBodyRange Is Nothing Then
-            TableToArray = RangeTo2DArray(LO.HeaderRowRange)
-        Else
-            TableToArray = RangeTo2DArray(LO.Range)
-        End If
-        Exit Function
-    End If
+    ' Returns the value from the ValueColName column in a TableToDicts object _
+      given the value In the lookup column _
+      A default value can be assigned For when no lookup Is found _
+      Otherwise it returns a runtime Error
     
-    If hasKey(WB.Names, Name) Then
-        TableToArray = RangeTo2DArray(WB.Names(Name).RefersToRange)
-        Exit Function
-    End If
+    ' for when GetTableRowIndex fails
+    If Not IsEmpty(default) Then On Error GoTo SetDefault
     
-    Dim WS As Worksheet
-    ' this will find the first occurrence of the table called 'Name'
-    For Each WS In WB.Worksheets
-        If hasKey(WS.Names, Name) Then
-            TableToArray = RangeTo2DArray(WS.Names(Name).RefersToRange)
-            Exit Function
-        End If
-    Next WS
+    Dim dict As Dictionary
+    Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
+    TableLookupValue = dictget(dict, ValueColName, default)
     
-    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Table '" & Name & "' not found in workbook '" & WB.Name & "'")
+    Exit Function
+SetDefault:
+    TableLookupValue = default
     
 End Function
+
+Function GetTableRowRange( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    ) As Range
+    
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, a runtime error is raised
+    
+    Dim RowNumber As Long
+    RowNumber = GetTableRowIndex(TableName, Columns, Values, WB) ' this will throw a runtime error if not found
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    ' Intersect of table range and entirerow
+    ' +1 as header is not included in GetTableRowIndex
+    Set GetTableRowRange = Intersect(TableR, TableR(RowNumber + 1, 1).EntireRow)
+    
+End Function
+
+
+Function GetTableColumnRange( _
+      TableName As String _
+    , Column As String _
+    , Optional WB As Workbook _
+    ) As Range
+    
+' Returns the range of a table's column, including the header
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    Dim I As Long
+    For I = 1 To TableR.Columns.Count
+        If LCase(TableR(1, I).Value) = LCase(Column) Then
+            GoTo found
+        End If
+    Next I
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
+found:
+    ' Intersect of table range and entirecolumn
+    Set GetTableColumnRange = Intersect(TableR, TableR(1, I).EntireColumn)
+
+End Function
+
+
+Public Function TableLookupCell( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Column As String _
+    , Optional WB As Workbook _
+    ) As Range
+    
+    Set TableLookupCell = Intersect(GetTableRowRange(TableName, Columns, Values, WB), GetTableColumnRange(TableName, Column, WB))
+
+End Function
+
+Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As Collection
+    
+    If TypeOf Table Is Collection Then ' assume if collection, it's already a TableDicts object
+        Set EnsureTableDicts = Table
+    Else
+        Set EnsureTableDicts = TableToDicts(CStr(Table), WB)
+    End If
+
+End Function
+
+
+Function GetTableRowIndex( _
+      Table As Variant _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    ) As Long
+    
+    ' Table can either be a TableToDicts collection, _
+      or the name of the table to find
+    
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, SubscriptOutOfRange error is raised
+    
+    Dim dict As Dictionary
+    Dim keyValuePair As Collection
+    Dim isMatch As Boolean
+    Dim RowNumber As Long
+    
+    For Each dict In EnsureTableDicts(Table, WB)
+        isMatch = True
+        RowNumber = RowNumber + 1
+        For Each keyValuePair In zip(Columns, Values)
+            If dict(keyValuePair(1)) <> keyValuePair(2) Then
+                isMatch = False
+            End If
+        Next keyValuePair
+        If isMatch = True Then Exit For
+    Next dict
+    
+    If isMatch Then
+        GetTableRowIndex = RowNumber
+    Else
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Columns-values pairs did not find a match")
+    End If
+    
+End Function
+
+Public Sub GotoRowInTable( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    )
+    Application.Goto GetTableRowRange(TableName, Columns, Values, WB), True
+End Sub
