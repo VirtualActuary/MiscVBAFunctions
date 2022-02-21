@@ -503,8 +503,12 @@ Public Sub CreateTextFile(ByVal Content As String, ByVal FilePath As String)
 End Sub
 
 '************"MiscDictionary"
-'@IgnoreModule ImplicitByRefModifier
+' This module contains functions to retrieve values given a
+' key in a dictionary
 
+
+
+'@IgnoreModule ImplicitByRefModifier
 
 Private Sub testDictget()
 
@@ -526,7 +530,14 @@ End Sub
 
 
 Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
-        
+'   Params:
+'       d: Dictionary to read the value from...
+'       key: The key ....
+'
+'   Returns:
+'
+    
+    
     If d.Exists(key) Then
         assign dictget, d.Item(key)
         
@@ -991,9 +1002,9 @@ Public Sub FreezePanes(r As Range)
         If .FreezePanes = True Then
             .FreezePanes = False
         End If
-        Application.Goto WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
+        Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.Goto r
+        Application.GoTo r
         .FreezePanes = True
     End With
     
@@ -1130,8 +1141,10 @@ End Sub
 
 
 '************"MiscHasKey"
-'@IgnoreModule ImplicitByRefModifier
+' Functions to check whether a key exists in a container
 
+
+'@IgnoreModule ImplicitByRefModifier
 
 Private Sub TestHasKey()
 
@@ -1179,6 +1192,18 @@ End Sub
 
 
 Public Function hasKey(Container As Variant, key As Variant) As Boolean
+    ' Checks whether a key exists in an existing container
+    ' The container can be a `Collection`, `Dictionary` or any
+    ' built-in Dictionary-like object. For example `ThisWorkbook.Sheets`
+    '
+    ' Args:
+    '     Container: The container in which to look for the key
+    '     key: The key to look for in the container
+    '
+    ' Returns:
+    '     True for success, False otherwise
+    
+    
     Dim ErrX As Integer
     Dim hasKeyFlag As Boolean
     Dim emptyFlag As Boolean
@@ -1970,5 +1995,5 @@ Public Sub GotoRowInTable( _
     , Values As Collection _
     , Optional WB As Workbook _
     )
-    Application.Goto GetTableRowRange(TableName, Columns, Values, WB), True
+    Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub

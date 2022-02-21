@@ -234,5 +234,5 @@ Public Sub GotoRowInTable( _
     , Values As Collection _
     , Optional WB As Workbook _
     )
-    Application.Goto GetTableRowRange(TableName, Columns, Values, WB), True
+    Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub

@@ -1,6 +1,8 @@
 Attribute VB_Name = "MiscHasKey"
-'@IgnoreModule ImplicitByRefModifier
+' Functions to check whether a key exists in a container
+
 Option Explicit
+'@IgnoreModule ImplicitByRefModifier
 
 Private Sub TestHasKey()
 
@@ -48,6 +50,18 @@ End Sub
 
 
 Public Function hasKey(Container As Variant, key As Variant) As Boolean
+    ' Checks whether a key exists in an existing container
+    ' The container can be a `Collection`, `Dictionary` or any
+    ' built-in Dictionary-like object. For example `ThisWorkbook.Sheets`
+    '
+    ' Args:
+    '     Container: The container in which to look for the key
+    '     key: The key to look for in the container
+    '
+    ' Returns:
+    '     True for success, False otherwise
+    
+    
     Dim ErrX As Integer
     Dim hasKeyFlag As Boolean
     Dim emptyFlag As Boolean

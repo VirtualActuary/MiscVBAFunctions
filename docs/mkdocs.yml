@@ -1,0 +1,21 @@
+site_name: Misc VBA functions documentation
+docs_dir: src
+site_dir: dist
+site_url: ""
+use_directory_urls: false
+theme: material
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        vba: { }
+  - gen-files:
+      scripts:
+        - gen_pages.py
+  - literate-nav:
+      nav_file: nav.md
+
+markdown_extensions:
+  - def_list
+  - toc:
+      permalink: true
