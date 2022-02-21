@@ -1,6 +1,10 @@
 Attribute VB_Name = "MiscDictionary"
-'@IgnoreModule ImplicitByRefModifier
+' This module contains functions to retrieve values given a
+' key in a dictionary
+
+
 Option Explicit
+'@IgnoreModule ImplicitByRefModifier
 
 Private Sub testDictget()
 
@@ -22,7 +26,14 @@ End Sub
 
 
 Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
-        
+'   Params:
+'       d: Dictionary to read the value from...
+'       key: The key ....
+'
+'   Returns:
+'
+    
+    
     If d.Exists(key) Then
         assign dictget, d.Item(key)
         
