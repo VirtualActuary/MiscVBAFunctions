@@ -1,8 +1,6 @@
 Attribute VB_Name = "MiscExcel"
 Option Explicit
 
-
-
 Public Function ExcelBook( _
       Path As String _
     , Optional MustExist As Boolean = False _

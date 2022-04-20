@@ -2,7 +2,6 @@ Attribute VB_Name = "MiscFreezePanes"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-
 Private Sub test()
     
     

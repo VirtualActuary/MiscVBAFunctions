@@ -1,9 +1,5 @@
 Attribute VB_Name = "MiscErrorMessage"
-
-' #####################################################################
-' ##### This module is version controlled in RunnerModule/Modules #####
-' #####################################################################
-
+Option Explicit
 '@Folder("error handling")
 
 Function ErrorMessage(ErrorCode As Integer, _

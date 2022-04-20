@@ -131,9 +131,11 @@ End Enum
 ' allows us to use FSO functions anywhere in the project
 ' Use a* so this is on top of the fn. MiscF library
 
+
 Public fso As New FileSystemObject
 
 '************"Casing"
+
 ' Uncomment and comment block to get casing back for the project
 '
 '
@@ -740,10 +742,6 @@ End Function
 
 '************"MiscErrorMessage"
 
-' #####################################################################
-' ##### This module is version controlled in RunnerModule/Modules #####
-' #####################################################################
-
 '@Folder("error handling")
 
 Function ErrorMessage(ErrorCode As Integer, _
@@ -902,8 +900,6 @@ End Function
 '************"MiscExcel"
 
 
-
-
 Public Function ExcelBook( _
       Path As String _
     , Optional MustExist As Boolean = False _
@@ -973,7 +969,6 @@ End Function
 
 '************"MiscFreezePanes"
 '@IgnoreModule ImplicitByRefModifier
-
 
 
 Private Sub test()
