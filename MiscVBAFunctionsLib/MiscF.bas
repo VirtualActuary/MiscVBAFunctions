@@ -1,9 +1,14 @@
 Attribute VB_Name = "MiscF"
-Option Explicit
-
-'************"aErrorEnums"
+' allows us to use FSO functions anywhere in the project
 ' Use a* so this is on top of the fn. MiscF library
 
+Option Explicit
+
+'*************** FSO
+Public FSO As New FileSystemObject
+
+'*************** MiscErrorMessage
+'@Folder("error handling")
 
 Enum ErrNr
     '********************************************
@@ -127,46 +132,17 @@ Enum ErrNr
     ErrorSavingToFile = 31036
 End Enum
 
-'************"aFSO"
-' allows us to use FSO functions anywhere in the project
-' Use a* so this is on top of the fn. MiscF library
-
-
-Public fso As New FileSystemObject
-
-'************"Casing"
-
-' Uncomment and comment block to get casing back for the project
-'
-'
-'Dim J
-'Dim I
-'Dim M
-'Dim WB
-'Dim WS
-'Dim dict ' for now... :/
-'Dim r ' for now... :/
-'Dim Keys
-'Dim Columns
-'Dim Values
-'Dim Column
-'Dim ColumnName
-
-'************"MiscArray"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscArray
 ' Functions for 1D and 2D arrays only.
 ' Replaces all Errors in the input array with vbNullString.
 ' The input array is modified (pass by referance) and the function returns the array
 Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Variant
-    If is2D(tableArr) Then
-        ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
+    If MiscArray_is2D(tableArr) Then
+        ErrorToNullStringTransformation = MiscArray_ErrorToNull2D(tableArr)
     Else
-        ErrorToNullStringTransformation = ErrorToNull1D(tableArr)
+        ErrorToNullStringTransformation = MiscArray_ErrorToNull1D(tableArr)
     End If
 End Function
-
 
 ' Functions for 1D and 2D arrays only.
 ' Converts the decimal seperator in the float input to a "." for each entry in the input array
@@ -175,55 +151,50 @@ End Function
 ' Custom seperators not supported.
 ' The input array is modified (pass by referance) and the function returns the array.
 Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Variant
-    If is2D(tableArr) Then
-        EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
+    If MiscArray_is2D(tableArr) Then
+        EnsureDotSeparatorTransformation = MiscArray_EnsureDotSeparator2D(tableArr)
     Else
-        EnsureDotSeparatorTransformation = EnsureDotSeparator1D(tableArr)
+        EnsureDotSeparatorTransformation = MiscArray_EnsureDotSeparator1D(tableArr)
     End If
 End Function
-
 
 ' Functions for 1D and 2D arrays only.
 ' Converts all Date/DateTime entries in the input array to string.
 ' The input array is modified (pass by referance) and the function returns the array.
 Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt As String = "yyyy-mm-dd") As Variant
-    If is2D(tableArr) Then
-        DateToStringTransformation = DateToString2D(tableArr, fmt)
+    If MiscArray_is2D(tableArr) Then
+        DateToStringTransformation = MiscArray_DateToString2D(tableArr, fmt)
     Else
-        DateToStringTransformation = DateToString1D(tableArr, fmt)
+        DateToStringTransformation = MiscArray_DateToString1D(tableArr, fmt)
     End If
 End Function
 
-
 ' Check if a collection is 1D or 2D.
 ' 3D is not supported
-Private Function is2D(arr As Variant)
+Private Function MiscArray_is2D(arr As Variant)
     On Error GoTo Err
-    is2D = (UBound(arr, 2) - LBound(arr, 2) > 1)
+    MiscArray_is2D = (UBound(arr, 2) - LBound(arr, 2) > 1)
     Exit Function
 Err:
-    is2D = False
+    MiscArray_is2D = False
 End Function
 
-
-Private Function dateToString(d As Date, fmt As String) As String
-    dateToString = Format(d, fmt)
+Private Function MiscArray_dateToString(d As Date, fmt As String) As String
+    MiscArray_dateToString = Format(d, fmt)
 End Function
 
-
-Private Function decStr(x As Variant) As String
-     decStr = CStr(x)
+Private Function MiscArray_decStr(x As Variant) As String
+     MiscArray_decStr = CStr(x)
 
      'Frikin ridiculous loops for VBA
      If IsNumeric(x) Then
-        decStr = Replace(decStr, Format(0, "."), ".")
+        MiscArray_decStr = Replace(MiscArray_decStr, Format(0, "."), ".")
         ' Format(0, ".") gives the system decimal separator
      End If
 
 End Function
 
-
-Private Function ErrorToNull2D(tableArr As Variant) As Variant
+Private Function MiscArray_ErrorToNull2D(tableArr As Variant) As Variant
     Dim I As Long, J As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         For J = LBound(tableArr, 2) To UBound(tableArr, 2)
@@ -232,75 +203,64 @@ Private Function ErrorToNull2D(tableArr As Variant) As Variant
             End If
         Next J
     Next I
-    ErrorToNull2D = tableArr
+    MiscArray_ErrorToNull2D = tableArr
 End Function
 
-
-Private Function ErrorToNull1D(tableArr As Variant) As Variant
+Private Function MiscArray_ErrorToNull1D(tableArr As Variant) As Variant
     Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsError(tableArr(I)) Then ' set all error values to an empty string
             tableArr(I) = vbNullString
         End If
     Next I
-    ErrorToNull1D = tableArr
+    MiscArray_ErrorToNull1D = tableArr
 End Function
 
-
-Private Function EnsureDotSeparator2D(tableArr As Variant) As Variant
+Private Function MiscArray_EnsureDotSeparator2D(tableArr As Variant) As Variant
     Dim I As Long, J As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         For J = LBound(tableArr, 2) To UBound(tableArr, 2)
             If IsNumeric(tableArr(I, J)) Then ' force numeric values to use . as decimal separator
-                tableArr(I, J) = decStr(tableArr(I, J))
+                tableArr(I, J) = MiscArray_decStr(tableArr(I, J))
             End If
         Next J
     Next I
-    EnsureDotSeparator2D = tableArr
+    MiscArray_EnsureDotSeparator2D = tableArr
 End Function
 
-
-Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
+Private Function MiscArray_EnsureDotSeparator1D(tableArr As Variant) As Variant
     Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsNumeric(tableArr(I)) Then ' force numeric values to use . as decimal separator
-            tableArr(I) = decStr(tableArr(I))
+            tableArr(I) = MiscArray_decStr(tableArr(I))
         End If
     Next I
-    EnsureDotSeparator1D = tableArr
+    MiscArray_EnsureDotSeparator1D = tableArr
 End Function
 
-
-Private Function DateToString2D(tableArr As Variant, fmt As String) As Variant
+Private Function MiscArray_DateToString2D(tableArr As Variant, fmt As String) As Variant
     Dim I As Long, J As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         For J = LBound(tableArr, 2) To UBound(tableArr, 2)
             If IsDate(tableArr(I, J)) Then ' format dates as strings to avoid some user's stupid default date settings
-                tableArr(I, J) = dateToString(CDate(tableArr(I, J)), fmt)
+                tableArr(I, J) = MiscArray_dateToString(CDate(tableArr(I, J)), fmt)
             End If
         Next J
     Next I
-    DateToString2D = tableArr
+    MiscArray_DateToString2D = tableArr
 End Function
 
-
-Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
+Private Function MiscArray_DateToString1D(tableArr As Variant, fmt As String) As Variant
     Dim I As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
-            tableArr(I) = dateToString(CDate(tableArr(I)), fmt)
+            tableArr(I) = MiscArray_dateToString(CDate(tableArr(I)), fmt)
         End If
     Next I
-    DateToString1D = tableArr
+    MiscArray_DateToString1D = tableArr
 End Function
 
-'************"MiscAssign"
-' Assign a value to a variable and also return that value. The goal of this function is to
-' overcome the different `set` syntax for assigning an object vs. assigning a native type
-' like Int, Double etc. Additionally this function has similar functionality to Python's
-' walrus operator: https://towardsdatascience.com/the-walrus-operator-7971cd339d7d
-
-
+'*************** MiscAssign
 Public Function assign(ByRef var As Variant, ByRef val As Variant)
     If IsObject(val) Then 'Object
         Set var = val
@@ -311,10 +271,7 @@ Public Function assign(ByRef var As Variant, ByRef val As Variant)
     End If
 End Function
 
-'************"MiscCollection"
-
-
-
+'*************** MiscCollection
 Function min(ByVal col As Collection) As Variant
     
     If col Is Nothing Then
@@ -369,7 +326,6 @@ Function mean(ByVal col As Collection) As Variant
     
 End Function
 
-
 Function IsValueInCollection(col As Collection, val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
     Dim ValI As Variant
     For Each ValI In col
@@ -386,11 +342,7 @@ Function IsValueInCollection(col As Collection, val As Variant, Optional CaseSen
     Next ValI
 End Function
 
-
-
-'************"MiscCollectionCreate"
-
-
+'*************** MiscCollectionCreate
 Public Function col(ParamArray Args() As Variant) As Collection
     Set col = New Collection
     Dim I As Long
@@ -400,7 +352,6 @@ Public Function col(ParamArray Args() As Variant) As Collection
     Next
 
 End Function
-
 
 Public Function zip(ParamArray Args() As Variant) As Collection
     Dim I As Long
@@ -427,14 +378,8 @@ Public Function zip(ParamArray Args() As Variant) As Collection
     Next I
 End Function
 
-
-
-
-'************"MiscCollectionSort"
-
-
-
-Private Sub TestBubbleSort()
+'*************** MiscCollectionSort
+Private Sub MiscCollectionSort_TestBubbleSort()
     Dim coll As Collection
     Set coll = col("variables10", "variables", "variables2", "variables_10", "variables_2")
     Set coll = BubbleSort(coll)
@@ -446,7 +391,6 @@ Private Sub TestBubbleSort()
     Debug.Print coll(5), "variables_2" ' :/
     
 End Sub
-
 
 Public Function BubbleSort(coll As Collection) As Collection
     
@@ -483,11 +427,8 @@ Public Function BubbleSort(coll As Collection) As Collection
     
 End Function
 
-
-'************"MiscCreateTextFile"
-
-
-Private Sub testCreateTextFile()
+'*************** MiscCreateTextFile
+Private Sub MiscCreateTextFile_testCreateTextFile()
     CreateTextFile "foo", ThisWorkbook.Path & "\tests\MiscCreateTextFile\test.txt"
     ' TODO: assertion
 End Sub
@@ -504,15 +445,10 @@ Public Sub CreateTextFile(ByVal Content As String, ByVal FilePath As String)
 
 End Sub
 
-'************"MiscDictionary"
-' This module contains functions to retrieve values given a
-' key in a dictionary
-
-
-
+'*************** MiscDictionary
 '@IgnoreModule ImplicitByRefModifier
 
-Private Sub testDictget()
+Private Sub MiscDictionary_testDictget()
 
     Dim d As Dictionary
     Set d = dict("a", 2, "b", ThisWorkbook)
@@ -529,7 +465,6 @@ Private Sub testDictget()
     On Error GoTo 0
 
 End Sub
-
 
 Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
 '   Params:
@@ -558,9 +493,7 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
     End If
 End Function
 
-'************"MiscDictionaryCreate"
-
-
+'*************** MiscDictionaryCreate
 Public Function dict(ParamArray Args() As Variant) As Dictionary
     'Case sensitive dictionary
     
@@ -585,7 +518,6 @@ Cont:
     Next I
 
 End Function
-
 
 Public Function dicti(ParamArray Args() As Variant) As Dictionary
     'Case insensitive dictionary
@@ -613,91 +545,96 @@ Cont:
 
 End Function
 
-
-'************"MiscEarlyBindings"
-'@IgnoreModule ImplicitByRefModifier
-
-
-
+'*************** MiscEarlyBindings
 ' Add references for this project programatically. If you are uncertain what to put here,
-' Go to Tools -> References and use the filename of the reference (eg. msado15.dll for
-' Microsoft ActiveX Data Objects 6.1 Library'), then run getPackageGUID("msado15.dll")
-' to see what options you have:
+' Go to `Tools -> References` and add the relevant bindings, then use the Sub
+' printAllEarlyBindings to see how to add it as VBA code
 '**********************************************************************************
 '* Add selected references to this project
 '**********************************************************************************
 Sub addEarlyBindings()
     On Error GoTo ErrorHandler
-        If Not isBindingNameLoaded("ADODB") Then
-            'Microsoft ActiveX Data Objects 6.1
-            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6.1, 0
+    
+        If Not MiscEarlyBindings_isBindingNameLoaded("ADODB") Then
+            'Microsoft ActiveX Data Objects 6.0 Library
+            ThisWorkbook.VBProject.References.addFromGuid "{B691E011-1797-432E-907A-4D8C69339129}", 6, 0
         End If
         
-        If Not isBindingNameLoaded("VBIDE") Then
+
+        If Not MiscEarlyBindings_isBindingNameLoaded("VBIDE") Then
             'Microsoft Visual Basic for Applications Extensibility 5.3
-            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5.3, 0
+            ThisWorkbook.VBProject.References.addFromGuid "{0002E157-0000-0000-C000-000000000046}", 5, 3
         End If
-        
-        
-        If Not isBindingNameLoaded("Scripting") Then
-            'Microsoft Scripting Runtime version 1.0
+
+
+        If Not MiscEarlyBindings_isBindingNameLoaded("Scripting") Then
+            'Microsoft Scripting Runtime
             ThisWorkbook.VBProject.References.addFromGuid "{420B2830-E718-11CF-893D-00A0C9054228}", 1, 0
         End If
         
     
-        If Not isBindingNameLoaded("VBScript_RegExp_55") Then
+        If Not MiscEarlyBindings_isBindingNameLoaded("VBScript_RegExp_55") Then
             'Microsoft VBScript Regular Expressions 5.5
             ThisWorkbook.VBProject.References.addFromGuid "{3F4DACA7-160D-11D2-A8E9-00104B365C9F}", 5, 5
         End If
-        
-        If Not isBindingNameLoaded("Shell32") Then
+
+
+        If Not MiscEarlyBindings_isBindingNameLoaded("Shell32") Then
             'Microsoft Shell Controls And Automation
             ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
         End If
+
                 
     Exit Sub
 ErrorHandler:
 End Sub
 
-
 '**********************************************************************************
 '* Verify if a reference is loaded
 '**********************************************************************************
-Private Function isBindingNameLoaded(ref As String) As Boolean
+Private Function MiscEarlyBindings_isBindingNameLoaded(ref As String) As Boolean
     ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
-    isBindingNameLoaded = False
+    MiscEarlyBindings_isBindingNameLoaded = False
     Dim xRef As Variant
     For Each xRef In ThisWorkbook.VBProject.References
         If LCase(xRef.Name) = LCase(ref) Then
-            isBindingNameLoaded = True
+            MiscEarlyBindings_isBindingNameLoaded = True
         End If
     Next xRef
     
 End Function
 
-
 '**********************************************************************************
 '* Print all current active GUIDs
 '**********************************************************************************
-Private Sub printAllEarlyBindings()
-    ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
+Private Sub MiscEarlyBindings_printAllEarlyBindings()
+    Dim codeString As String
+    Dim codeStringTmp As String
+    
+    codeString = "" & _
+        "If Not isBindingNameLoaded(""__name__"") Then" & chr(10) & _
+        "    '__description__" & chr(10) & _
+        "    ThisWorkbook.VBProject.References.addFromGuid ""__guid__"", __major__, __minor__" & chr(10) & _
+        "End If" & chr(10)
+        
+        
     Dim xRef As Variant
     For Each xRef In ThisWorkbook.VBProject.References
-        Debug.Print "**************" & xRef.Name
-        Debug.Print xRef.Description
-        Debug.Print xRef.Major
-        Debug.Print xRef.Minor
-        Debug.Print xRef.FullPath
-        Debug.Print xRef.GUID
-        Debug.Print ""
+        codeStringTmp = codeString
+        codeStringTmp = Replace(codeStringTmp, "__name__", xRef.Name)
+        codeStringTmp = Replace(codeStringTmp, "__description__", xRef.Description)
+        codeStringTmp = Replace(codeStringTmp, "__guid__", xRef.GUID)
+        codeStringTmp = Replace(codeStringTmp, "__major__", xRef.Major)
+        codeStringTmp = Replace(codeStringTmp, "__minor__", xRef.Minor)
+        
+        Debug.Print
+        Debug.Print codeStringTmp
+        
     Next xRef
     
 End Sub
 
-'************"MiscEnsureDictIUtil"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscEnsureDictIUtil
 Function EnsureDictI(Container As Variant) As Object
     Dim key As Variant
     Dim Item As Variant
@@ -740,12 +677,9 @@ Function EnsureDictI(Container As Variant) As Object
     End If
 End Function
 
-'************"MiscErrorMessage"
-
-'@Folder("error handling")
-
+'*************** MiscErrorMessage
 Function ErrorMessage(ErrorCode As Integer, _
-                              Optional SubMessage As String) As String
+                      Optional SubMessage As String) As String
 
     Dim M As String
     Select Case ErrorCode
@@ -897,9 +831,7 @@ Function BreakLines(SubMessage As String) As String
     
 End Function
 
-'************"MiscExcel"
-
-
+'*************** MiscExcel
 Public Function ExcelBook( _
       Path As String _
     , Optional MustExist As Boolean = False _
@@ -911,14 +843,14 @@ Public Function ExcelBook( _
     
     On Error GoTo finally
     
-    If fso.FileExists(Path) Then
+    If FSO.FileExists(Path) Then
     
         Set ExcelBook = OpenWorkbook(Path, ReadOnly)
     
     Else
         
         If MustExist Then
-            Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+            Err.Raise -999, , "FileNotFoundError: File '" & FSO.GetAbsolutePathName(Path) & "' does not exist."
         Else
             Set ExcelBook = Workbooks.Add
             
@@ -948,30 +880,26 @@ Function OpenWorkbook( _
     ) As Workbook
     
     
-    If hasKey(Workbooks, fso.GetFileName(Path)) Then
-        Set OpenWorkbook = Workbooks(fso.GetFileName(Path))
+    If hasKey(Workbooks, FSO.GetFileName(Path)) Then
+        Set OpenWorkbook = Workbooks(FSO.GetFileName(Path))
         
         ' check if the workbook is actually the one specified in path
         ' use AbsolutePathName to remove any relative path references  (\..\ / \.\)
-        If LCase(OpenWorkbook.FullName) <> LCase(fso.GetAbsolutePathName(Path)) Then
-            Debug.Print fso.GetAbsolutePathName(Path)
-            Err.Raise 457, , "Existing workbook with the same name is already open: '" & fso.GetFileName(Path) & "'"
+        If LCase(OpenWorkbook.FullName) <> LCase(FSO.GetAbsolutePathName(Path)) Then
+            Debug.Print FSO.GetAbsolutePathName(Path)
+            Err.Raise 457, , "Existing workbook with the same name is already open: '" & FSO.GetFileName(Path) & "'"
         End If
         
         If ReadOnly And OpenWorkbook.ReadOnly = False Then
-            Err.Raise -999, , "Workbook'" & fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
+            Err.Raise -999, , "Workbook'" & FSO.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
         End If
     Else
         Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
     End If
 End Function
 
-
-'************"MiscFreezePanes"
-'@IgnoreModule ImplicitByRefModifier
-
-
-Private Sub test()
+'*************** MiscFreezePanes
+Private Sub MiscFreezePanes_test()
     
     
     Dim WS As Worksheet
@@ -1022,11 +950,8 @@ Public Sub UnFreezePanes(WS As Worksheet)
     CurrentActiveSheet.Activate
 End Sub
 
-'************"MiscGetUniqueItems"
-'@IgnoreModule ImplicitByRefModifier
-
-
-Private Sub TestGetUniqueItems()
+'*************** MiscGetUniqueItems
+Private Sub MiscGetUniqueItems_TestGetUniqueItems()
     Dim arr(3) As Variant
     
     arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
@@ -1048,7 +973,7 @@ End Sub
 
 Public Function GetUniqueItems(arr() As Variant, _
             Optional CaseSensitive As Boolean = True) As Variant
-    If ArrayLen(arr) = 0 Then
+    If MiscGetUniqueItems_ArrayLen(arr) = 0 Then
         GetUniqueItems = Array()
     Else
         Dim d As New Dictionary
@@ -1067,24 +992,18 @@ Public Function GetUniqueItems(arr() As Variant, _
     End If
 End Function
 
-
 ' Returns the number of elements in an array for a given dimension.
-Private Function ArrayLen(arr As Variant, _
+Private Function MiscGetUniqueItems_ArrayLen(arr As Variant, _
     Optional dimNum As Integer = 1) As Long
     
     If IsEmpty(arr) Then
-        ArrayLen = 0
+        MiscGetUniqueItems_ArrayLen = 0
     Else
-        ArrayLen = UBound(arr, dimNum) - LBound(arr, dimNum) + 1
+        MiscGetUniqueItems_ArrayLen = UBound(arr, dimNum) - LBound(arr, dimNum) + 1
     End If
 End Function
 
-
-
-'************"MiscGroupOnIndentations"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscGroupOnIndentations
 Public Sub GroupRowsOnIndentations(r As Range)
     ' groups the rows based on indentations of the cells in the range
 
@@ -1105,14 +1024,12 @@ Public Sub GroupColumnsOnIndentations(r As Range)
     
 End Sub
 
-
-Private Sub TestRemoveGroupings()
+Private Sub MiscGroupOnIndentations_TestRemoveGroupings()
     ' Test rows
     RemoveRowGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
     ' Test columns
     RemoveColumnGroupings ThisWorkbook.Worksheets("GroupOnIndentations")
 End Sub
-
 
 Public Sub RemoveRowGroupings(WS As Worksheet)
     Dim r As Range
@@ -1134,14 +1051,10 @@ Public Sub RemoveColumnGroupings(WS As Worksheet)
     Next ri
 End Sub
 
-
-'************"MiscHasKey"
-' Functions to check whether a key exists in a container
-
-
+'*************** MiscHasKey
 '@IgnoreModule ImplicitByRefModifier
 
-Private Sub TestHasKey()
+Private Sub MiscHasKey_TestHasKey()
 
     Dim c As New Collection
     c.Add "a", "a"
@@ -1184,7 +1097,6 @@ Private Sub TestHasKey()
     On Error GoTo 0
 
 End Sub
-
 
 Public Function hasKey(Container As Variant, key As Variant) As Boolean
     ' Checks whether a key exists in an existing container
@@ -1259,11 +1171,7 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     
 End Function
 
-
-'************"MiscNewKeys"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscNewKeys
 ' this module is used to generate new keys to a container (collections, dict, sheets, etc)
 ' Use case is when we want to create a new sheet, but
 ' want to ensure we don't give a name that already exists in the workbook
@@ -1283,7 +1191,7 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     End If
 End Function
 
-Private Sub TestGetNewKey()
+Private Sub MiscNewKeys_TestGetNewKey()
 
     Dim c As New Collection
     Dim I As Long
@@ -1297,7 +1205,6 @@ Private Sub TestGetNewKey()
     Debug.Print GetNewKey("NewName", c), "NewName"
 
 End Sub
-
 
 Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
     ' get a key that does not exists in a container (dict or collection)
@@ -1331,16 +1238,12 @@ Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLeng
     End If
 End Function
 
-'************"MiscPowerQuery"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscPowerQuery
 ' Helpful functions to help with Power Query manipulations in VBA
 
-Private Sub MiscPowerQueryTests()
+Private Sub MiscPowerQuery_MiscPowerQueryTests()
     Debug.Print doesQueryExist("foo"), False
 End Sub
-
 
 Public Function doesQueryExist(ByVal queryName As String, Optional WB As Workbook) As Boolean
     
@@ -1356,7 +1259,6 @@ Public Function doesQueryExist(ByVal queryName As String, Optional WB As Workboo
     doesQueryExist = False
 End Function
 
-
 Public Function getQuery(Name As String, Optional WB As Workbook) As WorkbookQuery
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -1371,7 +1273,6 @@ Public Function getQuery(Name As String, Optional WB As Workbook) As WorkbookQue
     Err.Raise 999, , "Query " & Name & " does not exist"
     
 End Function
-
 
 Public Function updateQuery(Name As String, queryFormula As String, Optional WB As Workbook) As WorkbookQuery
     If WB Is Nothing Then Set WB = ThisWorkbook
@@ -1398,7 +1299,6 @@ Public Function updateQueryAndRefreshListObject(Name As String, queryFormula As 
     WaitForListObjectRefresh Name, WB
     
 End Function
-
 
 Public Sub WaitForListObjectRefresh(Name As String, Optional WB As Workbook)
     If WB Is Nothing Then Set WB = ThisWorkbook
@@ -1483,19 +1383,12 @@ Function addToWorkbookConnections(Query As WorkbookQuery, Optional WB As Workboo
 
 End Function
 
-
-
 Sub refreshAllQueriesAndPivots(Optional WB As Workbook)
     If WB Is Nothing Then Set WB = ThisWorkbook
     WB.RefreshAll
 End Sub
 
-
-
-'************"MiscRangeToArray"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscRangeToArray
 ' Converts a range to a normalized array.
 Public Function RangeToArray(r As Range, _
                 Optional IgnoreEmptyInFlatArray As Boolean) As Variant()
@@ -1510,8 +1403,6 @@ Public Function RangeToArray(r As Range, _
         RangeToArray = r.Value
     End If
 End Function
-
-
 
 Public Function RangeTo1DArray( _
               r As Range _
@@ -1555,7 +1446,7 @@ Public Function RangeTo1DArray( _
     
 End Function
 
-Private Function TestRangeTo2DArray()
+Private Function MiscRangeToArray_TestRangeTo2DArray()
     Debug.Print RangeTo2DArray(Range("A1"))(1, 1) ' should not throw an error
     Debug.Print RangeTo2DArray(Range("A1:B1"))(1, 2) ' should not throw an error
     Debug.Print RangeTo2DArray(Range("A1:A2"))(2, 1) ' should not throw an error
@@ -1576,10 +1467,7 @@ Public Function RangeTo2DArray(r As Range) As Variant
     
 End Function
 
-'************"MiscRemoveGridLines"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscRemoveGridLines
 Public Sub RemoveGridLines(WS As Worksheet)
     Dim view As WorksheetView
     For Each view In WS.Parent.Windows(1).SheetViews
@@ -1590,10 +1478,7 @@ Public Sub RemoveGridLines(WS As Worksheet)
     Next
 End Sub
 
-'************"MiscString"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscString
 Public Function randomString(length As Variant)
     Dim s As String
     While Len(s) < length
@@ -1602,11 +1487,7 @@ Public Function randomString(length As Variant)
     randomString = Mid(s, 1, length)
 End Function
 
-
-'************"MiscTables"
-'@IgnoreModule ImplicitByRefModifier
-
-
+'*************** MiscTables
 Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
 
     If WB Is Nothing Then Set WB = ThisWorkbook
@@ -1625,7 +1506,6 @@ Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
     HasLO = False
 
 End Function
-
 
 ' get list object only using it's name from within a workbook
 Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
@@ -1650,8 +1530,7 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
 
 End Function
 
-
-Private Sub TestTableToArray()
+Private Sub MiscTables_TestTableToArray()
     TableToArray "foo"
 End Sub
 
@@ -1710,7 +1589,6 @@ The name of the table to be found is case insensitive
     
 End Function
 
-
 Function GetAllTables(WB As Workbook) As Collection
     Set GetAllTables = New Collection
     
@@ -1738,7 +1616,6 @@ Function GetAllTables(WB As Workbook) As Collection
     
 End Function
 
-
 Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
     ' Converts a table's column to a 1-dimensional array
     
@@ -1754,11 +1631,8 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     TableColumnToArray = arr
 End Function
 
-'************"MiscTableToDicts"
-'@IgnoreModule ImplicitByRefModifier
-
-
-Private Sub TableToDictsTest()
+'*************** MiscTableToDicts
+Private Sub MiscTableToDicts_TableToDictsTest()
     Dim Dicts As Collection
     Set Dicts = TableToDicts("TableToDictsTestData")
     ' read row 2 in column "b":
@@ -1788,7 +1662,6 @@ in a dictionary with key `__source__`
         dict.Add "__source__", dicti("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
     Next dict
 End Function
-
 
 Public Function TableToDicts( _
           TableName As String _
@@ -1834,13 +1707,12 @@ Public Function TableToDicts( _
     
 End Function
 
-Private Function TestGetTableRowIndex()
+Private Function MiscTableToDicts_TestGetTableRowIndex()
     Dim Table As Collection
     Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
     Debug.Print GetTableRowIndex(Table, col("a", "b"), col(3, 4)), 2
     Debug.Print GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")), 3
 End Function
-
 
 Function TableLookupValue( _
         Table As Variant _
@@ -1862,7 +1734,7 @@ Function TableLookupValue( _
     If Not IsEmpty(default) Then On Error GoTo SetDefault
     
     Dim dict As Dictionary
-    Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
+    Set dict = MiscTableToDicts_EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
     TableLookupValue = dictget(dict, ValueColName, default)
     
     Exit Function
@@ -1895,7 +1767,6 @@ Function GetTableRowRange( _
     
 End Function
 
-
 Function GetTableColumnRange( _
       TableName As String _
     , Column As String _
@@ -1921,7 +1792,6 @@ found:
 
 End Function
 
-
 Public Function TableLookupCell( _
       TableName As String _
     , Columns As Collection _
@@ -1934,16 +1804,15 @@ Public Function TableLookupCell( _
 
 End Function
 
-Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As Collection
+Private Function MiscTableToDicts_EnsureTableDicts(Table As Variant, Optional WB As Workbook) As Collection
     
     If TypeOf Table Is Collection Then ' assume if collection, it's already a TableDicts object
-        Set EnsureTableDicts = Table
+        Set MiscTableToDicts_EnsureTableDicts = Table
     Else
-        Set EnsureTableDicts = TableToDicts(CStr(Table), WB)
+        Set MiscTableToDicts_EnsureTableDicts = TableToDicts(CStr(Table), WB)
     End If
 
 End Function
-
 
 Function GetTableRowIndex( _
       Table As Variant _
@@ -1965,7 +1834,7 @@ Function GetTableRowIndex( _
     Dim isMatch As Boolean
     Dim RowNumber As Long
     
-    For Each dict In EnsureTableDicts(Table, WB)
+    For Each dict In MiscTableToDicts_EnsureTableDicts(Table, WB)
         isMatch = True
         RowNumber = RowNumber + 1
         For Each keyValuePair In zip(Columns, Values)
@@ -1992,3 +1861,4 @@ Public Sub GotoRowInTable( _
     )
     Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub
+
