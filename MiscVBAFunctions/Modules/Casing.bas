@@ -1,5 +1,4 @@
-Attribute VB_Name = "Test__Casing"
-Option Explicit
+Attribute VB_Name = "Casing"
 ' Uncomment and comment block to get casing back for the project
 '
 '
@@ -15,4 +14,3 @@ Option Explicit
 'Dim Values
 'Dim Column
 'Dim ColumnName
-'Dim chr

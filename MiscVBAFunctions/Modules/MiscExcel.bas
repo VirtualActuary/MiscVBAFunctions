@@ -9,6 +9,17 @@ Public Function ExcelBook( _
     , Optional CloseOnError As Boolean = False _
     ) As Workbook
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
+    ' Create an Excel Workbook with custom arguments.
+    '
+    ' Args:
+    '   Path: Path to the file.
+    '   MustExist: If True, the file must exist. If it doesn't an error is raised.
+    '   ReadOnly: If True, the file is opened in readOnly mode.
+    '   SaveOnError: If True, the file is saved if an error is raised.
+    '   CloseOnError: If True, close the file if an error was raised.
+    '
+    ' Returns:
+    '   The created/opened Workbook.
     
     On Error GoTo finally
     
@@ -43,11 +54,19 @@ finally:
     
 End Function
 
-Function OpenWorkbook( _
+Public Function OpenWorkbook( _
       Path As String _
     , Optional ReadOnly As Boolean = False _
     ) As Workbook
-    
+    ' Open a Workbook. An error is raised if a file with the same name is already open.
+    ' If ReadOnly is True and the Workbook is already open but not in ReadOnly mode, an error is raised.
+    '
+    ' Args:
+    '   Path: Path to the file that gets opened.
+    '   ReadOnly: If True, the file gets opened in ReadOnly mode.
+    '
+    ' Returns:
+    '   The opened Workbook.
     
     If hasKey(Workbooks, fso.GetFileName(Path)) Then
         Set OpenWorkbook = Workbooks(fso.GetFileName(Path))

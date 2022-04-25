@@ -2,9 +2,8 @@ Attribute VB_Name = "MiscFreezePanes"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
+
 Private Sub test()
-    
-    
     Dim WS As Worksheet
     Set WS = ThisWorkbook.Worksheets(1)
     FreezePanes WS.Range("D6")
@@ -13,6 +12,11 @@ Private Sub test()
 End Sub
 
 Public Sub FreezePanes(r As Range)
+    ' FreezePanes on the current active sheet. Removes FreezedPanes if it already exists.
+    '
+    ' Args:
+    '   r: (row, column) cell where the FreezePanes should occur
+    '
     
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet
@@ -40,7 +44,12 @@ Public Sub FreezePanes(r As Range)
 End Sub
 
 Public Sub UnFreezePanes(WS As Worksheet)
-    
+    '
+    '
+    ' Args:
+    '   WS: Worksheet where this function will execute.
+    '
+
     Dim CurrentActiveSheet As Worksheet
     Set CurrentActiveSheet = ActiveSheet
     

@@ -2,10 +2,17 @@ Attribute VB_Name = "MiscArray"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-' Functions for 1D and 2D arrays only.
-' Replaces all Errors in the input array with vbNullString.
-' The input array is modified (pass by referance) and the function returns the array
 Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Variant
+    ' Replaces all Errors in the input array with vbNullString.
+    ' The input array is modified (pass by referance) and the function returns the array
+    ' Functions for 1D and 2D arrays only.
+    '
+    ' Args:
+    '   tableArr: Array that potentially contains error entries.
+    '
+    ' Returns:
+    '   Array with the changed values.
+    
     If is2D(tableArr) Then
         ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
     Else
@@ -14,13 +21,20 @@ Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Varian
 End Function
 
 
-' Functions for 1D and 2D arrays only.
-' Converts the decimal seperator in the float input to a "." for each entry in the input array
-' and returns the result as a string.
-' Only works when converting from the system's decimal seperator.
-' Custom seperators not supported.
-' The input array is modified (pass by referance) and the function returns the array.
 Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Variant
+    ' Converts the decimal seperator in the float input to a "." for each entry in the input array
+    ' and returns the result as an array of strings.
+    ' Only works when converting from the system's decimal seperator.
+    ' Custom seperators not supported.
+    ' The input array is modified (pass by referance) and the function returns the array.
+    ' Functions for 1D and 2D arrays only.
+    '
+    ' Args:
+    '   tableArr: Array with float entries. Non numeric entries gets skipped.
+    '
+    ' Returns:
+    '   Array with the changed string values.
+    
     If is2D(tableArr) Then
         EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
     Else
@@ -29,10 +43,18 @@ Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Varia
 End Function
 
 
-' Functions for 1D and 2D arrays only.
-' Converts all Date/DateTime entries in the input array to string.
-' The input array is modified (pass by referance) and the function returns the array.
 Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt As String = "yyyy-mm-dd") As Variant
+    ' Converts all Date/DateTime entries in the input array to string.
+    ' The input array is modified (pass by referance) and the function returns the array.
+    ' Functions for 1D and 2D arrays only.
+    '
+    ' Args:
+    '   tableArr: Array with potential Date/DateTime entries.
+    '   fmt: String format of the date that it must convert to. Default = "yyyy-mm-dd"
+    '
+    ' Returns:
+    '   Array where the Date/DateTime entries have been converted.
+
     If is2D(tableArr) Then
         DateToStringTransformation = DateToString2D(tableArr, fmt)
     Else

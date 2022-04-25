@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscDictionary"
+Attribute VB_Name = "Test__MiscFreezePanes"
 Option Explicit
 Option Private Module
 
@@ -32,20 +32,22 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget()
+'@TestMethod("MiscFreezePanes")
+Private Sub Test_FreezePanes()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
-    
+    Dim WS As Worksheet
+    Dim WB As Workbook
     'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
+    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscFreezePanes\MiscFreezePanes.xlsx"), True, True)
+    Set WS = WB.Worksheets(1)
+    FreezePanes WS.Range("D6")
+    
     'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+    With Application.Windows(WS.Parent.Name)
+        Assert.IsTrue .FreezePanes
+    End With
 
 TestExit:
     Exit Sub
@@ -54,28 +56,30 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget_fail()
-    Const ExpectedError As Long = 9
+'@TestMethod("MiscFreezePanes")
+Private Sub Test_UnFreezePanes()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    dictget d, "c"
+    Dim WS As Worksheet
+    Dim WB As Workbook
     
-Assert:
-    Assert.Fail "Expected error was not raised"
+    
+    'Act:
+    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscFreezePanes\MiscFreezePanes.xlsx"), True, True)
+    Set WS = WB.Worksheets(1)
+    FreezePanes WS.Range("D6")
+    UnFreezePanes WS
+    
+    'Assert:
+    With Application.Windows(WS.Parent.Name)
+        Assert.IsFalse .FreezePanes
+    End With
+    
 
 TestExit:
     Exit Sub
 TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub

@@ -10,6 +10,14 @@ End Sub
 
 
 Public Function doesQueryExist(ByVal queryName As String, Optional WB As Workbook) As Boolean
+    ' Check if a Query exists in the given Workbook.
+    '
+    ' Args:
+    '   queryName: Name of the Query to look for.
+    '   WB: Name of the WorkBook to look in.
+    '
+    ' Returns:
+    '   True if the Query exists, False otherwise.
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     ' Helper function to check if a query with the given name already exists
@@ -25,6 +33,15 @@ End Function
 
 
 Public Function getQuery(Name As String, Optional WB As Workbook) As WorkbookQuery
+    ' Return the desired Query if it exists. If the Query doesn't exist, an error is raised.
+    '
+    ' Args:
+    '   Name: Name of the Query to look for.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   The desired Query.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     Dim qry As WorkbookQuery
@@ -41,6 +58,16 @@ End Function
 
 
 Public Function updateQuery(Name As String, queryFormula As String, Optional WB As Workbook) As WorkbookQuery
+    ' Update the selected Query. If the Query doesn't exist, a new Query is added.
+    '
+    ' Args:
+    '   Name: Name of the Query.
+    '   queryFormula: New Formula of the Query.
+    '   WB: Selected WorkBook
+    '
+    ' Returns:
+    '   Updated or new Query.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     ' updates a query to the new formula
     ' if the query doesn't exist, a new one is created
@@ -55,6 +82,16 @@ Public Function updateQuery(Name As String, queryFormula As String, Optional WB 
 End Function
 
 Public Function updateQueryAndRefreshListObject(Name As String, queryFormula As String, Optional WB As Workbook) As WorkbookQuery
+    ' Update the selected Query and refresh the list of objects.
+    '
+    ' Args:
+    '   Name: Name of the Query to update.
+    '   queryFormula: New Formula of the Query.
+    '   WB: The selected Workbook.
+    '
+    ' Returns:
+    '   Updated or new Query.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     ' updates a power query query
     ' Also waits for the query to refresh before continuing the code
@@ -68,6 +105,12 @@ End Function
 
 
 Public Sub WaitForListObjectRefresh(Name As String, Optional WB As Workbook)
+    ' Refresh elements in the QueryTable.
+    '
+    ' Args:
+    '   Name: Name of the ListObject.
+    '   WB: Name of the WorkBook.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     ' Refreshes the query before continuing the code
     
@@ -84,8 +127,11 @@ Public Sub WaitForListObjectRefresh(Name As String, Optional WB As Workbook)
 End Sub
 
 Public Sub loadToWorkbook(queryName As String, Optional WB As Workbook)
-    
     ' loads a query to a sheet in the workbook
+    '
+    ' Args:
+    '   queryName: Name of the query to load to the WorkBook
+    '   WB: Name of the WorkBook.
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -122,8 +168,12 @@ Public Sub loadToWorkbook(queryName As String, Optional WB As Workbook)
     
 End Sub
 
-Function addToWorkbookConnections(Query As WorkbookQuery, Optional WB As Workbook) As WorkbookConnection
+Public Function addToWorkbookConnections(Query As WorkbookQuery, Optional WB As Workbook) As WorkbookConnection
     ' adds a query to workbookconnections so that it can be used in pivot tables
+    '
+    ' Args:
+    '   Query: Query that gets added to the workbookconnections.
+    '   WB: Name of the WorkBook
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -152,7 +202,12 @@ End Function
 
 
 
-Sub refreshAllQueriesAndPivots(Optional WB As Workbook)
+Public Sub refreshAllQueriesAndPivots(Optional WB As Workbook)
+    ' Refresh all Queries and Pivots.
+    '
+    ' Args:
+    '   WB: Name of the WorkBook
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     WB.RefreshAll
 End Sub

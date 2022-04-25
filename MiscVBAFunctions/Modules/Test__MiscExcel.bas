@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscDictionary"
+Attribute VB_Name = "Test__MiscExcel"
 Option Explicit
 Option Private Module
 
@@ -32,20 +32,21 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget()
+'@TestMethod("MiscExcel")
+Private Sub Test_ExcelBook()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim WB1 As New Workbook
+    Dim WB2 As New Workbook
     
     'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
+    Set WB1 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), True, True)
+    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel_added.xlsx"), False, True)
+
 
     'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+    Assert.Succeed
 
 TestExit:
     Exit Sub
@@ -54,19 +55,17 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget_fail()
-    Const ExpectedError As Long = 9
+'@TestMethod("MiscExcel")
+Private Sub Test_fail_ExcelBook()
+    Const ExpectedError As Long = -999
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    dictget d, "c"
+    Dim WB As New Workbook
     
+    'Act:
+    WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
+
 Assert:
     Assert.Fail "Expected error was not raised"
 
@@ -78,4 +77,22 @@ TestFail:
     Else
         Resume Assert
     End If
+End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_OpenWorkbook()
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    'Act:
+
+    'Assert:
+    Assert.Fail
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub

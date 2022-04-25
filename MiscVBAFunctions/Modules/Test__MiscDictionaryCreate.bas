@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscDictionary"
+Attribute VB_Name = "Test__MiscDictionaryCreate"
 Option Explicit
 Option Private Module
 
@@ -32,8 +32,8 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget()
+'@TestMethod("MiscDictionaryCreate")
+Private Sub Test_dict()
     On Error GoTo TestFail
     
     'Arrange:
@@ -43,9 +43,8 @@ Private Sub Test_dictget()
     Set d = dict("a", 2, "b", ThisWorkbook)
 
     'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+    Assert.AreEqual 2, d.Item("a")
+    Assert.AreEqual ThisWorkbook.Name, d.Item("b").Name
 
 TestExit:
     Exit Sub
@@ -54,28 +53,25 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget_fail()
-    Const ExpectedError As Long = 9
+'@TestMethod("MiscDictionaryCreate")
+Private Sub Test_dicti()
     On Error GoTo TestFail
     
     'Arrange:
     Dim d As Dictionary
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    dictget d, "c"
     
-Assert:
-    Assert.Fail "Expected error was not raised"
+    'Act:
+    Set d = dicti("a", 2, "b", ThisWorkbook)
+
+    'Assert:
+    Assert.AreEqual 2, d.Item("a")
+    Assert.AreEqual 2, d.Item("A")
+    Assert.AreEqual ThisWorkbook.Name, d.Item("b").Name
+    Assert.AreEqual ThisWorkbook.Name, d.Item("B").Name
 
 TestExit:
     Exit Sub
 TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub

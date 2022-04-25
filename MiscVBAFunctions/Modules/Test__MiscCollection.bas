@@ -164,3 +164,24 @@ TestFail:
         Resume Assert
     End If
 End Sub
+
+'@TestMethod("MiscCollection.IsValueInCollection")
+Private Sub Test_IsValueInCollection()
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    'Act:
+
+    'Assert:
+
+    Assert.IsTrue IsValueInCollection(col("a", "b"), "b")
+    Assert.IsFalse IsValueInCollection(col("a", "b"), "c")
+    Assert.IsFalse IsValueInCollection(col("a", "b"), "B", True)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub

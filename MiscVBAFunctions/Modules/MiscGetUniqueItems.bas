@@ -24,6 +24,15 @@ End Sub
 
 Public Function GetUniqueItems(arr() As Variant, _
             Optional CaseSensitive As Boolean = True) As Variant
+    'Return an array with unique values from the input array.
+    '
+    ' Args:
+    '   arr: Array with potential duplicate entries.
+    '   CaseSensitive: If true, the duplicate checks will be case sensitive.
+    '
+    ' Returns:
+    '   An array with unique entries.
+    
     If ArrayLen(arr) = 0 Then
         GetUniqueItems = Array()
     Else

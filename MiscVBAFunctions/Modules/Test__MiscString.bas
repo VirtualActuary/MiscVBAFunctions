@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscDictionary"
+Attribute VB_Name = "Test__MiscString"
 Option Explicit
 Option Private Module
 
@@ -32,50 +32,21 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget()
+'@TestMethod("MiscString")
+Private Sub Test_randomString()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
-    
+
     'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
 
     'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+    Assert.AreEqual 4, CInt(Len(randomString(4)))
+    Assert.AreNotEqual randomString(5), randomString(5)
 
 TestExit:
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
-End Sub
-
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget_fail()
-    Const ExpectedError As Long = 9
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim d As Dictionary
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    dictget d, "c"
-    
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
 End Sub

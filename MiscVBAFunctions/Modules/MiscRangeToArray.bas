@@ -2,11 +2,18 @@ Attribute VB_Name = "MiscRangeToArray"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-' Converts a range to a normalized array.
 Public Function RangeToArray(r As Range, _
                 Optional IgnoreEmptyInFlatArray As Boolean) As Variant()
+    ' Converts a range to a normalized array.
     ' vectors allocated to 1-dimensional arrays
     ' tables allocated to 2-dimensional array
+    '
+    ' Args:
+    '   r: Range to be converted to an array.
+    '   IgnoreEmptyInFlatArray: If True, skip over empty results.
+    '
+    ' Returns:
+    '   The normalized array.
     
     If r.Cells.Count = 1 Then
         RangeToArray = Array(r.Value)
@@ -17,15 +24,19 @@ Public Function RangeToArray(r As Range, _
     End If
 End Function
 
-
-
 Public Function RangeTo1DArray( _
               r As Range _
             , Optional IgnoreEmpty As Boolean = True _
             ) As Variant()
-    
     ' currently does the same as rangeToArray, just named better and is more efficient
     ' instead of reading from memory for every range item, we read it in only once
+    '
+    ' Args:
+    '   r: Range to be converted to an array.
+    '   IgnoreEmpty: If True, skip over empty results.
+    '
+    ' Returns:
+    '   The normalized array.
     
     Dim arr() As Variant ' the output array
     ReDim arr(r.Cells.Count - 1)
@@ -71,6 +82,13 @@ End Function
 Public Function RangeTo2DArray(r As Range) As Variant
     ' ensure a range is converted to a 2-dimensional array
     ' special treatment on edge cases where a range is a 1x1 scalar
+    '
+    ' Args:
+    '   r: Range to be converted to an array.
+    '
+    ' Returns:
+    '   2D array.
+    
     If r.Cells.Count = 1 Then
         Dim arr() As Variant
         ReDim arr(1 To 1, 1 To 1) ' make it base 1, similar to what .value does for non-scalars
