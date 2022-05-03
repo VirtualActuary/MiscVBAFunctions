@@ -1,6 +1,12 @@
 Attribute VB_Name = "MiscExcel"
 Option Explicit
 
+Private Sub ModuleInitialize()
+    Dim WB As Workbook
+    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel23763464453.xlsx"), True)
+    
+End Sub
+
 Public Function ExcelBook( _
       Path As String _
     , Optional MustExist As Boolean = False _
@@ -22,21 +28,19 @@ Public Function ExcelBook( _
     '   The created/opened Workbook.
     
     On Error GoTo finally
-    
     If fso.FileExists(Path) Then
-    
         Set ExcelBook = OpenWorkbook(Path, ReadOnly)
-    
     Else
-        
+        Debug.Print "3", MustExist
         If MustExist Then
+            'On Error GoTo 0
             Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
         Else
             Set ExcelBook = Workbooks.Add
             
-            If SaveOnError Then
-                ExcelBook.SaveAs Path
-            End If
+            'If SaveOnError Then
+            ExcelBook.SaveAs Path
+            'End If
         End If
         
     End If
@@ -51,6 +55,9 @@ finally:
     If CloseOnError Then
         ExcelBook.Close (False)
     End If
+    
+    Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
+    
     
 End Function
 
@@ -85,4 +92,6 @@ Public Function OpenWorkbook( _
         Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
     End If
 End Function
+
+
 

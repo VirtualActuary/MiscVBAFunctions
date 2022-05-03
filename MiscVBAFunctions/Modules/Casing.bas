@@ -1,4 +1,5 @@
 Attribute VB_Name = "Casing"
+Option Explicit
 ' Uncomment and comment block to get casing back for the project
 '
 '

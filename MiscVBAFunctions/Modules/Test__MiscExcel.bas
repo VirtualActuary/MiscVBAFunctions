@@ -43,12 +43,15 @@ Private Sub Test_ExcelBook()
     'Act:
     Set WB1 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), True, True)
     Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel_added.xlsx"), False, True)
-
+    WB1.Close False
+    WB2.Close False
 
     'Assert:
     Assert.Succeed
 
 TestExit:
+    
+    
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
@@ -65,7 +68,7 @@ Private Sub Test_fail_ExcelBook()
     
     'Act:
     WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
-
+    
 Assert:
     Assert.Fail "Expected error was not raised"
 
@@ -84,11 +87,12 @@ Private Sub Test_OpenWorkbook()
     On Error GoTo TestFail
     
     'Arrange:
-
+    Dim WB As Workbook
     'Act:
-
+    Set WB = OpenWorkbook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), False)
+    WB.Close False
     'Assert:
-    Assert.Fail
+    Assert.Succeed
 
 TestExit:
     Exit Sub
@@ -96,3 +100,4 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+

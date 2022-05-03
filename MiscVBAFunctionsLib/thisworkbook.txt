@@ -2,5 +2,6 @@
 Option Explicit
 
 Private Sub Workbook_Open()
-    addEarlyBindings
+    Dim d As New addEarlyBindings
+    d.addEarlyBindings
 End Sub

@@ -24,14 +24,15 @@ def get_app_clean():
                 path_source=app_dir,
                 auto_bas_namespace=False,
                 combine_bas_files=app_short_name,
-                glob_exclude=["**/test_*"]
+                glob_exclude=["**/test_*", "**/Casing.bas"],
+                auto_cls_rename = False
             )
         )
         conf.run(tmp)
 
         os.makedirs(output)
         for i in tmp.rglob("*"):
-            if str(i.name)[-4:] in (".txt", ".bas") and not i.name.startswith("z__"):
+            if str(i.name)[-4:] in (".txt", ".bas", ".cls") and not i.name.startswith("z__"):
                 shutil.move(i, Path(output, i.name))
 
         with Path(output, "thisworkbook.txt").open() as f:
