@@ -8,11 +8,9 @@ Private Sub ModuleInitialize()
 End Sub
 
 Public Function ExcelBook( _
-      Path As String _
+      Optional Path As String = "" _
     , Optional MustExist As Boolean = False _
     , Optional ReadOnly As Boolean = False _
-    , Optional SaveOnError As Boolean = False _
-    , Optional CloseOnError As Boolean = False _
     ) As Workbook
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
     ' Create an Excel Workbook with custom arguments.
@@ -21,43 +19,37 @@ Public Function ExcelBook( _
     '   Path: Path to the file.
     '   MustExist: If True, the file must exist. If it doesn't an error is raised.
     '   ReadOnly: If True, the file is opened in readOnly mode.
-    '   SaveOnError: If True, the file is saved if an error is raised.
-    '   CloseOnError: If True, close the file if an error was raised.
     '
     ' Returns:
     '   The created/opened Workbook.
     
-    On Error GoTo finally
-    If fso.FileExists(Path) Then
-        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
-    Else
-        Debug.Print "3", MustExist
+    If Len(Path) = 0 Then
         If MustExist Then
-            'On Error GoTo 0
-            Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
-        Else
-            Set ExcelBook = Workbooks.Add
-            
-            'If SaveOnError Then
-            ExcelBook.SaveAs Path
-            'End If
+            Err.Raise -997, , "Temp file can't have MustExist = True."
+        End If
+        If ReadOnly Then
+            Err.Raise -996, , "Temp file can't open in ReadOnly mode."
         End If
         
+        Set ExcelBook = Workbooks.Add
+        Exit Function
     End If
     
-    Exit Function
-    
-finally:
-    If SaveOnError Then
-        ExcelBook.Save
+    If fso.FileExists(Path) Then
+        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
+        Exit Function
     End If
     
-    If CloseOnError Then
-        ExcelBook.Close (False)
+    If MustExist Then
+        Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
     
-    Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
+    If ReadOnly Then
+        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+    End If
     
+    Set ExcelBook = Workbooks.Add
+    ExcelBook.SaveAs Path
     
 End Function
 

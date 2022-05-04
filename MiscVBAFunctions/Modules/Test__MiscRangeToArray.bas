@@ -51,12 +51,12 @@ Private Sub Test_RangeToArray_2D()
     y = RangeToArray(x)
 
     'Assert:
-    Assert.AreEqual 11, CInt(y(1, 1))
-    Assert.AreEqual 12, CInt(y(1, 2))
-    Assert.AreEqual 9, CInt(y(1, 3))
-    Assert.AreEqual 13, CInt(y(2, 1))
-    Assert.AreEqual 14, CInt(y(2, 2))
-    Assert.AreEqual 15, CInt(y(2, 3))
+    Assert.AreEqual 11, CInt(y(0, 0))
+    Assert.AreEqual 12, CInt(y(0, 1))
+    Assert.AreEqual 9, CInt(y(0, 2))
+    Assert.AreEqual 13, CInt(y(1, 0))
+    Assert.AreEqual 14, CInt(y(1, 1))
+    Assert.AreEqual 15, CInt(y(1, 2))
    
     Assert.AreEqual 2, CInt(UBound(y) - LBound(y) + 1)
     Assert.AreEqual 3, CInt(UBound(y, 2) - LBound(y, 2) + 1)

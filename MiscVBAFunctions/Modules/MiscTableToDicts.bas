@@ -75,7 +75,7 @@ Public Function TableToDicts( _
         
         If Columns Is Nothing Then
             For J = LBound(TableData, 2) To UBound(TableData, 2)
-                d.Add TableData(1, J), TableData(I, J)
+                d.Add TableData(0, J), TableData(I, J)
             Next J
         Else
             Dim ColumnName As Variant

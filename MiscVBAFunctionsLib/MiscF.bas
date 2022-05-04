@@ -890,11 +890,9 @@ Private Sub MiscExcel_ModuleInitialize()
 End Sub
 
 Public Function ExcelBook( _
-      Path As String _
+      Optional Path As String = "" _
     , Optional MustExist As Boolean = False _
     , Optional ReadOnly As Boolean = False _
-    , Optional SaveOnError As Boolean = False _
-    , Optional CloseOnError As Boolean = False _
     ) As Workbook
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
     ' Create an Excel Workbook with custom arguments.
@@ -903,43 +901,37 @@ Public Function ExcelBook( _
     '   Path: Path to the file.
     '   MustExist: If True, the file must exist. If it doesn't an error is raised.
     '   ReadOnly: If True, the file is opened in readOnly mode.
-    '   SaveOnError: If True, the file is saved if an error is raised.
-    '   CloseOnError: If True, close the file if an error was raised.
     '
     ' Returns:
     '   The created/opened Workbook.
     
-    On Error GoTo finally
-    If fso.FileExists(Path) Then
-        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
-    Else
-        Debug.Print "3", MustExist
+    If Len(Path) = 0 Then
         If MustExist Then
-            'On Error GoTo 0
-            Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
-        Else
-            Set ExcelBook = Workbooks.Add
-            
-            'If SaveOnError Then
-            ExcelBook.SaveAs Path
-            'End If
+            Err.Raise -997, , "Temp file can't have MustExist = True."
+        End If
+        If ReadOnly Then
+            Err.Raise -996, , "Temp file can't open in ReadOnly mode."
         End If
         
+        Set ExcelBook = Workbooks.Add
+        Exit Function
     End If
     
-    Exit Function
-    
-finally:
-    If SaveOnError Then
-        ExcelBook.Save
+    If fso.FileExists(Path) Then
+        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
+        Exit Function
     End If
     
-    If CloseOnError Then
-        ExcelBook.Close (False)
+    If MustExist Then
+        Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
     
-    Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
+    If ReadOnly Then
+        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+    End If
     
+    Set ExcelBook = Workbooks.Add
+    ExcelBook.SaveAs Path
     
 End Function
 
@@ -1588,7 +1580,7 @@ Public Function RangeToArray(r As Range, _
     ElseIf r.Rows.Count = 1 Or r.Columns.Count = 1 Then
         RangeToArray = RangeTo1DArray(r, IgnoreEmptyInFlatArray)
     Else
-        RangeToArray = r.Value
+        RangeToArray = RangeTo2DArray(r)
     End If
 End Function
 
@@ -1640,14 +1632,7 @@ Public Function RangeTo1DArray( _
     
 End Function
 
-Private Function MiscRangeToArray_TestRangeTo2DArray()
-    Debug.Print RangeTo2DArray(Range("A1"))(1, 1) ' should not throw an error
-    Debug.Print RangeTo2DArray(Range("A1:B1"))(1, 2) ' should not throw an error
-    Debug.Print RangeTo2DArray(Range("A1:A2"))(2, 1) ' should not throw an error
-    Debug.Print RangeTo2DArray(Range("A1:B2"))(2, 2) ' should not throw an error
-End Function
-
-Public Function RangeTo2DArray(r As Range) As Variant
+Public Function RangeTo2DArray(r As Range) As Variant()
     ' ensure a range is converted to a 2-dimensional array
     ' special treatment on edge cases where a range is a 1x1 scalar
     '
@@ -1658,13 +1643,30 @@ Public Function RangeTo2DArray(r As Range) As Variant
     '   2D array.
     
     If r.Cells.Count = 1 Then
-        Dim arr() As Variant
-        ReDim arr(1 To 1, 1 To 1) ' make it base 1, similar to what .value does for non-scalars
-        arr(1, 1) = r.Value
-        RangeTo2DArray = arr
-    Else
-        RangeTo2DArray = r.Value
+        Dim arr_single() As Variant
+        ReDim arr_single(1 To 1, 1 To 1) ' make it base 1, similar to what .value does for non-scalars
+        arr_single(1, 1) = r.Value
+        RangeTo2DArray = arr_single
+        Exit Function
     End If
+    
+    Dim Values() As Variant ' values of the whole range
+    Values = r.Value
+
+    Dim arr() As Variant ' the output array
+    ReDim arr(UBound(Values, 1) - LBound(Values, 1), UBound(Values, 2) - LBound(Values, 2))
+    Dim I As Long
+    Dim J As Long
+    Dim I_start As Long
+    Dim J_start As Long
+    I_start = LBound(Values, 1)
+    J_start = LBound(Values, 2)
+    For I = LBound(Values, 1) To UBound(Values, 1) ' rows
+        For J = LBound(Values, 2) To UBound(Values, 2) ' columns
+            arr(I - I_start, J - J_start) = Values(I, J)
+        Next J
+    Next I
+    RangeTo2DArray = arr
     
 End Function
 
@@ -1961,7 +1963,7 @@ Public Function TableToDicts( _
         
         If Columns Is Nothing Then
             For J = LBound(TableData, 2) To UBound(TableData, 2)
-                d.Add TableData(1, J), TableData(I, J)
+                d.Add TableData(0, J), TableData(I, J)
             Next J
         Else
             Dim ColumnName As Variant

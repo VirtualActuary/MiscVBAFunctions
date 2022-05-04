@@ -46,8 +46,8 @@ Private Sub TestListObjectsToDicts()
     
     ' Read all columns:
     Set Dicts = TableToDicts("ListObject1", WB)
-    Assert.AreEqual CInt(Dicts(2)("b")), 5
-    Assert.AreEqual CInt(Dicts(2)("B")), 5 ' must be case insensitive
+    Assert.AreEqual 5, CInt(Dicts(2)("b"))
+    Assert.AreEqual 5, CInt(Dicts(2)("B")) ' must be case insensitive
     
     Set Dicts = TableToDicts("ListObject1", WB, col("a", "C"))
     Assert.AreEqual True, hasKey(Dicts(1), "A") ' should contain A
