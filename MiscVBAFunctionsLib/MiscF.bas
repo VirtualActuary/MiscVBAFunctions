@@ -1357,7 +1357,7 @@ Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLeng
 End Function
 
 '*************** MiscOs
-Public Function Path(ParamArray entries() As Variant) As String
+Public Function Path(ParamArray Paths() As Variant) As String
     ' Combines folder pathes and the name of folders or a file and
     ' returns the combination with valid path separators.
     '
@@ -1369,10 +1369,10 @@ Public Function Path(ParamArray entries() As Variant) As String
     
     Dim Entry As Variant
     
-    Path = entries(0)
+    Path = Paths(0)
 
-    For Entry = LBound(entries) + 1 To UBound(entries)
-        Path = fso.BuildPath(Path, entries(Entry))
+    For Entry = LBound(Paths) + 1 To UBound(Paths)
+        Path = fso.BuildPath(Path, Paths(Entry))
     Next
     
 End Function

@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test_MiscOs"
+Attribute VB_Name = "Test__MiscOs"
 Option Explicit
 Option Private Module
 
@@ -46,6 +46,7 @@ Private Sub Test_Path()
     Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:\", "\folder1\", "\folder2\", "\folder3")
     
     Assert.AreEqual "folder\file.extension", Path("folder", "file.extension")
+    Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:\folder1\folder2\folder3")
 
 TestExit:
     Exit Sub
