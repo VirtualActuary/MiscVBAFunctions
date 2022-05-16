@@ -26,13 +26,16 @@ End Sub
 
 
 Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
-'   Params:
-'       d: Dictionary to read the value from...
-'       key: The key ....
-'
-'   Returns:
-'
-    
+    ' Return the entry in the input Dictionary at the given key. If the given key doesn't exist,
+    ' the default value is returned if it's not empty. Else an error is raised.
+    '
+    ' Args:
+    '   d: Dictionary to read the value from...
+    '   key: The key value that gets used to return the input Dictionary's value with the matching key.
+    '   default: The value that must be returned if the key doesn't exist in the Dictionary.
+    '
+    ' Returns:
+    '   The Dictionary's entry or the default value.
     
     If d.Exists(key) Then
         assign dictget, d.Item(key)

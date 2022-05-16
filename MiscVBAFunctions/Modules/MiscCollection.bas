@@ -2,7 +2,14 @@ Attribute VB_Name = "MiscCollection"
 Option Explicit
 
 
-Function min(ByVal col As Collection) As Variant
+Public Function min(ByVal col As Collection) As Variant
+    ' Returns the minimum value from the input Collection.
+    '
+    ' Args:
+    '   col: Collection with numerical values.
+    
+    ' Returns:
+    '   The minimum value in the collection.
     
     If col Is Nothing Then
         Err.Raise Number:=91, _
@@ -22,7 +29,15 @@ Function min(ByVal col As Collection) As Variant
     
 End Function
 
-Function max(ByVal col As Collection) As Variant
+Public Function max(ByVal col As Collection) As Variant
+    ' Returns the maximum value from the input Collection.
+    '
+    ' Args:
+    '   col: Collection with numerical values.
+    
+    ' Returns:
+    '   The maximum value in the collection.
+    
     If col Is Nothing Then
         Err.Raise Number:=91, _
               Description:="Collection input can't be empty"
@@ -39,7 +54,15 @@ Function max(ByVal col As Collection) As Variant
 
 End Function
 
-Function mean(ByVal col As Collection) As Variant
+Public Function mean(ByVal col As Collection) As Variant
+    ' Returns the mean value from the input Collection.
+    '
+    ' Args:
+    '   col: Collection with numerical values.
+    
+    ' Returns:
+    '   The mean value of the collection.
+    
     If col Is Nothing Then
         Err.Raise Number:=91, _
               Description:="Collection input can't be empty"
@@ -57,7 +80,17 @@ Function mean(ByVal col As Collection) As Variant
 End Function
 
 
-Function IsValueInCollection(col As Collection, val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
+Public Function IsValueInCollection(col As Collection, val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
+    ' Check if a value exists in the input Collection.
+    '
+    ' Args:
+    '   col: Collection that potentially contains val
+    '   val: The value to check for.
+    '   CaseSensitive: Boolean entry to indicate if the comparison must be case sensitive.
+    '
+    ' Returns:
+    '   True if val exists in the input Collection.
+    
     Dim ValI As Variant
     For Each ValI In col
         ' only check if not an object:

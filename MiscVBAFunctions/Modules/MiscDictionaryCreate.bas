@@ -2,7 +2,14 @@ Attribute VB_Name = "MiscDictionaryCreate"
 Option Explicit
 
 Public Function dict(ParamArray Args() As Variant) As Dictionary
-    'Case sensitive dictionary
+    ' Case sensitive dictionary
+    '
+    ' Args:
+    '   Args: List of values that gets inserted into the Dictionary.
+    '         All uneven entries are the keys and all even entries are the values for the matching keys.
+    '
+    ' Returns:
+    '   The Dictionary
     
     Dim errmsg As String
     Set dict = New Dictionary
@@ -28,7 +35,14 @@ End Function
 
 
 Public Function dicti(ParamArray Args() As Variant) As Dictionary
-    'Case insensitive dictionary
+    ' Case insensitive dictionary
+    '
+    ' Args:
+    '   Args: List of values that gets inserted into the Dictionary.
+    '         All uneven entries are the keys and all even entries are the values at its matching key.
+    '
+    ' Returns:
+    '   The case insensitive Dictionary
     
     Dim errmsg As String
     Set dicti = New Dictionary

@@ -2,7 +2,16 @@ Attribute VB_Name = "MiscEnsureDictIUtil"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-Function EnsureDictI(Container As Variant) As Object
+Public Function EnsureDictI(Container As Variant) As Object
+    ' Convert all Dicts in an object to case insensitive Dicts.
+    ' The object can only contain Dicts and Collections.
+    '
+    ' Args:
+    '   Container: Object that potentially contains Dicts.
+    '
+    ' Returns:
+    '   A dict or Collection that potentially contains Dicts and/or Collections.
+    
     Dim key As Variant
     Dim Item As Variant
     

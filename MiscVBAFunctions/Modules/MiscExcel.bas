@@ -1,53 +1,71 @@
 Attribute VB_Name = "MiscExcel"
 Option Explicit
 
+Private Sub ModuleInitialize()
+    Dim WB As Workbook
+    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel23763464453.xlsx"), True)
+    
+End Sub
+
 Public Function ExcelBook( _
-      Path As String _
+      Optional Path As String = "" _
     , Optional MustExist As Boolean = False _
     , Optional ReadOnly As Boolean = False _
-    , Optional SaveOnError As Boolean = False _
-    , Optional CloseOnError As Boolean = False _
     ) As Workbook
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
+    ' Create an Excel Workbook with custom arguments.
+    '
+    ' Args:
+    '   Path: Path to the file.
+    '   MustExist: If True, the file must exist. If it doesn't an error is raised.
+    '   ReadOnly: If True, the file is opened in readOnly mode.
+    '
+    ' Returns:
+    '   The created/opened Workbook.
     
-    On Error GoTo finally
-    
-    If fso.FileExists(Path) Then
-    
-        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
-    
-    Else
-        
+    If Len(Path) = 0 Then
         If MustExist Then
-            Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
-        Else
-            Set ExcelBook = Workbooks.Add
-            
-            If SaveOnError Then
-                ExcelBook.SaveAs Path
-            End If
+            Err.Raise -997, , "Temp file can't have MustExist = True."
+        End If
+        If ReadOnly Then
+            Err.Raise -996, , "Temp file can't open in ReadOnly mode."
         End If
         
+        Set ExcelBook = Workbooks.Add
+        Exit Function
     End If
     
-    Exit Function
-    
-finally:
-    If SaveOnError Then
-        ExcelBook.Save
+    If fso.FileExists(Path) Then
+        Set ExcelBook = OpenWorkbook(Path, ReadOnly)
+        Exit Function
     End If
     
-    If CloseOnError Then
-        ExcelBook.Close (False)
+    If MustExist Then
+        Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
+    
+    If ReadOnly Then
+        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+    End If
+    
+    Set ExcelBook = Workbooks.Add
+    ExcelBook.SaveAs Path
     
 End Function
 
-Function OpenWorkbook( _
+Public Function OpenWorkbook( _
       Path As String _
     , Optional ReadOnly As Boolean = False _
     ) As Workbook
-    
+    ' Open a Workbook. An error is raised if a file with the same name is already open.
+    ' If ReadOnly is True and the Workbook is already open but not in ReadOnly mode, an error is raised.
+    '
+    ' Args:
+    '   Path: Path to the file that gets opened.
+    '   ReadOnly: If True, the file gets opened in ReadOnly mode.
+    '
+    ' Returns:
+    '   The opened Workbook.
     
     If hasKey(Workbooks, fso.GetFileName(Path)) Then
         Set OpenWorkbook = Workbooks(fso.GetFileName(Path))
@@ -66,4 +84,6 @@ Function OpenWorkbook( _
         Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
     End If
 End Function
+
+
 

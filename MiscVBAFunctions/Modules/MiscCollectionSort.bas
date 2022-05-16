@@ -19,8 +19,14 @@ End Sub
 Public Function BubbleSort(coll As Collection) As Collection
     
     ' from: https://github.com/austinleedavis/VBA-utilities/blob/f23f1096d8df0dfdc740e5a3bec36525d61a3ffc/Collections.bas#L73
-    ' this is an easy implementation but a slow sorting algorithm
-    ' do not use for large collections
+    ' this is an easy implementation but a slow sorting algorithm.
+    ' do not use for large collections.
+    '
+    ' Args:
+    '   coll: Unsorted Collection.
+    '
+    ' Returns:
+    '   Sorted Collection
     
     Dim SortedColl As Collection
     Set SortedColl = New Collection

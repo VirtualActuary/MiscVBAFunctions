@@ -1,10 +1,24 @@
 Attribute VB_Name = "MiscErrorMessage"
 Option Explicit
+' #####################################################################
+' ##### This module is version controlled in RunnerModule/Modules #####
+' #####################################################################
+
 '@Folder("error handling")
 
-Function ErrorMessage(ErrorCode As Integer, _
+Public Function ErrorMessage(ErrorCode As Integer, _
                               Optional SubMessage As String) As String
-
+    ' Get the Error message for the given error code and return it. If the ErrorCode is not
+    ' in the list of known error codes, "Unknown error" will be the Error message.
+    ' SubMessage can be added that will be appended to the String that will be returned.
+    '
+    ' Args:
+    '   ErrorCode: Error code to look for.
+    '   SubMessage: Message to append to the returned error message.
+    '
+    ' Returns:
+    '   String with the error message and the SubMessage.
+    
     Dim M As String
     Select Case ErrorCode
         '**********************************************
@@ -135,7 +149,14 @@ Function ErrorMessage(ErrorCode As Integer, _
     
 End Function
 
-Function BreakLines(SubMessage As String) As String
+Public Function BreakLines(SubMessage As String) As String
+    ' Split a word with 100+ characters into 3 lines and a word with 50+ words into 2 lines.
+    '
+    ' Args:
+    '   SubMessage: String containing 1 or more words.
+    '
+    ' Returns:
+    '   String with 50+ character words split between multiple lines.
     
     Dim MsgArr() As String, I As Integer
     ' split by spaces

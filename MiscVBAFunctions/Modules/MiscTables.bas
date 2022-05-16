@@ -3,7 +3,15 @@ Attribute VB_Name = "MiscTables"
 Option Explicit
 
 Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
-
+    ' Check if the selected WorkBook contains a ListObject with the input name.
+    '
+    ' Args:
+    '   Name: Name of the ListObject to look for.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   True if the ListObject exists.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     Dim WS As Worksheet
     Dim LO As ListObject
@@ -22,9 +30,16 @@ Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
 End Function
 
 
-' get list object only using it's name from within a workbook
 Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
-
+    ' get list object only using it's name from within a workbook
+    '
+    ' Args:
+    '   Name: Name of the ListObject to look for.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   The ListObject if it exists. An error is raised if it doesn't exist.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     Dim WS As Worksheet
     Dim LO As ListObject
@@ -50,10 +65,18 @@ Private Sub TestTableToArray()
     TableToArray "foo"
 End Sub
 
-Function TableToArray( _
+Public Function TableToArray( _
       Name As String _
     , Optional WB As Workbook _
     ) As Variant()
+    ' Return an Array of the input table.
+    '
+    ' Args:
+    '   Name: Name of the table to look for.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   2D array of the selected Table.
     
     TableToArray = RangeTo2DArray(TableRange(Name, WB))
     
@@ -64,16 +87,23 @@ Public Function TableRange( _
       , Optional WB As Workbook _
       ) As Range
     
-'Returns the range (including headers of a table named `Name` in workbook `WB`): _
-- It first looks for a list object called `Name` _
-  - If the `.DataBodyRange` property is nothing the table range will only be the headers _
-- Then it looks for a named range in the Workbook scope called `Name` and returns the _
-  range this named range is referring to _
-- Then it looks for a worksheet scoped named range called `Name`. The first occurrence _
-  will be returned _
-If no tables found, a `SubscriptOutOfRange` error (9) is raised _
-The name of the table to be found is case insensitive
-  
+    'Returns the range (including headers of a table named `Name` in workbook `WB`): _
+    - It first looks for a list object called `Name` _
+      - If the `.DataBodyRange` property is nothing the table range will only be the headers _
+    - Then it looks for a named range in the Workbook scope called `Name` and returns the _
+      range this named range is referring to _
+    - Then it looks for a worksheet scoped named range called `Name`. The first occurrence _
+      will be returned _
+    If no tables found, a `SubscriptOutOfRange` error (9) is raised _
+    The name of the table to be found is case insensitive
+    '
+    ' Args:
+    '   Name: Name of the table to look for.
+    '   WB: Selected Workbook.
+    '
+    ' Returns:
+    '   Range of the cells in the selected Table.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     If HasLO(Name, WB) Then
@@ -106,10 +136,15 @@ The name of the table to be found is case insensitive
 End Function
 
 
-Function GetAllTables(WB As Workbook) As Collection
+Public Function GetAllTables(WB As Workbook) As Collection
     Set GetAllTables = New Collection
-    
-    ' Returns all (potential) tables in a workbook
+    ' Returns all tables in a workbook
+    '
+    ' Args:
+    '   WB: The selected WorkBook
+    '
+    ' Returns:
+    '   All tables in the selected WorkBook.
     
     Dim WS As Worksheet
     Dim LO As ListObject
@@ -135,7 +170,14 @@ End Function
 
 
 Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
-    ' Converts a table's column to a 1-dimensional array
+    ' Append the selected key's value from each Dict in the input Collection to a 1-dimensional array
+    '
+    ' Args:
+    '   TableDicts: A collection of Dicts.
+    '   ColumnName: Name of the column that will be returned as a 1-D array.
+    '
+    ' Returns:
+    '   1-D array of the selected column.
     
     Dim arr() As Variant
     ReDim arr(TableDicts.Count - 1) ' zero indexed

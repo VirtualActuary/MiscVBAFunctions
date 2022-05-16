@@ -15,14 +15,21 @@ Public Function TableToDictsLogSource( _
         , Optional Columns As Collection _
         ) As Collection
     
-'Similar to TableToDicts, but also stores the source of each row _
-in a dictionary with key `__source__`
-
-'The `__source__` object contains the following keys: _
- - `Workbook`: the Workbook object with the table _
- - `Table`: the name of the table within the workbook _
- - `RowIndex`: the row index of the current entry of the table
-
+    'Similar to TableToDicts, but also stores the source of each row _
+    in a dictionary with key `__source__`
+    'The `__source__` object contains the following keys: _
+     - `Workbook`: the Workbook object with the table _
+     - `Table`: the name of the table within the workbook _
+     - `RowIndex`: the row index of the current entry of the table
+    '
+    ' Args:
+    '   TableName: Name of the table to convert to Dicts.
+    '   WB: Selected WorkBook
+    '   Columns: Columns to include in the Dicts.
+    '
+    ' Returns:
+    '   The collection of Dicts containing the info as well as the source of each row.
+    
     Set TableToDictsLogSource = TableToDicts(TableName, WB, Columns)
     Dim dict As Dictionary
     Dim RowIndex As Long
@@ -41,6 +48,15 @@ Public Function TableToDicts( _
         ) As Collection
     
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/8e1b9709a380d71eaf0d59bd0c2882c8501e9540/aa_py_xl/data_util.py#L21
+    ' Convert a Table to a Collection of Dicts.
+    '
+    ' Args:
+    '   TableName: Name of the Selected Table.
+    '   WB: Selected WorkBook
+    '   Columns: Columns to be added to the Dicts.
+    '
+    ' Returns:
+    '   A collection of Dictionaries.
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -59,7 +75,7 @@ Public Function TableToDicts( _
         
         If Columns Is Nothing Then
             For J = LBound(TableData, 2) To UBound(TableData, 2)
-                d.Add TableData(1, J), TableData(I, J)
+                d.Add TableData(0, J), TableData(I, J)
             Next J
         Else
             Dim ColumnName As Variant
@@ -86,7 +102,7 @@ Private Function TestGetTableRowIndex()
 End Function
 
 
-Function TableLookupValue( _
+Public Function TableLookupValue( _
         Table As Variant _
       , Columns As Collection _
       , Values As Collection _
@@ -94,13 +110,23 @@ Function TableLookupValue( _
       , Optional default As Variant = Empty _
       , Optional WB As Workbook _
       ) As Variant
-    
-    If WB Is Nothing Then Set WB = ThisWorkbook
-    
     ' Returns the value from the ValueColName column in a TableToDicts object _
       given the value In the lookup column _
       A default value can be assigned For when no lookup Is found _
       Otherwise it returns a runtime Error
+    '
+    ' Args:
+    '   Table: Selected table.
+    '   Columns: Collection of selected Column names.
+    '   Values: Values from the lookup column
+    '   ValueColName: Column name that gets used to fetch values from.
+    '   default: Value to be used when no value has been found.
+    '   WB: Selected workbook.
+    '
+    ' Returns:
+    '   Value from the ValueColName column.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
     
     ' for when GetTableRowIndex fails
     If Not IsEmpty(default) Then On Error GoTo SetDefault
@@ -115,17 +141,25 @@ SetDefault:
     
 End Function
 
-Function GetTableRowRange( _
+Public Function GetTableRowRange( _
       TableName As String _
     , Columns As Collection _
     , Values As Collection _
     , Optional WB As Workbook _
     ) As Range
-    
     ' Given a table name, Columns and Values to match _
       this function returns the row in which these values matches
     ' Comparison is case sensitive
     ' If no match is found, a runtime error is raised
+    '
+    ' Args:
+    '   TableName: Name of the Table
+    '   Columns: Collection of Column names.
+    '   Values: Values to match agains.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   The row in which the vales matches the comparison.
     
     Dim RowNumber As Long
     RowNumber = GetTableRowIndex(TableName, Columns, Values, WB) ' this will throw a runtime error if not found
@@ -140,13 +174,20 @@ Function GetTableRowRange( _
 End Function
 
 
-Function GetTableColumnRange( _
+Public Function GetTableColumnRange( _
       TableName As String _
     , Column As String _
     , Optional WB As Workbook _
     ) As Range
-    
-' Returns the range of a table's column, including the header
+    ' Returns the range of a table's column, including the header
+    '
+    ' Args:
+    '   TableName: Name of the Table.
+    '   Columns: Name of the column.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   Range of cells for the selected table's column.
     
     Dim TableR As Range
     Set TableR = TableRange(TableName, WB)
@@ -173,6 +214,18 @@ Public Function TableLookupCell( _
     , Column As String _
     , Optional WB As Workbook _
     ) As Range
+    ' Find a cell in a Table and return its range.
+    ' The first match is returned.
+    '
+    ' Args:
+    '   TableName: Name of the table.
+    '   Columns: Columns to use to search the Values
+    '   Values: The values to search for.
+    '   Column: Name of any column in the table. Is used to determine the size of the table.
+    '   WB: Selected WorkBook
+    '
+    ' Returns:
+    '   The range of the cell that matches its matching Value first.
     
     Set TableLookupCell = Intersect(GetTableRowRange(TableName, Columns, Values, WB), GetTableColumnRange(TableName, Column, WB))
 
@@ -189,20 +242,27 @@ Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As 
 End Function
 
 
-Function GetTableRowIndex( _
+Public Function GetTableRowIndex( _
       Table As Variant _
     , Columns As Collection _
     , Values As Collection _
     , Optional WB As Workbook _
     ) As Long
-    
     ' Table can either be a TableToDicts collection, _
       or the name of the table to find
-    
     ' Given a table name, Columns and Values to match _
-      this function returns the row in which these values matches
+      this function returns the row in which the first set of values matches
     ' Comparison is case sensitive
     ' If no match is found, SubscriptOutOfRange error is raised
+    '
+    ' Args:
+    '   Table: TableToDicts or name of the table to find.
+    '   Columns: Columns to match
+    '   Values: Values to match.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   The row in which the values matches the comparison.
     
     Dim dict As Dictionary
     Dim keyValuePair As Collection
@@ -234,5 +294,13 @@ Public Sub GotoRowInTable( _
     , Values As Collection _
     , Optional WB As Workbook _
     )
+    ' Go to the cell that matches the entry in the Values input.
+    '
+    ' Args:
+    '   TableName: Name of the Table.
+    '   Columns: Columns to include in the search.
+    '   Values: Values to search for.
+    '   WB: Selected WorkBook.
+    
     Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub

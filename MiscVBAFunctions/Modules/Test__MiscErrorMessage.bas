@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscDictionary"
+Attribute VB_Name = "Test__MiscErrorMessage"
 Option Explicit
 Option Private Module
 
@@ -32,50 +32,22 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget()
+'@TestMethod("MiscErrorMessage")
+Private Sub Test_ErrorMessage()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
-    
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
 
+    'Act:
+    
     'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+    Assert.AreEqual "This array is fixed or temporarily locked", ErrorMessage(10)
+    Assert.AreEqual "Out of memory: a fix is required before continuing", ErrorMessage(7, "a fix is required before continuing")
+    Assert.AreEqual "Unknown error", ErrorMessage(77)
 
 TestExit:
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
-End Sub
-
-'@TestMethod("MiscDictionary")
-Private Sub Test_dictget_fail()
-    Const ExpectedError As Long = 9
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim d As Dictionary
-
-    'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
-
-    dictget d, "c"
-    
-Assert:
-    Assert.Fail "Expected error was not raised"
-
-TestExit:
-    Exit Sub
-TestFail:
-    If Err.Number = ExpectedError Then
-        Resume TestExit
-    Else
-        Resume Assert
-    End If
 End Sub

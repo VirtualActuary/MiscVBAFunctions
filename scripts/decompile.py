@@ -1,11 +1,11 @@
 import shutil
 import tempfile
 from pathlib import Path
-from zebra_vba_packager import decompile_xl, is_locked, pack
+from zebra_vba_packager import decompile_xl, is_locked, pack, backup_last_50_paths
 import locate
 
 locate.allow_relative_location_imports(".")
-from util import backup_last_50_files, get_app_clean, app_name  # noqa
+from util import get_app_clean, app_name  # noqa
 
 # Filenames
 app_xl = locate.this_dir().joinpath(f"../{app_name}.xlsb")
@@ -14,13 +14,8 @@ app_dir = Path(str(app_xl)[:-5])
 
 # Backup the directory
 for i in [app_dir, app_lib_dir]:
-    if is_locked(i):
-        raise ValueError(f"Dir '{i}' cannot be overwritten.")
-
-    with tempfile.TemporaryDirectory() as outdir:
-        if i.is_dir():
-            pack(i, zipname := Path(outdir).joinpath(i.name+".7z"))
-            backup_last_50_files(zipname)
+    if i.exists():
+        backup_last_50_paths(Path(tempfile.gettempdir(), f"{app_name}-compile-backups"), i)
 
 # Decompile (and remove zebra files)
 decompile_xl(app_xl, app_dir)
