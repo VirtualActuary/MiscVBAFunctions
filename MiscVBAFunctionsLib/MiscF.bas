@@ -1027,6 +1027,86 @@ Public Function OpenWorkbook( _
     End If
 End Function
 
+Public Function LastRow(WS As Worksheet) As Integer
+    ' Fetch the last row number that contains a value in any of the columns.
+    ' Returns 0 if the Worksheet is empty.
+    '
+    ' Args:
+    '   WS: The worksheet where the last row number must be found
+    '
+    ' Returns:
+    '   The last row number that contains a value in any of the columns.
+    
+    If WorksheetFunction.CountA(WS.Cells) = 0 Then
+        LastRow = 0
+        Exit Function
+    End If
+    LastRow = WS.Cells.Find(What:="*", after:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlPrevious).row
+End Function
+
+Public Function LastColumn(WS As Worksheet) As Integer
+    ' Fetch the last column number that contains a value in any of the rows.
+    ' Returns 0 if the Worksheet is empty.
+    '
+    ' Args:
+    '   WS: The worksheet where the last column number must be found
+    '
+    ' Returns:
+    '   The last column number that contains a value in any of the rows.
+    
+    If WorksheetFunction.CountA(WS.Cells) = 0 Then
+        LastColumn = 0
+        Exit Function
+    End If
+    LastColumn = WS.Cells.Find(What:="*", after:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).column
+End Function
+
+Public Function LastCell(WS As Worksheet) As Range
+    ' Get the last active cell using LastRow() and LastColumn() and returns it as a range.
+    ' This function doesn't fetch the last cell with containing a value, but rather returns the
+    ' the cell with the last active row and last active column.
+    ' An unset Range object is returned if the Worksheet is empty.
+    '
+    ' Args:
+    '   WS: The worksheet where the last column must be found.
+    '
+    ' Returns:
+    '   The last cell in a worksheet as a range.
+    
+    Dim row, column As Integer
+    row = LastRow(WS)
+    column = LastColumn(WS)
+    If row = 0 Or column = 0 Then
+        Dim EmptyRange As Range
+        Set LastCell = EmptyRange
+        Exit Function
+    End If
+    
+    Set LastCell = WS.Range(Cells(row, column), Cells(row, column))
+End Function
+
+Public Function RelevantRange(WS As Worksheet) As Range
+    ' Get the relevant range of a Worksheet. This relevant range always
+    ' starts at Cell("A1") and ends at the cell with the last active row and last active column.
+    ' An unset Range object is returned if the Worksheet is empty.
+    '
+    ' Args:
+    '   WS: The worksheet where the last column must be found.
+    '
+    ' Returns:
+    '   The range of active cells in the selected Worksheet.
+    
+    Dim row, column As Integer
+    row = LastRow(WS)
+    column = LastColumn(WS)
+    If row = 0 Or column = 0 Then
+        Dim EmptyRange As Range
+        Set RelevantRange = EmptyRange
+        Exit Function
+    End If
+    Set RelevantRange = WS.Range(Cells(1, 1), Cells(row, column))
+End Function
+
 '*************** MiscFreezePanes
 Private Sub MiscFreezePanes_test()
     Dim WS As Worksheet
