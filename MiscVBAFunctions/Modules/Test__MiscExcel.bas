@@ -216,7 +216,6 @@ TestFail:
 End Sub
 
 
-
 '@TestMethod("MiscExcel")
 Private Sub Test_LastRow()
     On Error GoTo TestFail
@@ -375,3 +374,4 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+                                                                        
