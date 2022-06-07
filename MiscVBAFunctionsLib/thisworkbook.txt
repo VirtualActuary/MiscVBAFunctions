@@ -1,7 +1,0 @@
-'@IgnoreModule ImplicitByRefModifier
-Option Explicit
-
-Private Sub Workbook_Open()
-    Dim eb As New z__addEarlyBindings
-    eb.addEarlyBindings
-End Sub
