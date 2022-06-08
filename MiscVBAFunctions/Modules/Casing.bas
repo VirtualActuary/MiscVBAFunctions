@@ -15,6 +15,3 @@ Option Explicit
 'Dim Values
 'Dim Column
 'Dim ColumnName
-'Dim Name
-'Dim Path
-

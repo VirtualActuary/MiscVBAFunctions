@@ -190,4 +190,3 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     
     TableColumnToArray = arr
 End Function
-
