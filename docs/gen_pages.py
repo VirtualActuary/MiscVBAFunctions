@@ -7,13 +7,18 @@ def main():
     nav = mkdocs_gen_files.Nav()
 
     # Inject the repo's README.md file into the documentation as the starting page.
-    nav["README.md"] = "index.md"
+    nav["Introduction"] = "index.md"
+    with mkdocs_gen_files.open("MiscVbaTemplate.xlsb", "wb") as dst:
+        with open('../MiscVbaTemplate.xlsb', "rb") as s:
+            dst.write(s.read())
+    
     with mkdocs_gen_files.open("index.md", "w") as dst:
         with repo_dir.joinpath("README.md").open("r") as src:
             dst.write(
                 """---
-title: README.md
+title: MiscVba
 ---
+Click [here](MiscVbaTemplate.xlsb) to download the template.
 """
             )
             dst.write(src.read())
@@ -22,9 +27,8 @@ title: README.md
     # https://github.com/mkdocstrings/mkdocstrings/blob/5802b1ef5ad9bf6077974f777bd55f32ce2bc219/docs/gen_doc_stubs.py
     for src_dir in [
         repo_dir.joinpath("MiscVBAFunctions"),
-        repo_dir.joinpath("MiscVBAFunctionsLib"),
     ]:
-        for src_path in sorted(src_dir.rglob("*.bas")):
+        for src_path in [i for i in sorted(src_dir.rglob("*.bas")) if not i.name.lower().startswith('test__')]:
             doc_path = src_path.relative_to(repo_dir).with_suffix(".md")
 
             nav[src_path.relative_to(repo_dir).parts] = doc_path.as_posix()

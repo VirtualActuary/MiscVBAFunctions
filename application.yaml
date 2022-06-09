@@ -1,0 +1,13 @@
+app-builder: v0.2.3
+
+Application:
+    name        : MiscVba
+    asciibanner : assets/asciibanner-VA.txt
+    icon        : assets/autoactuary.ico
+    installdir  : '%localappdata%\autoactuary\MiscVba'
+
+    programdata:
+        - [docs/dist, docs]
+
+    startmenu:
+        - [docs/index.html, MiscVba]
