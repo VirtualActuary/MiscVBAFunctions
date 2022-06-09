@@ -100,7 +100,7 @@ Public Function LastRow(WS As Worksheet) As Integer
         LastRow = 0
         Exit Function
     End If
-    LastRow = WS.Cells.Find(What:="*", after:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlPrevious).row
+    LastRow = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlPrevious).row
 End Function
 
 
@@ -118,7 +118,7 @@ Public Function LastColumn(WS As Worksheet) As Integer
         LastColumn = 0
         Exit Function
     End If
-    LastColumn = WS.Cells.Find(What:="*", after:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).column
+    LastColumn = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).Column
 End Function
 
 Public Function LastCell(WS As Worksheet) As Range
@@ -133,16 +133,16 @@ Public Function LastCell(WS As Worksheet) As Range
     ' Returns:
     '   The last cell in a worksheet as a range.
     
-    Dim row, column As Integer
+    Dim row, Column As Integer
     row = LastRow(WS)
-    column = LastColumn(WS)
-    If row = 0 Or column = 0 Then
+    Column = LastColumn(WS)
+    If row = 0 Or Column = 0 Then
         Dim EmptyRange As Range
         Set LastCell = EmptyRange
         Exit Function
     End If
     
-    Set LastCell = WS.Range(Cells(row, column), Cells(row, column))
+    Set LastCell = WS.Range(Cells(row, Column), Cells(row, Column))
 End Function
 
 
@@ -157,13 +157,13 @@ Public Function RelevantRange(WS As Worksheet) As Range
     ' Returns:
     '   The range of active cells in the selected Worksheet.
     
-    Dim row, column As Integer
+    Dim row, Column As Integer
     row = LastRow(WS)
-    column = LastColumn(WS)
-    If row = 0 Or column = 0 Then
+    Column = LastColumn(WS)
+    If row = 0 Or Column = 0 Then
         Dim EmptyRange As Range
         Set RelevantRange = EmptyRange
         Exit Function
     End If
-    Set RelevantRange = WS.Range(Cells(1, 1), Cells(row, column))
+    Set RelevantRange = WS.Range(Cells(1, 1), Cells(row, Column))
 End Function

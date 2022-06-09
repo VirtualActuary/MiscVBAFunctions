@@ -225,11 +225,11 @@ Private Sub Test_LastRow()
     Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
 
     'Act:
-    Dim rows As Integer
+    Dim Rows As Integer
     
-    rows = LastRow(WB.Sheets(1))
+    Rows = LastRow(WB.Sheets(1))
     'Assert:
-    Assert.AreEqual 6, rows
+    Assert.AreEqual 6, Rows
 
 TestExit:
     Exit Sub
@@ -246,11 +246,11 @@ Private Sub Test_LastColumn()
     Dim WB As Workbook
     Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
 
-    Dim column As Integer
+    Dim Column As Integer
     
-    column = LastColumn(WB.Sheets(1))
+    Column = LastColumn(WB.Sheets(1))
     'Assert:
-    Assert.AreEqual 9, column
+    Assert.AreEqual 9, Column
 
 TestExit:
     Exit Sub
@@ -274,7 +274,7 @@ Private Sub Test_LastCell_1()
 
     'Assert:
     Assert.AreEqual 1, CInt(r1.Count)
-    Assert.AreEqual 1, CInt(r1.rows.Count)
+    Assert.AreEqual 1, CInt(r1.Rows.Count)
     Assert.AreEqual 1, CInt(r1.Columns.Count)
     Assert.AreEqual "$I$6", r1.Address
     Assert.AreEqual "bla", r1.Value
@@ -302,7 +302,7 @@ Private Sub Test_LastCell_2()
 
     'Assert:
     Assert.AreEqual 1, CInt(r1.Count)
-    Assert.AreEqual 1, CInt(r1.rows.Count)
+    Assert.AreEqual 1, CInt(r1.Rows.Count)
     Assert.AreEqual 1, CInt(r1.Columns.Count)
     Assert.AreEqual "", r1.Value
     Assert.AreEqual "$N$11", r1.Address
@@ -331,7 +331,7 @@ Private Sub Test_RelevantRange()
     
     'Assert:
     Assert.AreEqual 99, CInt(r1.Count)
-    Assert.AreEqual 11, CInt(r1.rows.Count)
+    Assert.AreEqual 11, CInt(r1.Rows.Count)
     Assert.AreEqual 9, CInt(r1.Columns.Count)
     Assert.AreEqual 1, CInt(LBound(arr, 1))
     Assert.AreEqual 11, CInt(UBound(arr, 1))
