@@ -98,7 +98,7 @@ Public Function IsValueInCollection(col As Collection, val As Variant, Optional 
             If CaseSensitive Then
                 IsValueInCollection = ValI = val
             Else
-                IsValueInCollection = LCase(ValI) = LCase(val)
+                IsValueInCollection = VBA.LCase(ValI) = VBA.LCase(val)
             End If
             ' exit if found
             If IsValueInCollection Then Exit Function

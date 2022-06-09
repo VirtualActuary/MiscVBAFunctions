@@ -63,7 +63,7 @@ Public Function isBindingNameLoaded(ref As String) As Boolean
     isBindingNameLoaded = False
     Dim xRef As Variant
     For Each xRef In ThisWorkbook.VBProject.References
-        If LCase(xRef.Name) = LCase(ref) Then
+        If VBA.LCase(xRef.Name) = VBA.LCase(ref) Then
             isBindingNameLoaded = True
         End If
     Next xRef
