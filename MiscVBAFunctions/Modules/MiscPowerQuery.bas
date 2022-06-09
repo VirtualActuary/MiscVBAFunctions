@@ -56,20 +56,6 @@ Public Function getQuery(Name As String, Optional WB As Workbook) As WorkbookQue
     
 End Function
 
-Public Function GetQueryFormula(Name As String, Optional WB As Workbook) As String
-    ' Returns the Power M formula of the query returned by GetQuery
-    ' This can be used in VBA or as a UDF in Excel
-    '
-    ' Args:
-    '   Name: Name of the Query to look for.
-    '   WB: Selected WorkBook.
-    '
-    ' Returns:
-    '   The Power M formula of a query
-    
-    GetQueryFormula = getQuery(Name, WB).Formula
-    
-End Function
 
 Public Function updateQuery(Name As String, queryFormula As String, Optional WB As Workbook) As WorkbookQuery
     ' Update the selected Query. If the Query doesn't exist, a new Query is added.
@@ -88,7 +74,7 @@ Public Function updateQuery(Name As String, queryFormula As String, Optional WB 
     
     If doesQueryExist(Name, WB) Then
         Set updateQuery = getQuery(Name, WB)
-        updateQuery.Formula = queryFormula
+        updateQuery.formula = queryFormula
     Else
         Set updateQuery = WB.queries.Add(Name, queryFormula)
     End If
