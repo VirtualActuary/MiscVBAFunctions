@@ -10,4 +10,4 @@ Application:
         - [docs/dist, docs]
 
     startmenu:
-        - [docs/index.html, MiscVBA]
+        - [docs/index.html, MiscVba]
