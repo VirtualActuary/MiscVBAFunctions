@@ -137,12 +137,10 @@ Public Function LastCell(WS As Worksheet) As Range
     row = LastRow(WS)
     Column = LastColumn(WS)
     If row = 0 Or Column = 0 Then
-        Dim EmptyRange As Range
-        Set LastCell = EmptyRange
         Exit Function
     End If
     
-    Set LastCell = WS.Range(Cells(row, Column), Cells(row, Column))
+    Set LastCell = WS.Cells(row, Column)
 End Function
 
 
@@ -157,13 +155,12 @@ Public Function RelevantRange(WS As Worksheet) As Range
     ' Returns:
     '   The range of active cells in the selected Worksheet.
     
-    Dim row, Column As Integer
-    row = LastRow(WS)
-    Column = LastColumn(WS)
-    If row = 0 Or Column = 0 Then
-        Dim EmptyRange As Range
-        Set RelevantRange = EmptyRange
+    Dim LastCellEntry As Range
+    Set LastCellEntry = LastCell(WS)
+    
+    If LastCellEntry Is Nothing Then
         Exit Function
     End If
-    Set RelevantRange = WS.Range(Cells(1, 1), Cells(row, Column))
+    
+    Set RelevantRange = WS.Range(WS.Cells(1, 1), LastCellEntry)
 End Function
