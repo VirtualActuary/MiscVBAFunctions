@@ -72,7 +72,7 @@ Public Function OpenWorkbook( _
         
         ' check if the workbook is actually the one specified in path
         ' use AbsolutePathName to remove any relative path references  (\..\ / \.\)
-        If LCase(OpenWorkbook.FullName) <> LCase(fso.GetAbsolutePathName(Path)) Then
+        If VBA.LCase(OpenWorkbook.FullName) <> VBA.LCase(fso.GetAbsolutePathName(Path)) Then
             Debug.Print fso.GetAbsolutePathName(Path)
             Err.Raise 457, , "Existing workbook with the same name is already open: '" & fso.GetFileName(Path) & "'"
         End If

@@ -18,7 +18,7 @@ Public Function HasLO(Name As String, Optional WB As Workbook) As Boolean
     
     For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
-            If LCase(Name) = LCase(LO.Name) Then
+            If VBA.LCase(Name) = VBA.LCase(LO.Name) Then
                 HasLO = True
                 Exit Function
             End If
@@ -46,7 +46,7 @@ Public Function GetLO(Name As String, Optional WB As Workbook) As ListObject
     
     For Each WS In WB.Worksheets
         For Each LO In WS.ListObjects
-            If LCase(Name) = LCase(LO.Name) Then
+            If VBA.LCase(Name) = VBA.LCase(LO.Name) Then
                 Set GetLO = LO
                 Exit Function
             End If

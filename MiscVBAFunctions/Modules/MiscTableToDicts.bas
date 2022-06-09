@@ -194,7 +194,7 @@ Public Function GetTableColumnRange( _
     
     Dim I As Long
     For I = 1 To TableR.Columns.Count
-        If LCase(TableR(1, I).Value) = LCase(Column) Then
+        If VBA.LCase(TableR(1, I).Value) = VBA.LCase(Column) Then
             GoTo found
         End If
     Next I
