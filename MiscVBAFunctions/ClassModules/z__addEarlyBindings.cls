@@ -43,13 +43,7 @@ Public Sub addEarlyBindings()
             'Microsoft Shell Controls And Automation
             ThisWorkbook.VBProject.References.addFromGuid "{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}", 1, 0
         End If
-        
-        ' add Rubberduck on the developer side:
-        If Not isBindingNameLoaded("Rubberduck AddIn") Then
-            'Microsoft Shell Controls And Automation
-            ThisWorkbook.VBProject.References.addFromGuid "{E07C841C-43F0-3B33-B105-9B8188A6F040}", 2, 5
-        End If
-        
+    
     Exit Sub
 ErrorHandler:
 End Sub
