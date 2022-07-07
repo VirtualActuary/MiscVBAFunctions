@@ -70,16 +70,13 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_EvalPath()
+Private Sub Test_ExpandEnvironmentalVariables()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
-
+   
     'Assert:
-    Assert.Fail
-    
+    Assert.AreEqual Environ("windir"), ExpandEnvironmentalVariables("%windir%")
+    Assert.AreEqual Environ("username"), ExpandEnvironmentalVariables("%username%")
+    Assert.AreEqual Environ("windir") & "\%foo\bar%\%username\" & Environ("username"), ExpandEnvironmentalVariables("%windir%\%foo\bar%\%username\%username%")
 
 TestExit:
     Exit Sub
@@ -89,15 +86,15 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_CreateFolders()
+Private Sub Test_EvalPath()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
 
     'Assert:
-    Assert.Fail
+    Assert.AreEqual "C:\foo", EvalPath("C:\foo")
+    Assert.AreEqual "C:\foo", EvalPath("C:/foo")
+    Assert.AreEqual Environ("HOMEDRIVE") & "\Users\" & Environ("username"), EvalPath("%HOMEDRIVE%\Users\%username%")
+    Assert.AreEqual Path(ThisWorkbook, "foo\bar"), EvalPath("foo/bar")
+    Assert.AreEqual Path(ThisWorkbook, "foo\" & Environ("username")), EvalPath("foo/%UserName%")
 
 TestExit:
     Exit Sub
@@ -105,3 +102,4 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
