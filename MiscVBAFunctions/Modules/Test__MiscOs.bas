@@ -70,15 +70,16 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_officeBitness()
+Private Sub Test_EvalPath()
     On Error GoTo TestFail
     
+    'Arrange:
+
+    'Act:
+
     'Assert:
-    #If Win64 Then
-        Assert.AreEqual "64-bit", OfficeBitness()
-    #Else
-        Assert.AreEqual "32-bit", OfficeBitness()
-    #End If
+    Assert.Fail
+    
 
 TestExit:
     Exit Sub
@@ -88,7 +89,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_FileExists()
+Private Sub Test_CreateFolders()
     On Error GoTo TestFail
     
     'Arrange:
@@ -96,7 +97,7 @@ Private Sub Test_FileExists()
     'Act:
 
     'Assert:
-    Assert.IsTrue FileExists(".\compile.cmd")
+    Assert.Fail
 
 TestExit:
     Exit Sub
