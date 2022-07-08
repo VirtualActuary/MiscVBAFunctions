@@ -60,10 +60,18 @@ Private Sub Test_GetListOfChildren()
     Assert.AreEqual ChildrenDepths(1)(2), CLng(3)
     Assert.AreEqual ChildrenDepths(1)(3), CLng(7)
     
+    Assert.AreEqual ChildrenDepths(2).Count, CLng(0)
+    
     Assert.AreEqual ChildrenDepths(3)(1), CLng(4)
     Assert.AreEqual ChildrenDepths(3)(2), CLng(5)
     
+    Assert.AreEqual ChildrenDepths(4).Count, CLng(0)
+    
     Assert.AreEqual ChildrenDepths(5)(1), CLng(6)
+    
+    Assert.AreEqual ChildrenDepths(6).Count, CLng(0)
+    Assert.AreEqual ChildrenDepths(7).Count, CLng(0)
+    Assert.AreEqual ChildrenDepths(8).Count, CLng(0)
     
     Assert.AreEqual ChildrenDepths(9)(1), CLng(10)
     
