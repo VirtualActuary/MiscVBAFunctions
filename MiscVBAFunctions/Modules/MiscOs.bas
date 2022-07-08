@@ -35,7 +35,7 @@ Public Function Is64BitXl() As Boolean
     #End If
 End Function
 
-Public Function ExpandEnvironmentalVariables(pth As String) As String
+Public Function ExpandEnvironmentalVariables(Pth As String) As String
     ' Find the Windows/Linux system environment variables in the input path
     ' and convert it to string in the input path and return it.
     '
@@ -45,12 +45,12 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
     ' Returns:
     '   A string of Path with environment variables converted to its matching value.
     
-    ExpandEnvironmentalVariables = pth
-    If InStr(pth, "%") > 0 Then
+    ExpandEnvironmentalVariables = Pth
+    If InStr(Pth, "%") > 0 Then
         Dim I As Integer
         Dim EnvironVar As String
         Dim EnvironVarArr() As String
-        EnvironVarArr = Split(pth, "%")
+        EnvironVarArr = Split(Pth, "%")
         Dim IsEnvironmentalVariable As Boolean
         
         Do While UBound(EnvironVarArr) >= 2
@@ -87,13 +87,13 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
     
 End Function
 
-Private Function ConvertToBackslashes(pth As String) As String
-    ConvertToBackslashes = Replace(pth, "/", "\")
+Private Function ConvertToBackslashes(Pth As String) As String
+    ConvertToBackslashes = Replace(Pth, "/", "\")
 
 End Function
 
 
-Public Function EvalPath(pth As String, Optional WB As Workbook) As String
+Public Function EvalPath(Pth As String, Optional WB As Workbook) As String
     ' Convert a path to absolute path. Converts system variables to String in the Path
     '
     ' Args:
@@ -105,7 +105,7 @@ Public Function EvalPath(pth As String, Optional WB As Workbook) As String
     
     If WB Is Nothing Then Set WB = ThisWorkbook
 
-    EvalPath = ExpandEnvironmentalVariables(pth)
+    EvalPath = ExpandEnvironmentalVariables(Pth)
     EvalPath = ConvertToBackslashes(EvalPath)
 
     If Left(EvalPath, 1) Like "[A-Za-z]" And Mid(EvalPath, 2, 1) = ":" Then
@@ -139,8 +139,7 @@ Public Sub CreateFolders(ByVal strPath As String, _
     Dim I As Integer
     Dim J As Integer
     Dim pathTempSplit() As String
-    strPath = localFullName(strPath)
-
+    strPath = EvalPath(strPath)
     Dim wsh As Object
     Set wsh = VBA.CreateObject("WScript.Shell")
 
@@ -174,7 +173,7 @@ Public Sub CreateFolders(ByVal strPath As String, _
         End If
     Next J
     If Not fso.FolderExists(pathTemp) Then
-        Err.Raise userError.FileNotFound, , ErrorMessage(userError.FileNotFound, "Could not create folder with path: " & pathTemp & ". Ensure you have write access to the required folder.")
+        Err.Raise 53, , "Could not create folder with path: " & pathTemp & ". Ensure you have write access to the required folder."
     End If
 End Sub
 
@@ -191,11 +190,34 @@ Public Function RunShell(ByVal command As String, Optional WaitOnReturn As Boole
     
     Dim wsh As Object
     Set wsh = VBA.CreateObject("WScript.Shell")
-    RunShell = wsh.Run
+    'RunShell = wsh
     ':https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/shell-function
     Dim windowStyle As Integer: windowStyle = 0 ' vbHide (no pop-ups)
     
     ' If the Shell function successfully executes the named file, it returns the task ID of the started program.
     RunShell = wsh.Run(command, windowStyle, WaitOnReturn)
-    Set wsh = Nothing
 End Function
+
+
+
+
+Function GetAllFiles(Directory As folder) As Collection
+    
+    Set GetAllFiles = New Collection
+    GetAllFilesHelper Directory, GetAllFiles
+    
+End Function
+
+Private Sub GetAllFilesHelper(Directory As folder, ListOfFiles As Collection)
+    
+    Dim F As File
+    For Each F In Directory.Files
+        ListOfFiles.Add F
+    Next F
+    
+    Dim SubDir As folder
+    For Each SubDir In Directory.SubFolders
+        GetAllFilesHelper SubDir, ListOfFiles
+    Next SubDir
+    
+End Sub

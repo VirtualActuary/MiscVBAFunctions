@@ -93,8 +93,8 @@ Private Sub Test_EvalPath()
     Assert.AreEqual "C:\foo", EvalPath("C:\foo")
     Assert.AreEqual "C:\foo", EvalPath("C:/foo")
     Assert.AreEqual Environ("HOMEDRIVE") & "\Users\" & Environ("username"), EvalPath("%HOMEDRIVE%\Users\%username%")
-    Assert.AreEqual Path(ThisWorkbook, "foo\bar"), EvalPath("foo/bar")
-    Assert.AreEqual Path(ThisWorkbook, "foo\" & Environ("username")), EvalPath("foo/%UserName%")
+    Assert.AreEqual Path(ThisWorkbook.Path, "foo\bar"), EvalPath("foo/bar")
+    Assert.AreEqual Path(ThisWorkbook.Path, "foo\" & Environ("username")), EvalPath("foo/%UserName%")
 
 TestExit:
     Exit Sub
@@ -103,3 +103,45 @@ TestFail:
     Resume TestExit
 End Sub
 
+
+'@TestMethod("MiscOs")
+Private Sub Test_CreateFolders()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Dir As String
+    
+    'Act:
+    Dir = Path(ExpandEnvironmentalVariables("%temp%"), "folder1", "folder2", "folder3")
+    CreateFolders (Dir)
+    
+    'Assert:
+    Assert.IsTrue fso.FolderExists(Dir)
+    
+    
+    
+TestExit:
+    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "folder1")
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscOs")
+Private Sub Test_RunShell()
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    'Act:
+
+    'Assert:
+    Assert.AreEqual 0, CInt(RunShell("cmd /c echo hello", True))
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub

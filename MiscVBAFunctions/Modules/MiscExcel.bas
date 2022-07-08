@@ -56,6 +56,7 @@ End Function
 Public Function OpenWorkbook( _
       Path As String _
     , Optional ReadOnly As Boolean = False _
+    , Optional DisableUpdateLinksAndDisplayAlerts = True _
     ) As Workbook
     ' Open a Workbook. An error is raised if a file with the same name is already open.
     ' If ReadOnly is True and the Workbook is already open but not in ReadOnly mode, an error is raised.
@@ -81,7 +82,21 @@ Public Function OpenWorkbook( _
             Err.Raise -999, , "Workbook'" & fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
         End If
     Else
-        Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
+        If DisableUpdateLinksAndDisplayAlerts Then
+            Dim CurrentAskToUpdateLinks As Boolean
+            Dim CurrentDisplayAlerts As Boolean
+            CurrentAskToUpdateLinks = Application.AskToUpdateLinks
+            CurrentDisplayAlerts = Application.DisplayAlerts
+            Application.AskToUpdateLinks = False
+            Application.DisplayAlerts = False
+            
+            Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
+            
+            Application.AskToUpdateLinks = CurrentAskToUpdateLinks
+            Application.DisplayAlerts = CurrentDisplayAlerts
+        Else
+            Set OpenWorkbook = Workbooks.Open(Path, ReadOnly:=ReadOnly)
+        End If
     End If
 End Function
 
