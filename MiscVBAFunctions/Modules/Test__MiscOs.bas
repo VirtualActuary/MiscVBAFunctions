@@ -131,13 +131,29 @@ End Sub
 '@TestMethod("MiscOs")
 Private Sub Test_RunShell()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
 
     'Assert:
     Assert.AreEqual 0, CInt(RunShell("cmd /c echo hello", True))
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscOs")
+Private Sub Test_GetAllFilesRecursive()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim AllFiles As Collection
+    
+    'Act:
+    Set AllFiles = GetAllFilesRecursive(fso.GetFolder(Path(ThisWorkbook.Path, "\tests\GetAllFiles")))
+
+    'Assert:
+    Assert.AreEqual 5, CInt(AllFiles.Count)
 
 TestExit:
     Exit Sub

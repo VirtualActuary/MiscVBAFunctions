@@ -35,7 +35,8 @@ Public Function Is64BitXl() As Boolean
     #End If
 End Function
 
-Public Function ExpandEnvironmentalVariables(Pth As String) As String
+
+Public Function ExpandEnvironmentalVariables(pth As String) As String
     ' Find the Windows/Linux system environment variables in the input path
     ' and convert it to string in the input path and return it.
     '
@@ -45,12 +46,12 @@ Public Function ExpandEnvironmentalVariables(Pth As String) As String
     ' Returns:
     '   A string of Path with environment variables converted to its matching value.
     
-    ExpandEnvironmentalVariables = Pth
-    If InStr(Pth, "%") > 0 Then
+    ExpandEnvironmentalVariables = pth
+    If InStr(pth, "%") > 0 Then
         Dim I As Integer
         Dim EnvironVar As String
         Dim EnvironVarArr() As String
-        EnvironVarArr = Split(Pth, "%")
+        EnvironVarArr = Split(pth, "%")
         Dim IsEnvironmentalVariable As Boolean
         
         Do While UBound(EnvironVarArr) >= 2
@@ -87,13 +88,14 @@ Public Function ExpandEnvironmentalVariables(Pth As String) As String
     
 End Function
 
-Private Function ConvertToBackslashes(Pth As String) As String
-    ConvertToBackslashes = Replace(Pth, "/", "\")
+
+Private Function ConvertToBackslashes(pth As String) As String
+    ConvertToBackslashes = Replace(pth, "/", "\")
 
 End Function
 
 
-Public Function EvalPath(Pth As String, Optional WB As Workbook) As String
+Public Function EvalPath(pth As String, Optional WB As Workbook) As String
     ' Convert a path to absolute path. Converts system variables to String in the Path
     '
     ' Args:
@@ -105,7 +107,7 @@ Public Function EvalPath(Pth As String, Optional WB As Workbook) As String
     
     If WB Is Nothing Then Set WB = ThisWorkbook
 
-    EvalPath = ExpandEnvironmentalVariables(Pth)
+    EvalPath = ExpandEnvironmentalVariables(pth)
     EvalPath = ConvertToBackslashes(EvalPath)
 
     If Left(EvalPath, 1) Like "[A-Za-z]" And Mid(EvalPath, 2, 1) = ":" Then
@@ -199,14 +201,21 @@ Public Function RunShell(ByVal command As String, Optional WaitOnReturn As Boole
 End Function
 
 
-
-
-Function GetAllFiles(Directory As folder) As Collection
+Public Function GetAllFilesRecursive(Directory As folder) As Collection
+    ' Get all files in the given directory and sub-directories and
+    ' return a Collection with the File objects.
+    '
+    ' Args:
+    '   Directory: The directory to get the files from.
+    '
+    ' Returns:
+    '   A Collection with all the File objects.
     
-    Set GetAllFiles = New Collection
-    GetAllFilesHelper Directory, GetAllFiles
+    Set GetAllFilesRecursive = New Collection
+    GetAllFilesHelper Directory, GetAllFilesRecursive
     
 End Function
+
 
 Private Sub GetAllFilesHelper(Directory As folder, ListOfFiles As Collection)
     
@@ -221,3 +230,4 @@ Private Sub GetAllFilesHelper(Directory As folder, ListOfFiles As Collection)
     Next SubDir
     
 End Sub
+

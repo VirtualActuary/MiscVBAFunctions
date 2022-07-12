@@ -1,4 +1,4 @@
-Attribute VB_Name = "MiscDataStructures"
+Attribute VB_Name = "MiscDataContainers"
 Option Explicit
 
 

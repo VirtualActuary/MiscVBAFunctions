@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscDataStructures"
+Attribute VB_Name = "Test__MiscDataContainers"
 Option Explicit
 Option Private Module
 
