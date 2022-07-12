@@ -201,33 +201,3 @@ Public Function RunShell(ByVal command As String, Optional WaitOnReturn As Boole
 End Function
 
 
-Public Function GetAllFilesRecursive(Directory As folder) As Collection
-    ' Get all files in the given directory and sub-directories and
-    ' return a Collection with the File objects.
-    '
-    ' Args:
-    '   Directory: The directory to get the files from.
-    '
-    ' Returns:
-    '   A Collection with all the File objects.
-    
-    Set GetAllFilesRecursive = New Collection
-    GetAllFilesHelper Directory, GetAllFilesRecursive
-    
-End Function
-
-
-Private Sub GetAllFilesHelper(Directory As folder, ListOfFiles As Collection)
-    
-    Dim F As File
-    For Each F In Directory.Files
-        ListOfFiles.Add F
-    Next F
-    
-    Dim SubDir As folder
-    For Each SubDir In Directory.SubFolders
-        GetAllFilesHelper SubDir, ListOfFiles
-    Next SubDir
-    
-End Sub
-
