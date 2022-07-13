@@ -107,3 +107,60 @@ Public Function IsValueInCollection(col As Collection, val As Variant, Optional 
 End Function
 
 
+Public Sub ConcatCollections(ParamArray CollectionArr() As Variant)
+    ' Concatenate multiple Collections, thereby manipulating the first Collection.
+    ' Args:
+    '   CollectionArr: Array of the input collections.
+    
+    Dim col As Variant
+    For Each col In CollectionArr
+        If Not TypeOf col Is Collection Then
+            Dim errmsg As String
+            errmsg = "All inputs need to be Collections"
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(col) & "'": On Error GoTo 0
+            Err.Raise 5, , errmsg
+        End If
+    Next col
+    
+    Dim I As Long
+    Dim J As Long
+    For J = 1 To UBound(CollectionArr)
+        For I = 1 To CollectionArr(J).Count
+            CollectionArr(0).Add CollectionArr(J).Item(I)
+        Next
+    Next
+
+End Sub
+
+
+Public Function JoinCollections(ParamArray CollectionArr()) As Collection
+    ' Joins multiple Collections and returns the result.
+    ' None of the inputs get manipulated.
+    '
+    ' Args:
+    '   CollectionArr: Array of the input collections.
+    '
+    ' Returns:
+    '   Returns a new Collection of the joined Collections.
+
+    Dim col As Variant
+    For Each col In CollectionArr
+        If Not TypeOf col Is Collection Then
+            Dim errmsg As String
+            errmsg = "All inputs need to be Collections"
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(col) & "'": On Error GoTo 0
+            Err.Raise 5, , errmsg
+        End If
+    Next col
+    
+    Dim I As Long
+    Dim ColResult As New Collection
+
+    For Each col In CollectionArr
+        For I = 1 To col.Count
+            ColResult.Add col.Item(I)
+        Next
+    Next col
+
+    Set JoinCollections = ColResult
+End Function

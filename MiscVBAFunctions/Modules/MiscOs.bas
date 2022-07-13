@@ -99,7 +99,7 @@ Public Function EvalPath(pth As String, Optional WB As Workbook) As String
     ' Convert a path to absolute path. Converts system variables to String in the Path
     '
     ' Args:
-    '   pth: input path
+    '   Pth: input path
     '   WB: Optional WorkBook.
     '
     ' Returns:
@@ -146,7 +146,7 @@ Public Sub CreateFolders(ByVal strPath As String, _
     Set wsh = VBA.CreateObject("WScript.Shell")
 
     Dim pathTemp As String ' for when the relative names becomes too long:
-    pathTemp = fso.GetAbsolutePathName(strPath)
+    pathTemp = EvalPath(strPath)
 
     If fso.FolderExists(pathTemp) Then Exit Sub
         ' if the folder already exists, no need to create anything
