@@ -19,3 +19,6 @@ Option Explicit
 'Dim Path
 'Dim After
 'Dim Rows
+'Dim Source
+'Dim FileExists
+'Dim Destination

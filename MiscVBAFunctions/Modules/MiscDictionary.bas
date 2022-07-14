@@ -54,3 +54,91 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
         Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, errmsg)
     End If
 End Function
+
+
+Public Sub ConcatDicts(ParamArray Dicts())
+    ' Concatenate Dictionaries to the first dictionary, thereby manipulating the first dictionary.
+    ' Nothing gets returned since the first Dictionary gets manipulated.
+    ' If not all of the inputs are Dictionaries, an error will be raised.
+    ' If the CompareMode of the different dictionaries don't match, an error will be raised.
+    '
+    ' Args:
+    '   dicts: Array of dictionaries.
+    
+    Dim dictCompareMode As Long
+    dictCompareMode = -999  ' This is a placeholder value
+    Dim dict As Variant
+    For Each dict In Dicts
+        If Not TypeOf dict Is Dictionary Then
+            Dim errmsg As String
+            errmsg = "All inputs need to be Dictionaries"
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(dict) & "'": On Error GoTo 0
+            Err.Raise 5, , errmsg
+        Else
+            If dictCompareMode <> -999 And dictCompareMode <> dict.CompareMode Then
+                Err.Raise -987, , "CompareMode of all Dictionaries aren't the same."
+            End If
+            dictCompareMode = dict.CompareMode
+        
+        End If
+    Next dict
+
+    Dim J As Long
+
+    Dim key As Variant
+    For J = 1 To UBound(Dicts)
+        For Each key In Dicts(J).Keys
+            Dicts(0)(key) = Dicts(J).Item(key)
+        Next key
+
+    Next
+
+End Sub
+
+
+Public Function JoinDicts(ParamArray Dicts()) As Dictionary
+    ' Joins multiple Dictionaries and returns the result.
+    ' None of the inputs get manipulated.
+    ' If not all of the inputs are Dictionaries, an error will be raised.
+    ' If the CompareMode of the different dictionaries don't match, an error will be raised.
+    '
+    ' Args:
+    '   dicts: Array of the input Dictionaries.
+    '
+    ' Returns:
+    '   Returns a new Dictionary of the joined Dictionaries.
+    
+    Dim dictCompareMode As Long
+    dictCompareMode = -999  ' This is a placeholder value
+    Dim dict As Variant
+    For Each dict In Dicts
+        If Not TypeOf dict Is Dictionary Then
+            Dim errmsg As String
+            errmsg = "All inputs need to be Dictionaries"
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(dict) & "'": On Error GoTo 0
+            Err.Raise 5, , errmsg
+        Else
+            If dictCompareMode <> -999 And dictCompareMode <> dict.CompareMode Then
+                Err.Raise -987, , "CompareMode of all Dictionaries aren't the same."
+            End If
+            dictCompareMode = dict.CompareMode
+        
+        End If
+    Next dict
+   
+    Dim d As New Dictionary
+    d.CompareMode = dictCompareMode
+    Dim key As Variant
+
+    For Each dict In Dicts
+        For Each key In dict.Keys
+            d(key) = dict.Item(key)
+        Next key
+
+    Next dict
+
+    Set JoinDicts = d
+
+End Function
+
+
