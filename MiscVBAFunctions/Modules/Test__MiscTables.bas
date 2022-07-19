@@ -108,3 +108,52 @@ TestFail:
     Resume TestExit
 End Sub
 
+
+
+'@TestMethod("MiscTables")
+Private Sub Test_TableColumnToArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim col1 As Collection
+    Dim arr() As Variant
+    'Act:
+    Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
+    arr = TableColumnToArray(col1, "b")
+    
+    'Assert:
+    Assert.AreEqual 2, arr(0)
+    Assert.AreEqual 20, arr(1)
+    
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+
+'@TestMethod("MiscTables")
+Private Sub Test_TableColumnToCollection()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim col1 As Collection
+    Dim col2 As Collection
+    'Act:
+    Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
+    Set col2 = TableColumnToCollection(col1, "b")
+    
+    'Assert:
+    Assert.AreEqual 2, col2(1)
+    Assert.AreEqual 20, col2(2)
+    
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub

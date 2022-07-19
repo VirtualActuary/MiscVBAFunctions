@@ -191,3 +191,26 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     TableColumnToArray = arr
 End Function
 
+
+Function TableColumnToCollection(TableDicts As Collection, ColumnName As String) As Collection
+    ' Append the selected key's value from each Dict in the input Collection to a Collection
+    '
+    ' Args:
+    '   TableDicts: A collection of Dicts.
+    '   ColumnName: Name of the column that will be returned as a Collection.
+    '
+    ' Returns:
+    '   Collection of the selected column.
+    
+    Dim col1 As Collection
+    Dim dict As Dictionary
+    
+    Set col1 = New Collection
+    For Each dict In TableDicts
+        col1.Add dictget(dict, ColumnName)
+    Next dict
+    
+    Set TableColumnToCollection = col1
+End Function
+
+
