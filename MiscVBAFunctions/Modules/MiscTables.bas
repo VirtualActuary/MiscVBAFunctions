@@ -230,21 +230,3 @@ Public Sub CopyTable(InputTableName As String _
     Next
     
 End Sub
-
-
-Function asd()
-    Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
-    
-    Dim WB2 As Workbook
-    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\deleteme.xlsx"), True, False)
-    
-    CopyTable "Table2", WB2.Worksheets(1).Cells(5, 3), , WB
-End Function
-
-
-
-
-
-
-
