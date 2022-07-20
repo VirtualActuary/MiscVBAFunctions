@@ -191,3 +191,142 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     TableColumnToArray = arr
 End Function
 
+
+Function TableColumnToCollection(TableDicts As Collection, ColumnName As String) As Collection
+    ' Append the selected key's value from each Dict in the input Collection to a Collection
+    '
+    ' Args:
+    '   TableDicts: A collection of Dicts.
+    '   ColumnName: Name of the column that will be returned as a Collection.
+    '
+    ' Returns:
+    '   Collection of the selected column.
+    
+    Dim col1 As Collection
+    Dim dict As Dictionary
+    
+    Set col1 = New Collection
+    For Each dict In TableDicts
+        col1.Add dictget(dict, ColumnName)
+    Next dict
+    
+    Set TableColumnToCollection = col1
+End Function
+
+
+Public Sub ResizeLO(SelectedLO As ListObject, NumRows As Long)
+    ' Resize a table to the desired number of data rows. The columns remain unchanged.
+    ' If NumRows is set to "0", the table will instead be resized to "1" and the
+    ' content in that 1st row will be cleared.
+    '
+    ' Args:
+    '   SelectedLO: Selected List Object.
+    '   NumRows: Number of desired rows.
+    
+    Dim oldNumRows As Long
+    oldNumRows = SelectedLO.ListRows.Count
+    
+    ' Don't allow tables to be resized to zero rows.  Excel won't really do
+    ' this anyway - it's possible to get the DataBodyRange to be empty, in
+    ' which case the single row displayed in the table is the Insert row, but
+    ' this creates more problems than it solves.  Instead, resize the table to
+    ' one row, and set a flag to clear out any remaining data later.
+    Dim clearTable As Boolean
+    clearTable = False
+    If NumRows = 0 Then
+        NumRows = 1
+        clearTable = True
+    End If
+    
+    ' Resize the table (add 1 to the number of rows because mListObject.Range
+    ' includes the header row).
+    SelectedLO.Resize _
+        SelectedLO.Range.Resize( _
+            NumRows + 1, _
+            SelectedLO.ListColumns.Count)
+    
+    ' If the table is resized to have one row, but the row contains no data,
+    ' the row will be treated as the Insert row, and the data row count will
+    ' remain zero.  This will cause problems since the table doesn't actually
+    ' have a DataBodyRange.  To avoid this situation, put a space in the first
+    ' column, which will cause the Insert row to change to a data row.  After
+    ' setting the value once, it can be removed and the row will remain part
+    ' of the DataBodyRange.
+    
+    If NumRows = 1 And SelectedLO.ListRows.Count = 0 Then
+        SelectedLO.Range.Cells(1, 1).Offset(1, 0).Value = " "
+        SelectedLO.DataBodyRange.ClearContents
+    End If
+    
+    ' The user requested that the table be resized to zero rows.  We resized
+    ' it down to one row, now clear out the data.
+    
+    If clearTable Then
+        SelectedLO.DataBodyRange.ClearContents
+        'ClearSort
+    End If
+    
+    ' If the new number of rows is less than the old number of rows, clear out
+    ' the rows that were just removed from the table.
+    If NumRows < oldNumRows Then
+        SelectedLO.DataBodyRange _
+            .Offset(NumRows, 0) _
+            .Resize(oldNumRows - NumRows, SelectedLO.ListColumns.Count) _
+            .ClearContents
+    End If
+End Sub
+
+
+Public Function GetColumnLO(SelectedLO As ListObject, ColumnName As String) As Range
+    ' Returns the data range for the given column of this Excel table.
+    ' An error will be raised if the selected Column name doesn't exist in the given List Object.
+    '
+    ' Args:
+    '   SelectedLO: List Object to fetch the column from
+    '   ColumnName: Name of the column where the data will be fetched from.
+    '
+    ' Returns:
+    '   Data Range of the given column.
+    
+    Dim listCol As ListColumn
+    On Error GoTo noDataRange
+    Set listCol = SelectedLO.ListColumns(ColumnName)
+    
+    Set GetColumnLO = listCol.DataBodyRange
+    Exit Function
+    
+noDataRange:
+    On Error GoTo 0
+    Err.Raise 32000, Description:= _
+        "Failed to get data range for column '" & ColumnName & "' of table '" _
+            & SelectedLO.Name & "'."
+End Function
+
+
+Public Function GetRowLO(SelectedLO As ListObject, RowNumber As Long) As Range
+    ' Returns the data range for the given row number of this Excel table.
+    ' An error will be raised if the selected row number name doesn't exist in the given List Object.
+    '
+    ' Args:
+    '   SelectedLO: List Object to fetch the column from
+    '   RowNumber: Row number where the data will be fetched from.
+    '
+    ' Returns:
+    '   Data Range of the given row number.
+    
+    Dim listCol As ListColumn
+    Dim listR As listRow
+    
+    On Error GoTo noDataRange
+    Set listR = SelectedLO.ListRows(RowNumber)
+
+    Set GetRowLO = listR.Range
+    Exit Function
+    
+noDataRange:
+    On Error GoTo 0
+    Err.Raise 32000, Description:= _
+        "Failed to get data range for row '" & RowNumber & "' of table '" _
+            & SelectedLO.Name & "'."
+End Function
+
