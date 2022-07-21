@@ -214,36 +214,29 @@ Function TableColumnToCollection(TableDicts As Collection, ColumnName As String)
 End Function
 
 
-Public Sub ResizeLO(SelectedLO As ListObject, NumRows As Long)
+Public Sub ResizeLO(LO As ListObject, NumRows As Long)
     ' Resize a table to the desired number of data rows. The columns remain unchanged.
     ' If NumRows is set to "0", the table will instead be resized to "1" and the
     ' content in that 1st row will be cleared.
     '
     ' Args:
-    '   SelectedLO: Selected List Object.
+    '   LO: Selected List Object.
     '   NumRows: Number of desired rows.
     
-    Dim oldNumRows As Long
-    oldNumRows = SelectedLO.ListRows.Count
-    
-    ' Don't allow tables to be resized to zero rows.  Excel won't really do
-    ' this anyway - it's possible to get the DataBodyRange to be empty, in
-    ' which case the single row displayed in the table is the Insert row, but
-    ' this creates more problems than it solves.  Instead, resize the table to
-    ' one row, and set a flag to clear out any remaining data later.
-    Dim clearTable As Boolean
-    clearTable = False
     If NumRows = 0 Then
-        NumRows = 1
-        clearTable = True
+        LO.DataBodyRange.Delete
+        Exit Sub
     End If
+    
+    Dim oldNumRows As Long
+    oldNumRows = LO.ListRows.Count
     
     ' Resize the table (add 1 to the number of rows because mListObject.Range
     ' includes the header row).
-    SelectedLO.Resize _
-        SelectedLO.Range.Resize( _
+    LO.Resize _
+        LO.Range.Resize( _
             NumRows + 1, _
-            SelectedLO.ListColumns.Count)
+            LO.ListColumns.Count)
     
     ' If the table is resized to have one row, but the row contains no data,
     ' the row will be treated as the Insert row, and the data row count will
@@ -253,62 +246,146 @@ Public Sub ResizeLO(SelectedLO As ListObject, NumRows As Long)
     ' setting the value once, it can be removed and the row will remain part
     ' of the DataBodyRange.
     
-    If NumRows = 1 And SelectedLO.ListRows.Count = 0 Then
-        SelectedLO.Range.Cells(1, 1).Offset(1, 0).Value = " "
-        SelectedLO.DataBodyRange.ClearContents
-    End If
-    
-    ' The user requested that the table be resized to zero rows.  We resized
-    ' it down to one row, now clear out the data.
-    
-    If clearTable Then
-        SelectedLO.DataBodyRange.ClearContents
-        'ClearSort
+    If NumRows = 1 And LO.ListRows.Count = 0 Then
+        LO.Range.Cells(1, 1).Offset(1, 0).Value = " "
+        LO.DataBodyRange.ClearContents
     End If
     
     ' If the new number of rows is less than the old number of rows, clear out
     ' the rows that were just removed from the table.
     If NumRows < oldNumRows Then
-        SelectedLO.DataBodyRange _
+        LO.DataBodyRange _
             .Offset(NumRows, 0) _
-            .Resize(oldNumRows - NumRows, SelectedLO.ListColumns.Count) _
+            .Resize(oldNumRows - NumRows, LO.ListColumns.Count) _
             .ClearContents
     End If
 End Sub
 
 
-Public Function GetColumnLO(SelectedLO As ListObject, ColumnName As String) As Range
+Public Function GetTableColumnRange( _
+      TableName As String _
+    , Column As String _
+    , Optional WB As Workbook _
+    ) As Range
+    ' Returns the range of a table's column, including the header
+    '
+    ' Args:
+    '   TableName: Name of the Table.
+    '   Columns: Name of the column.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   Range of cells for the selected table's column.
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    Dim I As Long
+    For I = 1 To TableR.Columns.Count
+        If VBA.LCase(TableR(1, I).Value) = VBA.LCase(Column) Then
+            GoTo found
+        End If
+    Next I
+    
+    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
+found:
+    ' Intersect of table range and entirecolumn
+    Set GetTableColumnRange = Intersect(TableR, TableR(1, I).EntireColumn)
+
+End Function
+
+
+Public Function GetTableColumnDataRange(LO As ListObject, ColumnName As String) As Range
     ' Returns the data range for the given column of this Excel table.
     ' An error will be raised if the selected Column name doesn't exist in the given List Object.
     '
     ' Args:
-    '   SelectedLO: List Object to fetch the column from
+    '   LO: List Object to fetch the column from
     '   ColumnName: Name of the column where the data will be fetched from.
     '
     ' Returns:
     '   Data Range of the given column.
     
     Dim listCol As ListColumn
-    On Error GoTo noDataRange
-    Set listCol = SelectedLO.ListColumns(ColumnName)
     
-    Set GetColumnLO = listCol.DataBodyRange
-    Exit Function
+    If Not hasKey(LO.ListColumns, ColumnName) Then
+        Err.Raise 32000, Description:= _
+        "Column: '" & ColumnName & "' of table '" _
+            & LO.Name & "' Doesn't exist."
+    End If
     
-noDataRange:
-    On Error GoTo 0
-    Err.Raise 32000, Description:= _
-        "Failed to get data range for column '" & ColumnName & "' of table '" _
-            & SelectedLO.Name & "'."
+    Set listCol = LO.ListColumns(ColumnName)
+    
+    'On Error GoTo noDataRange
+    If LO.DataBodyRange Is Nothing Then
+        Exit Function
+    End If
+    
+    Set GetTableColumnDataRange = listCol.DataBodyRange
+'    Exit Function
+'
+'noDataRange:
+'    On Error GoTo 0
+    
 End Function
 
 
-Public Function GetRowLO(SelectedLO As ListObject, RowNumber As Long) As Range
+Public Function GetTableRowRange( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    ) As Range
+    ' Given a table name, Columns and Values to match _
+      this function returns the row in which these values matches
+    ' Comparison is case sensitive
+    ' If no match is found, a runtime error is raised
+    '
+    ' Args:
+    '   TableName: Name of the Table
+    '   Columns: Collection of Column names.
+    '   Values: Values to match agains.
+    '   WB: Selected WorkBook.
+    '
+    ' Returns:
+    '   The row in which the vales matches the comparison.
+    
+    Dim RowNumber As Long
+    RowNumber = GetTableRowIndex(TableName, Columns, Values, WB) ' this will throw a runtime error if not found
+    
+    Dim TableR As Range
+    Set TableR = TableRange(TableName, WB)
+    
+    ' Intersect of table range and entirerow
+    ' +1 as header is not included in GetTableRowIndex
+    Set GetTableRowRange = Intersect(TableR, TableR(RowNumber + 1, 1).EntireRow)
+End Function
+
+
+Public Sub GotoRowInTable( _
+      TableName As String _
+    , Columns As Collection _
+    , Values As Collection _
+    , Optional WB As Workbook _
+    )
+    ' Go to the cell that matches the entry in the Values input.
+    '
+    ' Args:
+    '   TableName: Name of the Table.
+    '   Columns: Columns to include in the search.
+    '   Values: Values to search for.
+    '   WB: Selected WorkBook.
+    
+    Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
+End Sub
+
+
+Public Function GetTableRowNumberDataRange(LO As ListObject, RowNumber As Long) As Range
     ' Returns the data range for the given row number of this Excel table.
     ' An error will be raised if the selected row number name doesn't exist in the given List Object.
     '
     ' Args:
-    '   SelectedLO: List Object to fetch the column from
+    '   LO: List Object to fetch the column from
     '   RowNumber: Row number where the data will be fetched from.
     '
     ' Returns:
@@ -316,17 +393,13 @@ Public Function GetRowLO(SelectedLO As ListObject, RowNumber As Long) As Range
     
     Dim listCol As ListColumn
     Dim listR As listRow
+        
+    If Not hasKey(LO.ListRows, RowNumber) Then
+        Err.Raise 32000, Description:= _
+        "Row number '" & RowNumber & "' of table '" _
+            & LO.Name & "' doesn't exist."
+    End If
     
-    On Error GoTo noDataRange
-    Set listR = SelectedLO.ListRows(RowNumber)
-
-    Set GetRowLO = listR.Range
-    Exit Function
-    
-noDataRange:
-    On Error GoTo 0
-    Err.Raise 32000, Description:= _
-        "Failed to get data range for row '" & RowNumber & "' of table '" _
-            & SelectedLO.Name & "'."
+    Set listR = LO.ListRows(RowNumber)
+    Set GetTableRowNumberDataRange = listR.Range
 End Function
-

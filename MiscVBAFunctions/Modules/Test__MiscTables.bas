@@ -182,7 +182,7 @@ Private Sub Test_ResizeLO_2()
     ResizeLO SelectedTable, 0
 
     'Assert:
-    Assert.AreEqual 1, CInt(SelectedTable.ListRows.Count)
+    Assert.AreEqual 0, CInt(SelectedTable.ListRows.Count)
     
 TestExit:
     Exit Sub
@@ -214,7 +214,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscTables")
-Private Sub Test_GetColumnLO()
+Private Sub Test_GetTableColumnDataRange()
     On Error GoTo TestFail
     
     'Arrange:
@@ -224,7 +224,7 @@ Private Sub Test_GetColumnLO()
     
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetColumnLO(SelectedTable, "Column2")
+    Set r = GetTableColumnDataRange(SelectedTable, "Column2")
     arr = r.Value
     'Assert:
     Assert.AreEqual 12, CInt(arr(1, 1))
@@ -239,7 +239,39 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscTables")
-Private Sub Test_GetColumnLO_fail()
+Private Sub Test_GetTableColumnDataRange_2()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim SelectedTable As ListObject
+    Dim r As Range
+    Dim arr() As Variant
+    
+    'Act:
+    Set SelectedTable = GetLO("table2", WB)
+    ResizeLO SelectedTable, 0
+    Set r = GetTableColumnDataRange(SelectedTable, "Column2")
+    
+'    arr = r.Value
+'    'Assert:
+'    Assert.AreEqual 12, CInt(arr(1, 1))
+'    Assert.AreEqual 22, CInt(arr(2, 1))
+'    Assert.AreEqual 32, CInt(arr(3, 1))
+    If r Is Nothing Then
+        Assert.Succeed
+    Else
+        Assert.Fail
+    End If
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscTables")
+Private Sub Test_GetTableColumnDataRange_fail()
     Const ExpectedError As Long = 32000
     On Error GoTo TestFail
     
@@ -249,7 +281,7 @@ Private Sub Test_GetColumnLO_fail()
     
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetColumnLO(SelectedTable, "NonExistingColumn")
+    Set r = GetTableColumnDataRange(SelectedTable, "NonExistingColumn")
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -264,9 +296,8 @@ TestFail:
     End If
 End Sub
 
-
 '@TestMethod("MiscTables")
-Private Sub Test_GetRowLO()
+Private Sub Test_GetTableRowNumberDataRange()
     On Error GoTo TestFail
     
     'Arrange:
@@ -276,7 +307,7 @@ Private Sub Test_GetRowLO()
     
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetRowLO(SelectedTable, 2)
+    Set r = GetTableRowNumberDataRange(SelectedTable, 2)
     arr = r.Value
     'Assert:
     Assert.AreEqual 21, CInt(arr(1, 1))
@@ -291,7 +322,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscTables")
-Private Sub Test_GetRowLO_fail()
+Private Sub Test_GetTableRowNumberDataRange_fail()
     Const ExpectedError As Long = 32000
     On Error GoTo TestFail
     
@@ -301,7 +332,7 @@ Private Sub Test_GetRowLO_fail()
     
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetRowLO(SelectedTable, 20)
+    Set r = GetTableRowNumberDataRange(SelectedTable, 20)
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -314,5 +345,30 @@ TestFail:
     Else
         Resume Assert
     End If
+End Sub
+
+
+'@TestMethod("MiscTables")
+Private Sub Test_GetTableRowRange()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    'Act:
+    Dim Dicts As Collection
+    Dim Source As Dictionary
+    
+    ' Test list object:
+    Dim r As Range
+    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$B$6:$D$6", r.Address
+    
+    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$G$6:$I$6", r.Address
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub
 
