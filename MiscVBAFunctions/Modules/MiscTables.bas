@@ -196,9 +196,9 @@ Public Sub CopyTable(InputTableName As String _
                     , StartRange As Range _
                     , Optional OutputTableName As String _
                     , Optional InputWB As Workbook)
-    ' Copy a Table to the desired location. This can be in the same Workbook,
-    ' or a different workbook. The of the output Table NumberFormat
-    ' is the same as the input table's.
+    ' Copy a List Object or TableRange to the desired location as a Table.
+    ' This can be in the same Workbook, or a different workbook.
+    ' The of the output Table NumberFormat is the same as the input table's.
     '
     ' Args:
     '   InputTableName: Table name that will be copied.
@@ -208,10 +208,8 @@ Public Sub CopyTable(InputTableName As String _
     '   InputWB: WorkBook of the input Table. ThisWorkBook is used if left empty.
 
     Dim col1 As Collection
-    Dim InputLO As ListObject
-    Dim OutputLO As ListObject
-    Dim InputLOBodyRange As Range
-    Dim OutputLOBodyRange As Range
+    Dim InputTableRange As Range
+    Dim OutputTableRange As Range
     Dim I As Long
     
     If OutputTableName = "" Then
@@ -220,13 +218,11 @@ Public Sub CopyTable(InputTableName As String _
     If InputWB Is Nothing Then Set InputWB = ThisWorkbook
 
     Set col1 = TableToDicts(InputTableName, InputWB)
-    Set InputLO = GetLO(InputTableName, InputWB)
-    Set OutputLO = DictsToTable(col1, StartRange, OutputTableName)
-    Set InputLOBodyRange = InputLO.DataBodyRange
-    Set OutputLOBodyRange = OutputLO.DataBodyRange
+    Set InputTableRange = TableRange(InputTableName, InputWB)
+    Set OutputTableRange = DictsToTable(col1, StartRange, OutputTableName).Range
 
-    For I = 1 To InputLOBodyRange.Count
-        OutputLOBodyRange(I).NumberFormat = InputLOBodyRange(I).NumberFormat
+    For I = 1 To InputTableRange.Count
+        OutputTableRange(I).NumberFormat = InputTableRange(I).NumberFormat
     Next
     
 End Sub
