@@ -247,8 +247,7 @@ Public Sub ResizeLO(LO As ListObject, NumRows As Long)
     ' of the DataBodyRange.
     
     If NumRows = 1 And LO.ListRows.Count = 0 Then
-        LO.Range.Cells(1, 1).Offset(1, 0).Value = " "
-        LO.DataBodyRange.ClearContents
+        LO.ListRows.Add
     End If
     
     ' If the new number of rows is less than the old number of rows, clear out

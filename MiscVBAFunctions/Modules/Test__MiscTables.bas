@@ -214,6 +214,28 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscTables")
+Private Sub Test_ResizeLO_4()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim SelectedTable As ListObject
+    
+    'Act:
+    Set SelectedTable = GetLO("Table1", WB)
+    ResizeLO SelectedTable, 0
+    ResizeLO SelectedTable, 1
+
+    'Assert:
+    Assert.AreEqual 1, CInt(SelectedTable.ListRows.Count)
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscTables")
 Private Sub Test_GetTableColumnDataRange()
     On Error GoTo TestFail
     
@@ -252,11 +274,7 @@ Private Sub Test_GetTableColumnDataRange_2()
     ResizeLO SelectedTable, 0
     Set r = GetTableColumnDataRange(SelectedTable, "Column2")
     
-'    arr = r.Value
 '    'Assert:
-'    Assert.AreEqual 12, CInt(arr(1, 1))
-'    Assert.AreEqual 22, CInt(arr(2, 1))
-'    Assert.AreEqual 32, CInt(arr(3, 1))
     If r Is Nothing Then
         Assert.Succeed
     Else
@@ -356,13 +374,14 @@ Private Sub Test_GetTableRowRange()
     'Act:
     Dim Dicts As Collection
     Dim Source As Dictionary
-    
+    Dim WB2 As Workbook
+    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
     ' Test list object:
     Dim r As Range
-    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
+    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB2)
     Assert.AreEqual "$B$6:$D$6", r.Address
     
-    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
+    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB2)
     Assert.AreEqual "$G$6:$I$6", r.Address
 
 TestExit:
