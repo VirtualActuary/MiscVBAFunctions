@@ -304,3 +304,58 @@ Public Sub GotoRowInTable( _
     
     Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub
+
+
+Public Function TableDictToArray(TableDicts As Collection) As Variant()
+    ' Convert a TableDicts to an Array. The Column names of the TbaleDicts
+    ' get inserted as the first row in the array.
+    '
+    ' Args:
+    '   TableDicts: Collection of dictionaries as a TableDicts.
+    '
+    ' Returns:
+    '   Array containing the input data.
+    
+    Dim NumberOfRows As Long
+    Dim NumberOfColumns As Long
+    Dim I As Integer
+    Dim J As Integer
+    Dim dict As Dictionary
+    Dim ColumnNames() As Variant
+    Dim ColumnNamesAsString As String
+    Dim DictEntry As Variant
+    
+    NumberOfRows = TableDicts.Count
+    NumberOfColumns = TableDicts(1).Count
+    Dim arr() As Variant
+    ReDim arr(NumberOfRows, NumberOfColumns - 1)
+    ColumnNames = TableDicts(1).Keys()
+    ColumnNamesAsString = Join(ColumnNames, ",")
+
+    For Each dict In TableDicts
+        If dict.Count <> NumberOfColumns Then
+            Err.Raise -997, , "Mismatch lengths for the dictionary entries. "
+        End If
+        
+        For Each DictEntry In dict.Keys()
+        
+            If (InStr(ColumnNamesAsString, DictEntry) = 0) Then
+                Err.Raise -996, , "Mismatching dictionaries found. "
+            End If
+        Next DictEntry
+    Next dict
+
+    For I = 0 To UBound(ColumnNames)
+        arr(0, I) = ColumnNames(I)
+    Next
+    
+    For I = 0 To NumberOfRows - 1
+        For J = 0 To NumberOfColumns - 1
+            arr(I + 1, J) = TableDicts(I + 1)(ColumnNames(J))
+        Next J
+    Next I
+    TableDictToArray = arr
+End Function
+
+
+
