@@ -6,7 +6,7 @@ Function testrglob()
     Dim RemainingPath As Variant
     Dim c As Collection
     
-    Set c = rglob("C:\AA\test_dir", "NB\*.xlsx")
+    Set c = rglob("C:\AA\test_dir", "2021\**")
     
     For Each RemainingPath In c
         Debug.Print RemainingPath
@@ -18,7 +18,7 @@ Function testglob()
     Dim RemainingPath As Variant
     Dim c As Collection
     
-    Set c = glob("C:\AA\test_dir", "")
+    Set c = glob("C:\AA\test_dir", "**\2021\*")
     
     For Each RemainingPath In c
         Debug.Print RemainingPath
@@ -35,16 +35,13 @@ Function FindCorrectPaths(Dir As String, Pattern As String, LenPatternSplits As 
     Dim NumPaths As Long
     Dim I As Long
     Set DirPath = fso.GetFolder(Dir)
-    
-'    Dim LenPatternSplits As Long
-'    LenPatternSplits = UBound(Split(Pattern, "\"))
-    
+
     Set AllPaths = GetAllPaths(DirPath, LenPatternSplits)
     NumPaths = AllPaths.Count
     
     I = 1
     While I <= NumPaths
-        If Not IsPathValidRecursive(CStr(AllPaths(I)), Pattern, UBound(Split(Dir, "\"))) Then
+        If Not IsPathValid(CStr(AllPaths(I)), Pattern, UBound(Split(Dir, "\"))) Then
             AllPaths.Remove I
             NumPaths = NumPaths - 1
             I = I - 1
@@ -52,108 +49,70 @@ Function FindCorrectPaths(Dir As String, Pattern As String, LenPatternSplits As 
         I = I + 1
     Wend
     
-    Set glob = AllPaths
+    Set FindCorrectPaths = AllPaths
 
 End Function
 
 
 Public Function glob(Dir As String, Pattern As String) As Collection
     ' Limitations:
-    '   ** can't be called from glob. Use rglob instead.
     '   Max 999 sub-dirs deep
     
-    If Not Len(Pattern) Then
+    If Len(Pattern) = 0 Then
         Err.Raise -345, , "ValueError: Unacceptable pattern: ''"
     End If
-    
-    Dim AllPaths As Collection
-    Dim DirPath As folder
-    Dim NumPaths As Long
-    Dim I As Long
-    Set DirPath = fso.GetFolder(Dir)
     
     Dim LenPatternSplits As Long
     LenPatternSplits = UBound(Split(Pattern, "\"))
     If InStr(Pattern, "**") Then
+        Pattern = Left(Pattern, InStr(Pattern, "**") - 1) + Mid(Pattern, InStr(Pattern, "**") + 3)
         LenPatternSplits = 999
     End If
     
-    Set AllPaths = GetAllPaths(DirPath, LenPatternSplits)
-    NumPaths = AllPaths.Count
-    
-    I = 1
-    While I <= NumPaths
-        If Not IsPathValidRecursive(CStr(AllPaths(I)), Pattern, UBound(Split(Dir, "\"))) Then
-            AllPaths.Remove I
-            NumPaths = NumPaths - 1
-            I = I - 1
-        End If
-        I = I + 1
-    Wend
-    
-    Set glob = AllPaths
-
+    Set glob = FindCorrectPaths(Dir, Pattern, LenPatternSplits)
 End Function
 
 
 Public Function rglob(Dir As String, Pattern As String) As Collection
-
-    Dim AllPaths As Collection
-    Dim DirPath As folder
-    Dim NumPaths As Long
-    Dim I As Long
-    Set DirPath = fso.GetFolder(Dir)
-    Set AllPaths = GetAllPaths(DirPath)
-    NumPaths = AllPaths.Count
-    I = 1
+    ' "2021\**" this pattern doesn't work to run recursively again
     
-    While I <= NumPaths
-        If Not IsPathValidRecursive(CStr(AllPaths(I)), Pattern, UBound(Split(Dir, "\"))) Then
-            AllPaths.Remove I
-            NumPaths = NumPaths - 1
-            I = I - 1
-        End If
-        I = I + 1
-    Wend
-    
-    Set rglob = AllPaths
-
+    Set rglob = FindCorrectPaths(Dir, Pattern, 999)
 End Function
+
+
+'Function IsPathValid(CurrentPath As String, Pattern As String, DirPathLen As Long) As Boolean
+'    IsPathValid = False
+'    Dim LenPatternSplits As Long
+'    LenPatternSplits = UBound(Split(Pattern, "\"))
+'    Dim PathSplitted() As String
+'    PathSplitted = Split(CurrentPath, "\")
+'
+'    Dim RelevantPathSection As String
+'
+'    If UBound(PathSplitted) - LenPatternSplits <= DirPathLen Then
+'        ' Pattern can't go further back than the dir Path
+'        Exit Function
+'    End If
+'
+'    Dim I As Long
+'    For I = DirPathLen + 1 To DirPathLen + 1 + LenPatternSplits
+'        If Len(RelevantPathSection) Then
+'            RelevantPathSection = RelevantPathSection & "\" & PathSplitted(I)
+'        Else
+'            RelevantPathSection = PathSplitted(I)
+'        End If
+'
+'    Next
+'
+'    If RelevantPathSection Like Pattern Then
+'        IsPathValid = True
+'    End If
+'
+'End Function
 
 
 Function IsPathValid(CurrentPath As String, Pattern As String, DirPathLen As Long) As Boolean
     IsPathValid = False
-    Dim LenPatternSplits As Long
-    LenPatternSplits = UBound(Split(Pattern, "\"))
-    Dim PathSplitted() As String
-    PathSplitted = Split(CurrentPath, "\")
-    
-    Dim RelevantPathSection As String
-    
-    If UBound(PathSplitted) - LenPatternSplits <= DirPathLen Then
-        ' Pattern can't go further back than the dir Path
-        Exit Function
-    End If
-    
-    Dim I As Long
-    For I = DirPathLen + 1 To DirPathLen + 1 + LenPatternSplits
-        If Len(RelevantPathSection) Then
-            RelevantPathSection = RelevantPathSection & "\" & PathSplitted(I)
-        Else
-            RelevantPathSection = PathSplitted(I)
-        End If
-        
-    Next
-
-    If RelevantPathSection Like Pattern Then
-        IsPathValid = True
-    End If
-    
-End Function
-
-
-Function IsPathValidRecursive(CurrentPath As String, Pattern As String, DirPathLen As Long) As Boolean
-    IsPathValidRecursive = False
     Dim LenPatternSplits As Long
     LenPatternSplits = UBound(Split(Pattern, "\"))
     Dim PathSplitted() As String
@@ -177,7 +136,7 @@ Function IsPathValidRecursive(CurrentPath As String, Pattern As String, DirPathL
     Next
 
     If RelevantPathSection Like Pattern Then
-        IsPathValidRecursive = True
+        IsPathValid = True
     End If
     
 End Function
