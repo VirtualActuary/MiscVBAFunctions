@@ -182,10 +182,10 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     Dim arr() As Variant
     ReDim arr(TableDicts.Count - 1) ' zero indexed
     Dim dict As Dictionary
-    Dim counter As Long
+    Dim Counter As Long
     For Each dict In TableDicts
-        arr(counter) = dictget(dict, ColumnName)
-        counter = counter + 1 ' zero indexing
+        arr(Counter) = dictget(dict, ColumnName)
+        Counter = Counter + 1 ' zero indexing
     Next dict
     
     TableColumnToArray = arr
