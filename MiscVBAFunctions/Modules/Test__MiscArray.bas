@@ -145,3 +145,29 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToCollection()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim arr(3) As Variant
+    Dim col1 As Collection
+    'Act:
+    arr(0) = 10
+    arr(1) = 11
+    arr(2) = 12
+    arr(3) = 13
+    Set col1 = ArrayToCollection(arr)
+    'Assert:
+    Assert.AreEqual 10, CInt(col1(1))
+    Assert.AreEqual 11, CInt(col1(2))
+    Assert.AreEqual 12, CInt(col1(3))
+    Assert.AreEqual 13, CInt(col1(4))
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
