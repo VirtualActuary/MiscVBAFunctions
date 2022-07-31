@@ -41,7 +41,7 @@ Private Sub TestListObjectsToDicts()
     
     'Arrange:
     
-    'Act:
+    'Act + Assert:
     Dim Dicts As Collection
     
     ' Read all columns:
@@ -52,10 +52,6 @@ Private Sub TestListObjectsToDicts()
     Set Dicts = TableToDicts("ListObject1", WB, col("a", "C"))
     Assert.AreEqual True, hasKey(Dicts(1), "A") ' should contain A
     Assert.AreNotEqual True, hasKey(Dicts(1), "b") ' should not contain b
-    
-    
-    'Assert:
-    Assert.Succeed
 
 TestExit:
     Exit Sub
@@ -69,9 +65,9 @@ Private Sub TestNamedRangeToDicts()
     On Error GoTo TestFail
     
     'Arrange:
-    'Act:
     Dim Dicts As Collection
     
+    'Act + Assert:
     ' Read all columns:
     Set Dicts = TableToDicts("NamedRange1", WB)
     Assert.AreEqual 5, CInt(Dicts(2)("b"))
@@ -81,10 +77,6 @@ Private Sub TestNamedRangeToDicts()
     Assert.AreEqual True, hasKey(Dicts(1), "A") ' should contain A
     Assert.AreNotEqual True, hasKey(Dicts(1), "b") ' should not contain b
     
-    
-    'Assert:
-    Assert.Succeed
-
 TestExit:
     Exit Sub
 TestFail:
@@ -98,9 +90,10 @@ Private Sub TestEmptyTablesToDicts()
     On Error GoTo TestFail
     
     'Arrange:
-    'Act:
     Dim Dicts As Collection
     
+    'Act + Assert:
+
     ' Read all columns:
     Set Dicts = TableToDicts("ListObject2", WB)
     Assert.AreEqual 0, CInt(Dicts.Count)
@@ -108,10 +101,6 @@ Private Sub TestEmptyTablesToDicts()
     Set Dicts = TableToDicts("NamedRange2", WB)
     Assert.AreEqual 0, CInt(Dicts.Count)
     
-    
-    'Assert:
-    Assert.Succeed
-
 TestExit:
     Exit Sub
 TestFail:
@@ -125,19 +114,16 @@ Private Sub TestEmpty1ColumnTablesToDicts()
     On Error GoTo TestFail
     
     'Arrange:
-    'Act:
     Dim Dicts As Collection
     
+    'Act + Assert:
+     
     ' Read all columns:
     Set Dicts = TableToDicts("ListObject3", WB)
     Assert.AreEqual 0, CInt(Dicts.Count)
     
     Set Dicts = TableToDicts("NamedRange3", WB)
     Assert.AreEqual 0, CInt(Dicts.Count)
-    
-    
-    'Assert:
-    Assert.Succeed
 
 TestExit:
     Exit Sub
@@ -153,8 +139,9 @@ Private Sub TestGetTableRowIndex()
     On Error GoTo TestFail
     
     'Arrange:
-    'Act:
     Dim Table As Collection
+    
+    'Act:
     Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
     
     'Assert:
@@ -173,8 +160,9 @@ Private Sub TestTableLookupValue()
     On Error GoTo TestFail
     
     'Arrange:
-    'Act:
     Dim Table As Collection
+    
+    'Act:
     Set Table = col(dicti("a", 1, "b", 2, "c", 5), dicti("a", 3, "b", 4, "c", 6), dicti("a", "foo", "b", "bar"))
     
     'Assert:
@@ -195,22 +183,129 @@ Private Sub TestTableToDictsLogSource()
     On Error GoTo TestFail
     
     'Arrange:
-    'Act:
     Dim Dicts As Collection
     Dim Source As Dictionary
     
-    ' Read all columns:
+    'Act:
+ 
     Set Dicts = TableToDictsLogSource("ListObject1", WB)
     Set Source = dictget(Dicts(2), "__source__")
+    
+    'Assert:
     Assert.AreEqual "ListObject1", dictget(Source, "table")
     Assert.AreEqual CLng(2), dictget(Source, "rowindex")
     Assert.AreEqual "MiscTableToDicts.xlsx", dictget(Source, "workbook").Name
     
-    'Assert:
 
 TestExit:
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscTableToDicts")
+Private Sub TestGetTableRowRange()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Dicts As Collection
+    Dim Source As Dictionary
+    Dim r As Range
+    
+    'Act:
+    ' Test list object:
+    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$B$6:$D$6", r.Address
+    
+    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$G$6:$I$6", r.Address
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscTableToDicts")
+Private Sub Test_TableDictToArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim col1 As Collection
+    Dim arr() As Variant
+    
+    'Act:
+    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12))
+    arr = TableDictToArray(col1)
+
+    'Assert:
+    Assert.AreEqual "a", arr(0, 0)
+    Assert.AreEqual "b", arr(0, 1)
+    Assert.AreEqual 1, arr(1, 0)
+    Assert.AreEqual 2, arr(1, 1)
+    Assert.AreEqual 12, arr(2, 0)
+    Assert.AreEqual 11, arr(2, 1)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscTableToDicts")
+Private Sub Test_TableDictToArray_fail_1()
+    Const ExpectedError As Long = -997
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim col1 As Collection
+    Dim arr() As Variant
+    
+    'Act:
+    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12, "c", 3))
+    arr = TableDictToArray(col1)
+
+
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub
+
+'@TestMethod("MiscTableToDicts")
+Private Sub Test_TableDictToArray_fail_2()
+    Const ExpectedError As Long = -996
+    On Error GoTo TestFail
+    
+    Dim col1 As Collection
+    Dim arr() As Variant
+    
+    'Act:
+    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "c", 3))
+    arr = TableDictToArray(col1)
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
 End Sub
