@@ -142,6 +142,7 @@ Private Sub Test_TableColumnToCollection()
     Assert.AreEqual 2, col2(1)
     Assert.AreEqual 20, col2(2)
     
+
 TestExit:
     Exit Sub
 TestFail:
@@ -390,4 +391,3 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
-
