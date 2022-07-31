@@ -101,7 +101,7 @@ Public Function OpenWorkbook( _
 End Function
 
 
-Public Function LastRow(WS As Worksheet) As Integer
+Public Function LastRow(WS As Worksheet) As Long
     ' Fetch the last row number that contains a value in any of the columns.
     ' Returns 0 if the Worksheet is empty.
     '
@@ -119,7 +119,7 @@ Public Function LastRow(WS As Worksheet) As Integer
 End Function
 
 
-Public Function LastColumn(WS As Worksheet) As Integer
+Public Function LastColumn(WS As Worksheet) As Long
     ' Fetch the last column number that contains a value in any of the rows.
     ' Returns 0 if the Worksheet is empty.
     '
@@ -148,7 +148,8 @@ Public Function LastCell(WS As Worksheet) As Range
     ' Returns:
     '   The last cell in a worksheet as a range.
     
-    Dim row, Column As Integer
+    Dim row As Long
+    Dim Column As Long
     row = LastRow(WS)
     Column = LastColumn(WS)
     If row = 0 Or Column = 0 Then

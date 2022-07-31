@@ -1,4 +1,4 @@
-Attribute VB_Name = "aErrorEnums"
+Attribute VB_Name = "MiscErrorEnums"
 ' Use a* so this is on top of the fn. MiscF library
 
 Option Explicit
