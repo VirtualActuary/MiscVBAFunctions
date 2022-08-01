@@ -141,71 +141,6 @@ SetDefault:
     
 End Function
 
-Public Function GetTableRowRange( _
-      TableName As String _
-    , Columns As Collection _
-    , Values As Collection _
-    , Optional WB As Workbook _
-    ) As Range
-    ' Given a table name, Columns and Values to match _
-      this function returns the row in which these values matches
-    ' Comparison is case sensitive
-    ' If no match is found, a runtime error is raised
-    '
-    ' Args:
-    '   TableName: Name of the Table
-    '   Columns: Collection of Column names.
-    '   Values: Values to match agains.
-    '   WB: Selected WorkBook.
-    '
-    ' Returns:
-    '   The row in which the vales matches the comparison.
-    
-    Dim RowNumber As Long
-    RowNumber = GetTableRowIndex(TableName, Columns, Values, WB) ' this will throw a runtime error if not found
-    
-    Dim TableR As Range
-    Set TableR = TableRange(TableName, WB)
-    
-    ' Intersect of table range and entirerow
-    ' +1 as header is not included in GetTableRowIndex
-    Set GetTableRowRange = Intersect(TableR, TableR(RowNumber + 1, 1).EntireRow)
-    
-End Function
-
-
-Public Function GetTableColumnRange( _
-      TableName As String _
-    , Column As String _
-    , Optional WB As Workbook _
-    ) As Range
-    ' Returns the range of a table's column, including the header
-    '
-    ' Args:
-    '   TableName: Name of the Table.
-    '   Columns: Name of the column.
-    '   WB: Selected WorkBook.
-    '
-    ' Returns:
-    '   Range of cells for the selected table's column.
-    
-    Dim TableR As Range
-    Set TableR = TableRange(TableName, WB)
-    
-    Dim I As Long
-    For I = 1 To TableR.Columns.Count
-        If VBA.LCase(TableR(1, I).Value) = VBA.LCase(Column) Then
-            GoTo found
-        End If
-    Next I
-    
-    Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
-found:
-    ' Intersect of table range and entirecolumn
-    Set GetTableColumnRange = Intersect(TableR, TableR(1, I).EntireColumn)
-
-End Function
-
 
 Public Function TableLookupCell( _
       TableName As String _
@@ -230,6 +165,7 @@ Public Function TableLookupCell( _
     Set TableLookupCell = Intersect(GetTableRowRange(TableName, Columns, Values, WB), GetTableColumnRange(TableName, Column, WB))
 
 End Function
+
 
 Private Function EnsureTableDicts(Table As Variant, Optional WB As Workbook) As Collection
     
@@ -304,3 +240,57 @@ Public Sub GotoRowInTable( _
     
     Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
 End Sub
+
+
+Public Function TableDictToArray(TableDicts As Collection) As Variant()
+    ' Convert a TableDicts to an Array. The Column names of the TbaleDicts
+    ' get inserted as the first row in the array.
+    '
+    ' Args:
+    '   TableDicts: Collection of dictionaries as a TableDicts.
+    '
+    ' Returns:
+    '   Array containing the input data.
+    
+    Dim NumberOfRows As Long
+    Dim NumberOfColumns As Long
+    Dim I As Integer
+    Dim J As Integer
+    Dim dict As Dictionary
+    Dim ColumnNames() As Variant
+    Dim ColumnNamesAsString As String
+    Dim DictEntry As Variant
+    
+    NumberOfRows = TableDicts.Count
+    NumberOfColumns = TableDicts(1).Count
+    Dim arr() As Variant
+    ReDim arr(NumberOfRows, NumberOfColumns - 1)
+    ColumnNames = TableDicts(1).Keys()
+    ColumnNamesAsString = Join(ColumnNames, ",")
+
+    For Each dict In TableDicts
+        If dict.Count <> NumberOfColumns Then
+            Err.Raise -997, , "Mismatch lengths for the dictionary entries. "
+        End If
+        
+        For Each DictEntry In dict.Keys()
+        
+            If (InStr(ColumnNamesAsString, DictEntry) = 0) Then
+                Err.Raise -996, , "Mismatching dictionaries found. "
+            End If
+        Next DictEntry
+    Next dict
+
+    For I = 0 To UBound(ColumnNames)
+        arr(0, I) = ColumnNames(I)
+    Next
+    
+    For I = 0 To NumberOfRows - 1
+        For J = 0 To NumberOfColumns - 1
+            arr(I + 1, J) = TableDicts(I + 1)(ColumnNames(J))
+        Next J
+    Next I
+    TableDictToArray = arr
+End Function
+
+
