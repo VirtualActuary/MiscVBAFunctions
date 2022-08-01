@@ -229,7 +229,7 @@ Private Sub Test_LastRow()
     
     Rows = LastRow(WB.Sheets(1))
     'Assert:
-    Assert.AreEqual 7, Rows
+    Assert.AreEqual 17, Rows
 
 TestExit:
     Exit Sub
@@ -276,8 +276,8 @@ Private Sub Test_LastCell_1()
     Assert.AreEqual 1, CInt(r1.Count)
     Assert.AreEqual 1, CInt(r1.Rows.Count)
     Assert.AreEqual 1, CInt(r1.Columns.Count)
-    Assert.AreEqual "$N$7", r1.Address
-    Assert.AreEqual 33, CInt(r1.Value)
+    Assert.AreEqual "$N$17", r1.Address
+    Assert.AreEqual 32, CInt(r1.Value)
 
 TestExit:
     WB.Close False

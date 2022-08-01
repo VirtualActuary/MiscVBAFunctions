@@ -169,7 +169,7 @@ Public Function GetAllTables(WB As Workbook) As Collection
 End Function
 
 
-Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
+Public Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As Variant()
     ' Append the selected key's value from each Dict in the input Collection to a 1-dimensional array
     '
     ' Args:
@@ -190,6 +190,42 @@ Function TableColumnToArray(TableDicts As Collection, ColumnName As String) As V
     
     TableColumnToArray = arr
 End Function
+
+
+Public Sub CopyTable(InputTableName As String _
+                    , StartRange As Range _
+                    , Optional OutputTableName As String _
+                    , Optional InputWB As Workbook)
+    ' Copy a List Object or TableRange to the desired location as a Table.
+    ' This can be in the same Workbook, or a different workbook.
+    ' The of the output Table NumberFormat is the same as the input table's.
+    '
+    ' Args:
+    '   InputTableName: Table name that will be copied.
+    '   StartRange: Range object of the output table's destination
+    '   OutputTableName: Name of the output table.
+    '                    If left empty, the input table's name gets used.
+    '   InputWB: WorkBook of the input Table. ThisWorkBook is used if left empty.
+
+    Dim col1 As Collection
+    Dim InputTableRange As Range
+    Dim OutputTableRange As Range
+    Dim I As Long
+    
+    If OutputTableName = "" Then
+        OutputTableName = InputTableName
+    End If
+    If InputWB Is Nothing Then Set InputWB = ThisWorkbook
+
+    Set col1 = TableToDicts(InputTableName, InputWB)
+    Set InputTableRange = TableRange(InputTableName, InputWB)
+    Set OutputTableRange = DictsToTable(col1, StartRange, OutputTableName).Range
+
+    For I = 1 To InputTableRange.Count
+        OutputTableRange(I).NumberFormat = InputTableRange(I).NumberFormat
+    Next
+    
+End Sub
 
 
 Function TableColumnToCollection(TableDicts As Collection, ColumnName As String) As Collection
