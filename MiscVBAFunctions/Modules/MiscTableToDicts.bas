@@ -224,23 +224,6 @@ Public Function GetTableRowIndex( _
     
 End Function
 
-Public Sub GotoRowInTable( _
-      TableName As String _
-    , Columns As Collection _
-    , Values As Collection _
-    , Optional WB As Workbook _
-    )
-    ' Go to the cell that matches the entry in the Values input.
-    '
-    ' Args:
-    '   TableName: Name of the Table.
-    '   Columns: Columns to include in the search.
-    '   Values: Values to search for.
-    '   WB: Selected WorkBook.
-    
-    Application.GoTo GetTableRowRange(TableName, Columns, Values, WB), True
-End Sub
-
 
 Public Function TableDictToArray(TableDicts As Collection) As Variant()
     ' Convert a TableDicts to an Array. The Column names of the TbaleDicts
