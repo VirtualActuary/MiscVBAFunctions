@@ -2,6 +2,26 @@ Attribute VB_Name = "MiscArray"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
+
+Public Function ArrayToCollection(arr() As Variant) As Collection
+    ' Take an array as an input and return it as a Collection
+    '
+    ' Args:
+    '   arr: Input array
+    '
+    ' Returns:
+    '   Collection containing the values of the input array.
+    
+    Dim CurrVal As Variant
+    Dim col1 As Collection
+    Set col1 = New Collection
+    For Each CurrVal In arr
+        col1.Add CurrVal
+    Next
+    Set ArrayToCollection = col1
+End Function
+
+
 Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Variant
     ' Replaces all Errors in the input array with vbNullString.
     ' The input array is modified (pass by referance) and the function returns the array
