@@ -2,11 +2,12 @@ Attribute VB_Name = "MiscOs"
 Option Explicit
 
 Public Function Path(ParamArray Paths() As Variant) As String
-    ' Combines folder pathes and the name of folders or a file and
+    ' Combines folder paths and the name of folders or a file and
     ' returns the combination with valid path separators.
+    ' Multiple Paths can be combined.
     '
     ' Args:
-    '   entries: The folder pathes and the name of folders or a file to be combined.
+    '   entries: The folder paths and the name of folders or a file to be combined.
     '
     ' Returns:
     '   The combination of paths with valid path separators.
@@ -96,7 +97,11 @@ End Function
 
 
 Public Function EvalPath(pth As String, Optional WB As Workbook) As String
-    ' Convert a path to absolute path. Converts system variables to String in the Path
+    ' Convert a path to absolute path.
+    ' Converts system variables to String in the Path.
+    ' Convert "/" to "\" in the Path.
+    ' If the input Path doesn't start with "[A-Za-z]" and then ":" or starts with "\\",
+    ' the selected WorkBook's Path is used to create the absolute path of the input Path.
     '
     ' Args:
     '   Pth: input path
@@ -110,14 +115,11 @@ Public Function EvalPath(pth As String, Optional WB As Workbook) As String
     EvalPath = ExpandEnvironmentalVariables(pth)
     EvalPath = ConvertToBackslashes(EvalPath)
 
-    If Left(EvalPath, 1) Like "[A-Za-z]" And Mid(EvalPath, 2, 1) = ":" Then
-        Exit Function
-    ElseIf Left(EvalPath, 2) = "\\" Then
-        Exit Function
+    If (Left(EvalPath, 1) Like "[A-Za-z]" And Mid(EvalPath, 2, 1) = ":") Or Left(EvalPath, 2) = "\\" Then
+        EvalPath = fso.GetAbsolutePathName(EvalPath)
+    Else
+        EvalPath = fso.GetAbsolutePathName(Path(WB.Path, EvalPath))
     End If
-    
-    EvalPath = fso.GetAbsolutePathName(Path(WB.Path, EvalPath))
-
 End Function
 
 
@@ -129,8 +131,8 @@ End Function
 Public Sub CreateFolders(ByVal strPath As String, _
                   Optional doShell As Boolean = False)
     ' source: https://stackoverflow.com/questions/10803834/is-there-a-way-to-create-a-folder-and-sub-folders-in-excel-vba
-    ' this code will make the folders recursively if required
-    '
+    ' this code will make the folders recursively if required.
+    ' the strPath can, therefore, be a Path where multiple sub-dirs don't exist yet.
     '
     ' Args:
     '   strPath: The desired directory
@@ -181,7 +183,7 @@ End Sub
 
 
 Public Function RunShell(ByVal command As String, Optional WaitOnReturn As Boolean = True)
-    '   run WScript.Shell with the selected command.
+    ' run WScript.Shell with the selected command.
     '
     ' Args:
     '   command: Command to execute.
