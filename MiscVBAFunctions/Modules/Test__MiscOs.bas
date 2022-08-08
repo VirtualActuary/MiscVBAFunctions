@@ -92,6 +92,7 @@ Private Sub Test_EvalPath()
     'Assert:
     Assert.AreEqual "C:\foo", EvalPath("C:\foo")
     Assert.AreEqual "C:\foo", EvalPath("C:/foo")
+    Assert.AreEqual "C:\c", EvalPath("C:\a\..\b\..\c")
     Assert.AreEqual Environ("HOMEDRIVE") & "\Users\" & Environ("username"), EvalPath("%HOMEDRIVE%\Users\%username%")
     Assert.AreEqual Path(ThisWorkbook.Path, "foo\bar"), EvalPath("foo/bar")
     Assert.AreEqual Path(ThisWorkbook.Path, "foo\" & Environ("username")), EvalPath("foo/%UserName%")
