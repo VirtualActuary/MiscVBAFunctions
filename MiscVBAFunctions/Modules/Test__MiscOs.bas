@@ -33,25 +33,6 @@ Private Sub TestCleanup()
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_Path()
-    On Error GoTo TestFail
-
-    'Assert:
-    Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:\", "folder1", "folder2", "folder3")
-    Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:\", "folder1\", "folder2", "\folder3")
-    Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:\", "\folder1\", "\folder2\", "\folder3")
-    
-    Assert.AreEqual "folder\file.extension", Path("folder", "file.extension")
-    Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:\folder1\folder2\folder3")
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscOs")
 Private Sub Test_is64BitXl()
     On Error GoTo TestFail
 
