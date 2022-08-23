@@ -1,27 +1,6 @@
 Attribute VB_Name = "MiscOs"
 Option Explicit
 
-Public Function Path(ParamArray Paths() As Variant) As String
-    ' Combines folder paths and the name of folders or a file and
-    ' returns the combination with valid path separators.
-    ' Multiple Paths can be combined.
-    '
-    ' Args:
-    '   entries: The folder paths and the name of folders or a file to be combined.
-    '
-    ' Returns:
-    '   The combination of paths with valid path separators.
-    
-    Dim Entry As Variant
-    
-    Path = Paths(0)
-
-    For Entry = LBound(Paths) + 1 To UBound(Paths)
-        Path = fso.BuildPath(Path, Paths(Entry))
-    Next
-    
-End Function
-
 
 Public Function Is64BitXl() As Boolean
     ' Check if the current version of Excel is 64-bit.

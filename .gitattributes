@@ -1,2 +1,22 @@
-# Auto detect text files and perform LF normalization
+#https://stackoverflow.com/a/20653073/1490584
+#https://stackoverflow.com/a/35242463/1490584
+
+# By default, convert line endings automatically.
 * text=auto
+
+# Declare files that will always have CRLF line endings on checkout.
+*.vbp text eol=crlf
+*.frm text eol=crlf
+*.cls text eol=crlf
+*.bas text eol=crlf
+*.dsr text eol=crlf
+*.ini text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps text eol=crlf
+
+# Denote all files that are truly binary and should not be modified.
+*.frx binary
+*.exe binary
+*.dll binary
+*.ocx binary
