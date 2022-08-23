@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+tab_width = 2
+trim_trailing_whitespace = true
+
+[{*.py,*.pyw}]
+indent_size = 4
+tab_width = 4
+
+# These files should always have CRLF line endings. Keep this list the same as in .gitattributes.
+[{*.vbp,*.frm,*.cls,*.bas,*.dsr,*.ini,*.bat,*.cmd,*.ps}]
+end_of_line = crlf
+
+# VBA-specific settings.
+[{*.frm, *.cls, *.bas}]
+indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = false
