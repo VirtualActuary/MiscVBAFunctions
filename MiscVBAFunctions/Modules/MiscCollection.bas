@@ -164,3 +164,17 @@ Public Function JoinCollections(ParamArray CollectionArr()) As Collection
 
     Set JoinCollections = ColResult
 End Function
+
+
+Function CollectionToArray(Coll As Collection) As Variant
+    ' Create an Array from a Collection.
+    Dim Result As Variant
+    Dim I As Long
+    ReDim Result(Coll.Count - 1)
+    
+    For I = 1 To Coll.Count
+        Result(I - 1) = Coll(I)
+    Next I
+    
+    CollectionToArray = Result
+End Function
