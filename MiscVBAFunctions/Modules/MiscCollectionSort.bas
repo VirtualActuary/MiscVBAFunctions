@@ -3,20 +3,20 @@ Option Explicit
 
 
 Private Sub TestBubbleSort()
-    Dim coll As Collection
-    Set coll = col("variables10", "variables", "variables2", "variables_10", "variables_2")
-    Set coll = BubbleSort(coll)
+    Dim Coll As Collection
+    Set Coll = col("variables10", "variables", "variables2", "variables_10", "variables_2")
+    Set Coll = BubbleSort(Coll)
     
-    Debug.Print coll(1), "variables"
-    Debug.Print coll(2), "variables10" ' :/
-    Debug.Print coll(3), "variables2" ' :/
-    Debug.Print coll(4), "variables_10" ' :/
-    Debug.Print coll(5), "variables_2" ' :/
+    Debug.Print Coll(1), "variables"
+    Debug.Print Coll(2), "variables10" ' :/
+    Debug.Print Coll(3), "variables2" ' :/
+    Debug.Print Coll(4), "variables_10" ' :/
+    Debug.Print Coll(5), "variables_2" ' :/
     
 End Sub
 
 
-Public Function BubbleSort(coll As Collection) As Collection
+Public Function BubbleSort(Coll As Collection) As Collection
     
     ' from: https://github.com/austinleedavis/VBA-utilities/blob/f23f1096d8df0dfdc740e5a3bec36525d61a3ffc/Collections.bas#L73
     ' this is an easy implementation but a slow sorting algorithm.
@@ -32,7 +32,7 @@ Public Function BubbleSort(coll As Collection) As Collection
     Set SortedColl = New Collection
     Dim vItm As Variant
     ' copy the collection"
-    For Each vItm In coll
+    For Each vItm In Coll
         SortedColl.Add vItm
     Next vItm
 
