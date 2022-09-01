@@ -53,7 +53,7 @@ Public Function DictsToTable(TableDicts As Collection, start_range As Range, Tab
     For J = 1 To NumberOfRows
         CurrentTable.ListRows.Add
         For I = 1 To NumberOfColumns
-            CurrentTable.ListRows.Item(J).Range(I) = TableDicts(J)(ColumnNames(I - 1))
+            SetCellValue CurrentTable.ListRows.Item(J).Range(I), TableDicts(J)(ColumnNames(I - 1))
         Next I
     Next J
     
@@ -61,3 +61,27 @@ Public Function DictsToTable(TableDicts As Collection, start_range As Range, Tab
 End Function
 
 
+Private Sub SetCellValue(Cell As Range, Value As Variant)
+    ' Sets a cell's value, and makes allowance for Excel's unwanted
+    ' autocorrecting of strings starting with `=`. Using VBA you can set a formula
+    ' Explicitly using Cell.Formula = FormulaString instead of relying on Excel's autorcorrect
+    '
+    ' Args:
+    '   Cell: the cell set
+    '   Value: the value to give the cell
+    '
+    ' Returns:
+    '   Returns nothing. Side-effect on the value of the cell
+    
+    If Application.WorksheetFunction.IsText(Value) Then
+        If Left(Value, 1) = "=" Then
+            With Cell
+                .NumberFormat = "@" ' Format as TEXT. It avoids the auto-correction of '=foo' to =foo
+                .Value = Value
+            End With
+        End If
+    End If
+    
+    Cell.Value = Value
+        
+End Sub

@@ -128,7 +128,7 @@ Private Sub Test_CopyTable()
     Assert.AreEqual "General", LOEntries(5).NumberFormat
     Assert.AreEqual "m/d/yyyy", LOEntries(6).NumberFormat
 
-    Assert.AreEqual 11, CInt(LOEntries(1).Value)
+    Assert.AreEqual "=[foo]", LOEntries(1).Value
     Assert.AreEqual 12, CInt(LOEntries(2).Value)
     Assert.AreEqual 21, CInt(LOEntries(3).Value)
     Assert.AreEqual 22, CInt(LOEntries(4).Value)
