@@ -37,27 +37,50 @@ Public Function DictsToTable(TableDicts As Collection, start_range As Range, Tab
             End If
         Next DictEntry
     Next dict
-
-    start_range.Worksheet.ListObjects.Add(SourceType:=xlSrcRange, Source:=start_range, _
-    xlListObjectHasHeaders:=xlYes, tablestyleName:="TableStyleMedium2").Name = TableName
-
-    Set CurrentTable = start_range.Worksheet.ListObjects(TableName)
-    CurrentTable.ListColumns.Item(1).Name = TableDicts(1).Keys()(0)
     
     ' Add column headers.
-    For I = 1 To NumberOfColumns - 1
-        CurrentTable.ListColumns.Add.Name = TableDicts(1).Keys()(I)
+    For I = 1 To NumberOfColumns
+        start_range.Offset(0, I - 1).Value = TableDicts(1).Keys()(I - 1)
     Next I
     
     ' add values.
     For J = 1 To NumberOfRows
-        CurrentTable.ListRows.Add
         For I = 1 To NumberOfColumns
-            CurrentTable.ListRows.Item(J).Range(I) = TableDicts(J)(ColumnNames(I - 1))
+            SetCellValue start_range.Offset(J, I - 1), TableDicts(J)(ColumnNames(I - 1))
         Next I
     Next J
     
+    Set CurrentTable = start_range.Worksheet.ListObjects.Add(SourceType:=xlSrcRange, Source:=start_range.Resize(NumberOfRows + 1, NumberOfColumns), _
+    xlListObjectHasHeaders:=xlYes, tablestyleName:="TableStyleMedium2")
+    
+    CurrentTable.Name = TableName
+
     Set DictsToTable = CurrentTable
 End Function
 
 
+Private Sub SetCellValue(Cell As Range, Value As Variant)
+    ' Sets a cell's value, and makes allowance for Excel's unwanted
+    ' autocorrecting of strings starting with `=`. Using VBA you can set a formula
+    ' Explicitly using Cell.Formula = FormulaString instead of relying on Excel's autorcorrect
+    '
+    ' Args:
+    '   Cell: the cell set
+    '   Value: the value to give the cell
+    '
+    ' Returns:
+    '   Returns nothing. Side-effect on the value of the cell
+    
+    If Application.WorksheetFunction.IsText(Value) Then
+        If Left(Value, 1) = "=" Then
+            With Cell
+                .NumberFormat = "@" ' Format as TEXT. It avoids the auto-correction of '=foo' to =foo
+                .Value = Value
+            End With
+            Exit Sub
+        End If
+    End If
+    
+    Cell.Value = Value
+        
+End Sub

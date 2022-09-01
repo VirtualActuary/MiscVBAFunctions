@@ -128,13 +128,16 @@ Private Sub Test_CopyTable()
     Assert.AreEqual "General", LOEntries(5).NumberFormat
     Assert.AreEqual "m/d/yyyy", LOEntries(6).NumberFormat
 
-    Assert.AreEqual 11, CInt(LOEntries(1).Value)
-    Assert.AreEqual 12, CInt(LOEntries(2).Value)
-    Assert.AreEqual 21, CInt(LOEntries(3).Value)
-    Assert.AreEqual 22, CInt(LOEntries(4).Value)
-    Assert.AreEqual 31, CInt(LOEntries(5).Value)
-    Assert.AreEqual 32, CInt(LOEntries(6).Value)
-
+    Assert.AreEqual "=[foo]", LOEntries(1, 1).Value
+    Assert.AreEqual 12, CInt(LOEntries(1, 2).Value)
+    Assert.AreEqual 21, CInt(LOEntries(2, 1).Value)
+    Assert.AreEqual 22, CInt(LOEntries(2, 2).Value)
+    Assert.AreEqual "Hello", LOEntries(3, 1).Value
+    Assert.AreEqual 32, CInt(LOEntries(3, 2).Value)
+    Assert.AreEqual CVErr(xlErrName), LOEntries(4, 1).Value
+    Assert.AreEqual CVErr(xlErrNA), LOEntries(4, 2).Value
+    Assert.AreEqual "=foo", LOEntries(5, 1).Value
+    
 TestExit:
     WB2.Close False
     Exit Sub
