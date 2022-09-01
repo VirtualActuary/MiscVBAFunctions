@@ -226,7 +226,7 @@ End Function
 
 
 Public Function TableDictToArray(TableDicts As Collection) As Variant()
-    ' Convert a TableDicts to an Array. The Column names of the TbaleDicts
+    ' Convert a TableDicts to an Array. The Column names of the TableDicts
     ' get inserted as the first row in the array.
     '
     ' Args:
