@@ -1,5 +1,5 @@
-mkdocs~=1.2
-mkdocs-material~=8.1
-mkdocstrings-vba>=0.0.3
-mkdocs-gen-files~=0.3.4
+mkdocs~=1.3
+mkdocs-material~=8.4
+mkdocstrings-vba>=0.0.7
+mkdocs-gen-files~=0.4.0
 mkdocs-literate-nav~=0.4.1
