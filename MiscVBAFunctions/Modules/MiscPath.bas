@@ -2,6 +2,28 @@ Attribute VB_Name = "MiscPath"
 Option Explicit
 
 
+Public Function EvalPath(pth As String, Optional WB As Workbook) As String
+    ' Convert a path to absolute path.
+    ' Converts system variables to String in the Path.
+    ' Convert "/" to "\" in the Path.
+    ' If the input Path doesn't start with "[A-Za-z]" and then ":" or starts with "\\",
+    ' the selected WorkBook's Path is used to create the absolute path of the input Path.
+    '
+    ' Args:
+    '   Pth: input path
+    '   WB: Optional WorkBook.
+    '
+    ' Returns:
+    '   The absolute Path.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+
+    EvalPath = ExpandEnvironmentalVariables(pth)
+    
+    EvalPath = AbsolutePath(EvalPath, WB)
+End Function
+
+
 Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Nothing) As String
     ' Convert the input Path string to an absolute path string.
     ' We opt for using backslashes `\` only, to
@@ -17,34 +39,30 @@ Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Noth
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     PathString = ConvertToBackslashes(PathString)
-
-    ' Insert wb's path if PathString is a local path
-    If Not ((Left(PathString, 1) Like "[A-Za-z]" And Mid(PathString, 2, 1) = ":") Or Left(PathString, 2) = "\\") Then
+    Dim IsNetwokDrive As Boolean
+    IsNetwokDrive = False
+    
+    If IsAbsolutePath(PathString) Then
+        If PathHasServer(PathString) Then
+            ' fso.GetAbsolutePathName(...) doesn't work with network paths, so "x:\" gets added instead
+            ' to ensure fso.GetAbsolutePathName(...) can function.
+            ' The "x:\" gets replaced by "\\" in the last step
+            PathString = "x:\" & Mid(PathString, 3)
+            IsNetwokDrive = True
+        
+        ElseIf Left(PathString, 1) = "\" Then
+            ' If PathString starts with a "\" and its not a network drive, Prepend drive letter only.
+            ' fso.GetAbsolutePathName(...) points to ThisWorkbook's drive letter.
+            PathString = PathGetDrive(WB.Path) & PathString
+        End If
+    Else
+        ' Prepend WB.Path to PathString if not an absolute Path.
         PathString = Path(WB.Path, PathString)
     End If
     
-    Dim IsNetwokDrive As Boolean
-    IsNetwokDrive = False
- 
-    Dim PathArr() As String
-    PathArr = Split(PathString, "\\")
-    
-    AbsolutePath = ""
-    Dim Counter As Long
-    For Counter = 0 To UBound(PathArr)
-        If Counter = 0 And PathArr(Counter) = "" Then
-            ' fso.GetAbsolutePathName(...) doesn't work with network paths, so an extra step was
-            ' added to ensure fso.GetAbsolutePathName(...) can function.
-            AbsolutePath = "x:\"
-            IsNetwokDrive = True
-        ElseIf Counter = UBound(PathArr) Then
-            AbsolutePath = AbsolutePath & PathArr(Counter)
-        Else
-            AbsolutePath = AbsolutePath & PathArr(Counter) & "\"
-        End If
-    Next
-    
+    AbsolutePath = Replace(PathString, "\\", "\")
     AbsolutePath = fso.GetAbsolutePathName(AbsolutePath)
+
     If IsNetwokDrive Then
         ' Remove the "x:\" prefix and replace it with "\\" if the PathString is a network drive.
         AbsolutePath = "\\" & Mid(AbsolutePath, 4)
@@ -157,6 +175,12 @@ Public Function Path(ParamArray Args() As Variant) As String
         'Debug.Print "Segment: " & Segments(I)
         Path = Path & Slash & Segments(I)
     Next
+End Function
+
+
+Private Function ConvertToBackslashes(pth As String) As String
+    ConvertToBackslashes = Replace(pth, "/", "\")
+
 End Function
 
 

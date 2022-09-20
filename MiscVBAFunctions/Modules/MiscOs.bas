@@ -69,34 +69,6 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
 End Function
 
 
-Public Function ConvertToBackslashes(pth As String) As String
-    ConvertToBackslashes = Replace(pth, "/", "\")
-
-End Function
-
-
-Public Function EvalPath(pth As String, Optional WB As Workbook) As String
-    ' Convert a path to absolute path.
-    ' Converts system variables to String in the Path.
-    ' Convert "/" to "\" in the Path.
-    ' If the input Path doesn't start with "[A-Za-z]" and then ":" or starts with "\\",
-    ' the selected WorkBook's Path is used to create the absolute path of the input Path.
-    '
-    ' Args:
-    '   Pth: input path
-    '   WB: Optional WorkBook.
-    '
-    ' Returns:
-    '   The absolute Path.
-    
-    If WB Is Nothing Then Set WB = ThisWorkbook
-
-    EvalPath = ExpandEnvironmentalVariables(pth)
-    
-    EvalPath = AbsolutePath(EvalPath, WB)
-End Function
-
-
 Private Function parentDir(ByVal folder)
     parentDir = Left$(folder, InStrRev(folder, "\") - 1)
 End Function
