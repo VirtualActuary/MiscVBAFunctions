@@ -2,6 +2,57 @@ Attribute VB_Name = "MiscPath"
 Option Explicit
 
 
+Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Nothing) As String
+    ' Convert the input Path string to an absolute path string.
+    ' We opt for using backslashes `\` only, to
+    ' allow support for network paths like `\\server1\asdf` on Windows.
+    '
+    ' Args:
+    '   PathString: Path to be converted to an absolute path
+    '   WB: The WorkBook that will be used to convert the PathString to an absolute Path
+    '       if the PathString is a relative Path.
+    '
+    ' Returns:
+    '   The Absolute Path as a string
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    PathString = ConvertToBackslashes(PathString)
+
+    ' Insert wb's path if PathString is a local path
+    If Not ((Left(PathString, 1) Like "[A-Za-z]" And Mid(PathString, 2, 1) = ":") Or Left(PathString, 2) = "\\") Then
+        PathString = Path(WB.Path, PathString)
+    End If
+    
+    Dim IsNetwokDrive As Boolean
+    IsNetwokDrive = False
+ 
+    Dim PathArr() As String
+    PathArr = Split(PathString, "\\")
+    
+    AbsolutePath = ""
+    Dim Counter As Long
+    For Counter = 0 To UBound(PathArr)
+        If Counter = 0 And PathArr(Counter) = "" Then
+            ' fso.GetAbsolutePathName(...) doesn't work with network paths, so an extra step was
+            ' added to ensure fso.GetAbsolutePathName(...) can function.
+            AbsolutePath = "x:\"
+            IsNetwokDrive = True
+        ElseIf Counter = UBound(PathArr) Then
+            AbsolutePath = AbsolutePath & PathArr(Counter)
+        Else
+            AbsolutePath = AbsolutePath & PathArr(Counter) & "\"
+        End If
+    Next
+    
+    AbsolutePath = fso.GetAbsolutePathName(AbsolutePath)
+    If IsNetwokDrive Then
+        ' Remove the "x:\" prefix and replace it with "\\" if the PathString is a network drive.
+        AbsolutePath = "\\" & Mid(AbsolutePath, 4)
+    End If
+
+End Function
+
+
 Public Function Path(ParamArray Args() As Variant) As String
     ' Combine paths or path segments.
     '

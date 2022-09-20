@@ -51,19 +51,19 @@ Public Function RangeTo1DArray( _
     Values = r.Value
     Dim I As Long
     Dim J As Long
-    Dim counter As Long
-    counter = 0
+    Dim Counter As Long
+    Counter = 0
     For I = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
             If IsError(Values(I, J)) Then
                 ' if error, we cannot check if empty, we need to add it
-                arr(counter) = Values(I, J)
-                counter = counter + 1
+                arr(Counter) = Values(I, J)
+                Counter = Counter + 1
             ElseIf Values(I, J) = vbNullString And IgnoreEmpty Then
                 ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
-                arr(counter) = Values(I, J)
-                counter = counter + 1
+                arr(Counter) = Values(I, J)
+                Counter = Counter + 1
             End If
         Next J
     Next I

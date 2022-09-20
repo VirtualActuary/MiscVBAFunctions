@@ -69,7 +69,7 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
 End Function
 
 
-Private Function ConvertToBackslashes(pth As String) As String
+Public Function ConvertToBackslashes(pth As String) As String
     ConvertToBackslashes = Replace(pth, "/", "\")
 
 End Function
@@ -92,13 +92,8 @@ Public Function EvalPath(pth As String, Optional WB As Workbook) As String
     If WB Is Nothing Then Set WB = ThisWorkbook
 
     EvalPath = ExpandEnvironmentalVariables(pth)
-    EvalPath = ConvertToBackslashes(EvalPath)
-
-    If (Left(EvalPath, 1) Like "[A-Za-z]" And Mid(EvalPath, 2, 1) = ":") Or Left(EvalPath, 2) = "\\" Then
-        EvalPath = fso.GetAbsolutePathName(EvalPath)
-    Else
-        EvalPath = fso.GetAbsolutePathName(Path(WB.Path, EvalPath))
-    End If
+    
+    EvalPath = AbsolutePath(EvalPath, WB)
 End Function
 
 

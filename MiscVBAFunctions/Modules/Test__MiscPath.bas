@@ -230,3 +230,37 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+'@TestMethod("MiscPath.AbsolutePath")
+Private Sub Test_AbsolutePath()
+    On Error GoTo TestFail
+
+    'Assert:
+    'Absolute paths
+    Assert.AreEqual "C:\", AbsolutePath("C:\")
+    Assert.AreEqual "C:\test", AbsolutePath("C:\test")
+    Assert.AreEqual "C:\foo\bar", AbsolutePath("C:\foo\bar")
+    Assert.AreEqual "C:\bar", AbsolutePath("C:\foo\..\bar")
+    Assert.AreEqual "C:\foo", AbsolutePath("C:\foo\\bar\\..")
+    
+    ' Local paths
+    Assert.AreEqual ThisWorkbook.Path & "\foo\bar", AbsolutePath("foo/bar", ThisWorkbook)
+    Assert.AreEqual ThisWorkbook.Path & "\foo", AbsolutePath(".\foo", ThisWorkbook)
+    Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path) & "\foo", AbsolutePath("..\foo", ThisWorkbook)
+    Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo\..\..", ThisWorkbook)
+    Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo//..//..", ThisWorkbook)
+
+    ' Network Paths
+    Assert.AreEqual "\\foo\bar", AbsolutePath("\\foo/bar")
+    Assert.AreEqual "\\foo\bar", AbsolutePath("\\foo\\bar")
+    Assert.AreEqual "\\foo\bar", AbsolutePath("\\foo\\.\bar\\..\\bar")
+    Assert.AreEqual "\\foo", AbsolutePath("//foo")
+    Assert.AreEqual "\\foo\bar", AbsolutePath("//foo\\bar")
+    Assert.AreEqual "\\hello\2", AbsolutePath("\\hello\world\\..\2")
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
