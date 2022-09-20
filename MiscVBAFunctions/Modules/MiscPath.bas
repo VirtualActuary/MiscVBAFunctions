@@ -59,10 +59,9 @@ Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Noth
         ' Prepend WB.Path to PathString if not an absolute Path.
         PathString = Path(WB.Path, PathString)
     End If
-    
-    AbsolutePath = Replace(PathString, "\\", "\")
-    AbsolutePath = fso.GetAbsolutePathName(AbsolutePath)
 
+    ' Breaking example: fso.GetAbsolutePathName("\\hello\world\\..\2")
+    AbsolutePath = fso.GetAbsolutePathName(PathString)
     If IsNetwokDrive Then
         ' Remove the "x:\" prefix and replace it with "\\" if the PathString is a network drive.
         AbsolutePath = "\\" & Mid(AbsolutePath, 4)
