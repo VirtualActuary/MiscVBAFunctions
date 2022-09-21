@@ -29,16 +29,16 @@ End Function
 
 Private Sub TestGetNewKey()
 
-    Dim c As New Collection
+    Dim C As New Collection
     Dim I As Long
     
-    c.Add "bla", "name"
+    C.Add "bla", "name"
     For I = 1 To 100
-        c.Add "bla", "name" & I
+        C.Add "bla", "name" & I
     Next I
     
-    Debug.Print GetNewKey("name", c), "name101"
-    Debug.Print GetNewKey("NewName", c), "NewName"
+    Debug.Print GetNewKey("name", C), "name101"
+    Debug.Print GetNewKey("NewName", C), "NewName"
 
 End Sub
 

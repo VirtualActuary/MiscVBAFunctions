@@ -6,14 +6,14 @@ Option Explicit
 
 Private Sub TestHasKey()
 
-    Dim c As New Collection
-    c.Add "a", "a"
-    c.Add col("x", "y", "z"), "b"
+    Dim C As New Collection
+    C.Add "a", "a"
+    C.Add col("x", "y", "z"), "b"
     
     Debug.Print vbLf & "*********** TestHasKey tests ***********"
-    Debug.Print True, hasKey(c, "a") ' True for scalar
-    Debug.Print True, hasKey(c, "b") ' True for object
-    Debug.Print True, hasKey(c, "A") ' True (even though case insensitive???)
+    Debug.Print True, hasKey(C, "a") ' True for scalar
+    Debug.Print True, hasKey(C, "b") ' True for object
+    Debug.Print True, hasKey(C, "A") ' True (even though case insensitive???)
 
     Debug.Print True, hasKey(Workbooks, ThisWorkbook.Name) ' True for non-collection type collections
     

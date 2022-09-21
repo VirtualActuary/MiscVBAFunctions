@@ -16,18 +16,18 @@ Public Function EnsureDictI(Container As Variant) As Object
     Dim Item As Variant
     
     If TypeOf Container Is Collection Then
-        Dim c As Collection
-        Set c = New Collection
+        Dim C As Collection
+        Set C = New Collection
         
         For Each Item In Container
             If TypeOf Item Is Collection Or TypeOf Item Is Dictionary Then
-                c.Add EnsureDictI(Item)
+                C.Add EnsureDictI(Item)
             Else
-                c.Add Item
+                C.Add Item
             End If
         Next Item
         
-        Set EnsureDictI = c
+        Set EnsureDictI = C
         
     ElseIf TypeOf Container Is Dictionary Then
         Dim d As Dictionary

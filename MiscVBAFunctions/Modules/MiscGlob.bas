@@ -3,7 +3,21 @@ Option Explicit
 
 
 Public Function Glob(Dir As String, Pattern As String) As Collection
-    
+    ' Mimics Python's Glob function, but here the files are listed depth first,
+    ' whereas in Python it's lists width first.
+    '
+    ' Available wildcards :  ?          :   Any single character
+    '                        *          :   Zero or more characters
+    '                        #          :   Any single digit (0–9)
+    '                        [charlist] :   Any single character in charlist
+    '                        [!charlist]:   Any single character not in charlist
+    '
+    ' Args:
+    '   Dir: Base directory to find matching files from
+    '   Pattern: Pattern to compare to the file names
+    '
+    ' Returns:
+    '   A Collection with all files that match the input pattern
     
     If Len(Pattern) = 0 Then
         Err.Raise -345, , "ValueError: Unacceptable pattern: ''"
@@ -13,6 +27,7 @@ Public Function Glob(Dir As String, Pattern As String) As Collection
     Set DirPath = fso.GetFolder(Dir)
     
     Dim PatternSplitted() As String
+    Pattern = Replace(Pattern, "/", "\")
     PatternSplitted = Split(Pattern, "\")
 
     Dim AllPaths As Collection
@@ -31,7 +46,6 @@ Public Function Glob(Dir As String, Pattern As String) As Collection
     I = 1
     While I <= NumPaths
         CurrentPath = CreateRelativePath(CStr(DirPath), CStr(AllPaths(I)))
-
         If IsGlobValid(CurrentPath, PatternSplitted, Dir) = False Then
             AllPaths.Remove I
             NumPaths = NumPaths - 1
@@ -48,13 +62,29 @@ End Function
 
 
 Public Function RGlob(Dir As String, Pattern As String) As Collection
+    ' Mimics Python's RGlob function, but here the files are listed depth first,
+    ' whereas in Python it's lists width first.
+    '
+    ' Available wildcards :  ?          :   Any single character
+    '                        *          :   Zero or more characters
+    '                        #          :   Any single digit (0–9)
+    '                        [charlist] :   Any single character in charlist
+    '                        [!charlist]:   Any single character not in charlist
+    '
+    ' Args:
+    '   Dir: Base directory to find matching files from
+    '   Pattern: Pattern to compare to the file names
+    '
+    ' Returns:
+    '   A Collection with all files that match the input pattern
     
-    If Len(Pattern) = 0 Then
-        Err.Raise -345, , "ValueError: Unacceptable pattern: ''"
-    End If
     
     Dim DirPath As folder
     Set DirPath = fso.GetFolder(Dir)
+    
+    If Pattern = "" Then
+        Pattern = "**"
+    End If
     
     Dim PatternSplitted() As String
     PatternSplitted = Split(Pattern, "\")
@@ -121,6 +151,7 @@ Private Function IsGlobValid(CurrentPath As String, PatternSplitted() As String,
     For I = 0 To PatternLen
         
         If PatternSplitted(I) = "**" Then
+            
             If I = PatternLen Then
                 If fso.FolderExists(BaseDir + "\" + CurrentPath) Then
                     IsGlobValid = True
@@ -129,7 +160,7 @@ Private Function IsGlobValid(CurrentPath As String, PatternSplitted() As String,
                 End If
                 Exit Function
             End If
-            
+
             Dim ArrRest() As String
             ReDim ArrRest(PatternLen - I - 1) As String
             Dim J As Long
@@ -173,10 +204,14 @@ Private Function IsGlobValid(CurrentPath As String, PatternSplitted() As String,
 End Function
 
 
-Private Function IsRGlobValid(CurrentPath As String, PatternSplitted() As String, BaseDir As String)
+Private Function IsRGlobValid(ByVal CurrentPath As String, PatternSplit() As String, BaseDir As String)
     ' must still test for scenerios where there are multiple recursions (not at beginning or end)
+    
+    Dim PatternSplitted() As String
+    PatternSplitted = PatternSplit
+    
     If CurrentPath = "" Then
-        If UBound(PatternSplitted) = 0 And PatternSplitted(0) = "**" Then
+        If (UBound(PatternSplitted) = 0 And PatternSplitted(0) = "**") Then
             IsRGlobValid = True
         Else
             IsRGlobValid = False
@@ -207,18 +242,21 @@ Private Function IsRGlobValid(CurrentPath As String, PatternSplitted() As String
         End If
     
         If PatternSplitted(I) = "**" Then
+            Dim ArrRest() As String
+            
             If I = 0 Then
-                If fso.FolderExists(BaseDir + "\" + CurrentPath) Then
-                    IsRGlobValid = True
-                Else
+                ' if The last section of the pattern is "**", only folders are considered.
+                If Not fso.FolderExists(BaseDir + "\" + CurrentPath) Then
                     IsRGlobValid = False
+                    Exit Function
                 End If
+            End If
+            If I = PatternLen Then
+                ' All other checks passed and this is final check, so test passed.
+                IsRGlobValid = True
                 Exit Function
             End If
-            
-            ' When recursion is called in RGlob()
-            
-            Dim ArrRest() As String
+                
             ReDim ArrRest(PatternLen - I - 1) As String
             Dim J As Long
             
@@ -226,7 +264,7 @@ Private Function IsRGlobValid(CurrentPath As String, PatternSplitted() As String
                 ArrRest(J - I - 1) = PatternSplitted(J)
             Next J
             
-            IsRGlobValid = IsRecursiveRGlobValid(Mid(CurrentPath, Len(RelativePath) + 1), ArrRest)
+            IsRGlobValid = IsRecursiveRGlobValid(Left(CurrentPath, Len(CurrentPath) - Len(RelativePath)), ArrRest)
             Exit Function
         End If
         
@@ -253,30 +291,41 @@ End Function
 
 
 Private Function IsRecursiveRGlobValid(CurrentPath As String, PatternSplitted() As String) As Boolean
+    ' Glob for multiple recursions
+    ' Example: pattern = "foo\**\bar\**\tree
+    
     Dim PathSplitted() As String
     PathSplitted = Split(CurrentPath, "\")
     
     Dim RelativePattern As String
     Dim RelativePath As String
     
+    Dim PatternLen As Long
+    PatternLen = UBound(PatternSplitted)
+
     Dim I As Long
     Dim J As Long
     
+    ' must look at all different Path sections.
     For I = 0 To UBound(PathSplitted)
-
+        RelativePattern = ""
         For J = 0 To UBound(PatternSplitted)
-            If I + J > PathSplitted Then
-                GoTo NextIteration
+            ' If pattern is longer that remaining path
+            If I + UBound(PatternSplitted) > UBound(PathSplitted) Then
+                IsRecursiveRGlobValid = False
+                Exit Function
             End If
             
+            ' Build a relative path to be compared to Pattern section
             If RelativePath = "" Then
                 RelativePath = PathSplitted(I + J)
             Else
                 RelativePath = RelativePath + "\" + PathSplitted(I + J)
             End If
-
-            If PatternSplitted(J) = "**" Then
             
+            ' If current pattern section is "**" call this function again (recursion)
+            If PatternSplitted(J) = "**" Then
+                ' Untested section
                 If J = UBound(PatternSplitted) Then
                     IsRecursiveRGlobValid = True
                     Exit Function
@@ -297,14 +346,14 @@ Private Function IsRecursiveRGlobValid(CurrentPath As String, PatternSplitted() 
                 GoTo NextIteration
             End If
             
+            ' Build relative pattern
             If RelativePattern = "" Then
                 RelativePattern = PatternSplitted(J)
             Else
                 RelativePattern = RelativePattern + "\" + PatternSplitted(J)
             End If
-            
             If J = UBound(PatternSplitted) Then
-                If RelativePath Like RelativePattern Then
+                If RelativePath Like "*" & RelativePattern & "*" Then
                     IsRecursiveRGlobValid = True
                     Exit Function
                 End If
@@ -348,18 +397,18 @@ Private Function GetAllPaths(Directory As folder, Optional MaxDepth = 999, Optio
     Set GetAllPaths = New Collection
     GetAllPaths.Add Directory
     GetAllPathsHelper Directory, GetAllPaths, MaxDepth
-    
+
 End Function
 
 
 Private Sub GetAllPathsHelper(Directory As folder, ListOfFiles As Collection, Optional MaxDepth = 999, Optional CurrentDepth = 0)
-    ' add all files before folders. Python adds folders first.
+    ' Depth first ordering
 
     Dim F As File
     For Each F In Directory.Files
         ListOfFiles.Add F
     Next F
-    
+
     Dim SubDir As folder
     For Each SubDir In Directory.SubFolders
         ListOfFiles.Add SubDir
@@ -367,10 +416,6 @@ Private Sub GetAllPathsHelper(Directory As folder, ListOfFiles As Collection, Op
             GetAllPathsHelper SubDir, ListOfFiles, MaxDepth, CurrentDepth + 1
         End If
     Next SubDir
-    
+
 End Sub
-
-
-
-
 
