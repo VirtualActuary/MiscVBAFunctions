@@ -242,15 +242,15 @@ Private Sub Test_AbsolutePath()
     Assert.AreEqual "C:\foo\bar", AbsolutePath("C:\foo\bar")
     Assert.AreEqual "C:\bar", AbsolutePath("C:\foo\..\bar")
     Assert.AreEqual "C:\foo", AbsolutePath("C:\foo\\bar\\..")
+    Assert.AreEqual PathGetDrive(ThisWorkbook.Path) & "\foo", AbsolutePath("\foo")
     
-    ' Local paths
+    ' Relative paths
     Assert.AreEqual ThisWorkbook.Path & "\foo\bar", AbsolutePath("foo/bar", ThisWorkbook)
     Assert.AreEqual ThisWorkbook.Path & "\foo", AbsolutePath(".\foo", ThisWorkbook)
     Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path) & "\foo", AbsolutePath("..\foo", ThisWorkbook)
     Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo\..\..", ThisWorkbook)
     Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo//..//..", ThisWorkbook)
-    Assert.AreEqual PathGetDrive(ThisWorkbook.Path) & "\foo", AbsolutePath("\foo")
-
+    
     ' Network Paths
     Assert.AreEqual "\\foo\bar", AbsolutePath("\\foo/bar")
     Assert.AreEqual "\\foo\bar", AbsolutePath("\\foo\\bar")
