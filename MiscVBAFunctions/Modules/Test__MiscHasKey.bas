@@ -38,16 +38,16 @@ Private Sub Test_HasKey_Collection()
     
     
     'Arrange:
-     Dim c As New Collection
+     Dim C As New Collection
 
     'Act:
-    c.Add "foo", "a"
-    c.Add col("x", "y", "z"), "b"
+    C.Add "foo", "a"
+    C.Add col("x", "y", "z"), "b"
     
     'Assert:
-    Assert.AreEqual True, hasKey(c, "a") ' True for scalar
-    Assert.AreEqual True, hasKey(c, "b") ' True for scalar
-    Assert.AreEqual True, hasKey(c, "A") ' True for case insensitive
+    Assert.AreEqual True, hasKey(C, "a") ' True for scalar
+    Assert.AreEqual True, hasKey(C, "b") ' True for scalar
+    Assert.AreEqual True, hasKey(C, "A") ' True for case insensitive
     'Assert.Succeed
 
 TestExit:

@@ -37,15 +37,15 @@ Private Sub Test_Col()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c As Collection
+    Dim C As Collection
     'Act:
-    Set c = col(1, 3, 5)
+    Set C = col(1, 3, 5)
     'Assert:
     'Assert.Succeed
     
-    Assert.AreEqual 1, c(1), "col test succeeded"
-    Assert.AreEqual 3, c(2), "col test succeeded"
-    Assert.AreEqual 5, c(3), "col test succeeded"
+    Assert.AreEqual 1, C(1), "col test succeeded"
+    Assert.AreEqual 3, C(2), "col test succeeded"
+    Assert.AreEqual 5, C(3), "col test succeeded"
 
 TestExit:
     Exit Sub
@@ -59,15 +59,15 @@ Private Sub Test_zip()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c1 As Collection
+    Dim C1 As Collection
     Dim c2 As Collection
     Dim cOut As Collection
 
     'Act:
-    Set c1 = col(1, 2, 3)
+    Set C1 = col(1, 2, 3)
     Set c2 = col(4, 5, 6, 7)
     
-    Set cOut = zip(c1, c2)
+    Set cOut = zip(C1, c2)
 
     'Assert:
     Assert.AreEqual 1, cOut(1)(1), "zip test succeeded"

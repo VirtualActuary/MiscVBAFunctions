@@ -57,11 +57,11 @@ Private Sub Test_min_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c As Collection
+    Dim C As Collection
     'Act:
     
     
-    min c
+    min C
     
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -104,10 +104,10 @@ Private Sub Test_max_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c As Collection
+    Dim C As Collection
 
     'Act:
-    max c
+    max C
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -147,10 +147,10 @@ Private Sub Test_mean_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c As Collection
+    Dim C As Collection
 
     'Act:
-    mean c
+    mean C
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -258,13 +258,13 @@ Private Sub Test_Join_Collections_fail_2()
     'Arrange:
     Dim d As Dictionary
     Dim d1 As Dictionary
-    Dim c As New Collection
+    Dim C As New Collection
     'Act:
 
     Set d1 = dict("a", 1, "b", 2)
-    Set c = col(1, 2, 3)
+    Set C = col(1, 2, 3)
     
-    Set d = JoinCollections(d1, c)
+    Set d = JoinCollections(d1, C)
     
 
 Assert:
@@ -318,13 +318,13 @@ Private Sub Test_Concat_Collections_fail()
     'Arrange:
     Dim d As Dictionary
     Dim d1 As Dictionary
-    Dim c As New Collection
+    Dim C As New Collection
     'Act:
 
     Set d1 = dict("a", 1, "b", 2)
-    Set c = col(1, 2, 3)
+    Set C = col(1, 2, 3)
     
-    ConcatCollections d1, c
+    ConcatCollections d1, C
 Assert:
     Assert.Fail "Expected error was not raised"
 

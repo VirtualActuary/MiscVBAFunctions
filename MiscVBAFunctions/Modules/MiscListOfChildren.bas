@@ -15,11 +15,11 @@ Function GetListOfChildren(Depths As Collection, Optional SearchDown As Boolean 
     
     Dim ListOfChildren As New Collection
     
-    Dim c As Long
+    Dim C As Long
     ' Create empty collections for the output
-    For c = 1 To Depths.Count
+    For C = 1 To Depths.Count
         ListOfChildren.Add New Collection
-    Next c
+    Next C
     
     Dim I As Long
     Dim idx As Long

@@ -37,14 +37,14 @@ Private Sub Test_GetNewKey()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c As New Collection
+    Dim C As New Collection
     Dim d As New Collection
     Dim I As Long
 
     'Act:
-    c.Add "bla", "name"
+    C.Add "bla", "name"
     For I = 1 To 100
-        c.Add "bla", "name" & I
+        C.Add "bla", "name" & I
     Next I
     
     d.Add "bla", "does"
@@ -52,8 +52,8 @@ Private Sub Test_GetNewKey()
     d.Add "bla", "matter"
 
     'Assert:
-    Assert.AreEqual "name101", GetNewKey("name", c)
-    Assert.AreEqual "NewName", GetNewKey("NewName", c)
+    Assert.AreEqual "name101", GetNewKey("name", C)
+    Assert.AreEqual "NewName", GetNewKey("NewName", C)
     Assert.AreEqual "not1", GetNewKey("not", d)
     Assert.AreEqual "foo", GetNewKey("foo", d)
 

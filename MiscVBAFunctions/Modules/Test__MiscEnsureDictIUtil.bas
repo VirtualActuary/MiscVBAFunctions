@@ -68,8 +68,8 @@ Private Sub Test_EnsureDictIContainer()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c As Collection
-    Set c = New Collection
+    Dim C As Collection
+    Set C = New Collection
     
     Dim cI As Collection
     Set cI = New Collection
@@ -88,16 +88,16 @@ Private Sub Test_EnsureDictIContainer()
     d2.Add "b", "foo"  ' lowercase
     d3.Add "C", "foo"  ' uppercase
     
-    c.Add d1
-    c.Add d2
-    c.Add d3
+    C.Add d1
+    C.Add d2
+    C.Add d3
     
-    Set cI = EnsureDictI(c)
+    Set cI = EnsureDictI(C)
 
     'Assert:
-    Assert.AreEqual False, c(1).Exists("a")
-    Assert.AreEqual True, c(2).Exists("b")
-    Assert.AreEqual False, c(3).Exists("c")
+    Assert.AreEqual False, C(1).Exists("a")
+    Assert.AreEqual True, C(2).Exists("b")
+    Assert.AreEqual False, C(3).Exists("c")
     
     
     Assert.AreEqual True, cI(1).Exists("a")
