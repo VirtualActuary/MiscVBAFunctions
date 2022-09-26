@@ -26,8 +26,7 @@ End Function
 
 Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Nothing) As String
     ' Convert the input Path string to an absolute path string.
-    ' We opt for using backslashes `\` only, to
-    ' allow support for network paths like `\\server1\asdf` on Windows.
+    ' The result is normalised to contain only backslashes
     '
     ' Args:
     '   PathString: Path to be converted to an absolute path
