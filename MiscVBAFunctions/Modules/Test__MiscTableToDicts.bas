@@ -236,19 +236,19 @@ Private Sub Test_TableDictToArray()
     
     'Arrange:
     Dim col1 As Collection
-    Dim arr() As Variant
+    Dim Arr() As Variant
     
     'Act:
     Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12))
-    arr = TableDictToArray(col1)
+    Arr = TableDictToArray(col1)
 
     'Assert:
-    Assert.AreEqual "a", arr(0, 0)
-    Assert.AreEqual "b", arr(0, 1)
-    Assert.AreEqual 1, arr(1, 0)
-    Assert.AreEqual 2, arr(1, 1)
-    Assert.AreEqual 12, arr(2, 0)
-    Assert.AreEqual 11, arr(2, 1)
+    Assert.AreEqual "a", Arr(0, 0)
+    Assert.AreEqual "b", Arr(0, 1)
+    Assert.AreEqual 1, Arr(1, 0)
+    Assert.AreEqual 2, Arr(1, 1)
+    Assert.AreEqual 12, Arr(2, 0)
+    Assert.AreEqual 11, Arr(2, 1)
 
 TestExit:
     Exit Sub
@@ -264,11 +264,11 @@ Private Sub Test_TableDictToArray_fail_1()
     
     'Arrange:
     Dim col1 As Collection
-    Dim arr() As Variant
+    Dim Arr() As Variant
     
     'Act:
     Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12, "c", 3))
-    arr = TableDictToArray(col1)
+    Arr = TableDictToArray(col1)
 
 
 
@@ -291,11 +291,11 @@ Private Sub Test_TableDictToArray_fail_2()
     On Error GoTo TestFail
     
     Dim col1 As Collection
-    Dim arr() As Variant
+    Dim Arr() As Variant
     
     'Act:
     Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "c", 3))
-    arr = TableDictToArray(col1)
+    Arr = TableDictToArray(col1)
 
 Assert:
     Assert.Fail "Expected error was not raised"

@@ -38,13 +38,13 @@ Public Function RangeTo1DArray( _
     ' Returns:
     '   The normalized array.
     
-    Dim arr() As Variant ' the output array
-    ReDim arr(r.Cells.Count - 1)
+    Dim Arr() As Variant ' the output array
+    ReDim Arr(r.Cells.Count - 1)
     
     Dim Values() As Variant ' values of the whole range
     If r.Cells.Count = 1 Then
-        arr(0) = r.Value
-        RangeTo1DArray = arr
+        Arr(0) = r.Value
+        RangeTo1DArray = Arr
         Exit Function
     End If
     
@@ -57,18 +57,18 @@ Public Function RangeTo1DArray( _
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
             If IsError(Values(I, J)) Then
                 ' if error, we cannot check if empty, we need to add it
-                arr(Counter) = Values(I, J)
+                Arr(Counter) = Values(I, J)
                 Counter = Counter + 1
             ElseIf Values(I, J) = vbNullString And IgnoreEmpty Then
-                ReDim Preserve arr(UBound(arr) - 1) ' when there is an empty cell, just reduce array size by 1
+                ReDim Preserve Arr(UBound(Arr) - 1) ' when there is an empty cell, just reduce array size by 1
             Else
-                arr(Counter) = Values(I, J)
+                Arr(Counter) = Values(I, J)
                 Counter = Counter + 1
             End If
         Next J
     Next I
     
-    RangeTo1DArray = arr
+    RangeTo1DArray = Arr
     
 End Function
 
@@ -94,8 +94,8 @@ Public Function RangeTo2DArray(r As Range) As Variant()
     Dim Values() As Variant ' values of the whole range
     Values = r.Value
 
-    Dim arr() As Variant ' the output array
-    ReDim arr(UBound(Values, 1) - LBound(Values, 1), UBound(Values, 2) - LBound(Values, 2))
+    Dim Arr() As Variant ' the output array
+    ReDim Arr(UBound(Values, 1) - LBound(Values, 1), UBound(Values, 2) - LBound(Values, 2))
     Dim I As Long
     Dim J As Long
     Dim I_start As Long
@@ -104,9 +104,9 @@ Public Function RangeTo2DArray(r As Range) As Variant()
     J_start = LBound(Values, 2)
     For I = LBound(Values, 1) To UBound(Values, 1) ' rows
         For J = LBound(Values, 2) To UBound(Values, 2) ' columns
-            arr(I - I_start, J - J_start) = Values(I, J)
+            Arr(I - I_start, J - J_start) = Values(I, J)
         Next J
     Next I
-    RangeTo2DArray = arr
+    RangeTo2DArray = Arr
     
 End Function

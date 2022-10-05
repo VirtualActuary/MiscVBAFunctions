@@ -115,7 +115,7 @@ Public Function LastRow(WS As Worksheet) As Long
         LastRow = 0
         Exit Function
     End If
-    LastRow = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlPrevious).row
+    LastRow = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
 End Function
 
 
@@ -148,15 +148,15 @@ Public Function LastCell(WS As Worksheet) As Range
     ' Returns:
     '   The last cell in a worksheet as a range.
     
-    Dim row As Long
+    Dim Row As Long
     Dim Column As Long
-    row = LastRow(WS)
+    Row = LastRow(WS)
     Column = LastColumn(WS)
-    If row = 0 Or Column = 0 Then
+    If Row = 0 Or Column = 0 Then
         Exit Function
     End If
     
-    Set LastCell = WS.Cells(row, Column)
+    Set LastCell = WS.Cells(Row, Column)
 End Function
 
 

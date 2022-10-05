@@ -246,8 +246,8 @@ Public Function TableDictToArray(TableDicts As Collection) As Variant()
     
     NumberOfRows = TableDicts.Count
     NumberOfColumns = TableDicts(1).Count
-    Dim arr() As Variant
-    ReDim arr(NumberOfRows, NumberOfColumns - 1)
+    Dim Arr() As Variant
+    ReDim Arr(NumberOfRows, NumberOfColumns - 1)
     ColumnNames = TableDicts(1).Keys()
     ColumnNamesAsString = Join(ColumnNames, ",")
 
@@ -265,15 +265,15 @@ Public Function TableDictToArray(TableDicts As Collection) As Variant()
     Next dict
 
     For I = 0 To UBound(ColumnNames)
-        arr(0, I) = ColumnNames(I)
+        Arr(0, I) = ColumnNames(I)
     Next
     
     For I = 0 To NumberOfRows - 1
         For J = 0 To NumberOfColumns - 1
-            arr(I + 1, J) = TableDicts(I + 1)(ColumnNames(J))
+            Arr(I + 1, J) = TableDicts(I + 1)(ColumnNames(J))
         Next J
     Next I
-    TableDictToArray = arr
+    TableDictToArray = Arr
 End Function
 
 

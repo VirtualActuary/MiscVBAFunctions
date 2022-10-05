@@ -179,16 +179,16 @@ Public Function TableColumnToArray(TableDicts As Collection, ColumnName As Strin
     ' Returns:
     '   1-D array of the selected column.
     
-    Dim arr() As Variant
-    ReDim arr(TableDicts.Count - 1) ' zero indexed
+    Dim Arr() As Variant
+    ReDim Arr(TableDicts.Count - 1) ' zero indexed
     Dim dict As Dictionary
     Dim Counter As Long
     For Each dict In TableDicts
-        arr(Counter) = dictget(dict, ColumnName)
+        Arr(Counter) = dictget(dict, ColumnName)
         Counter = Counter + 1 ' zero indexing
     Next dict
     
-    TableColumnToArray = arr
+    TableColumnToArray = Arr
 End Function
 
 

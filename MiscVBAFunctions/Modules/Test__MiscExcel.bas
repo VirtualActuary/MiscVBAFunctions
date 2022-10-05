@@ -266,18 +266,18 @@ Private Sub Test_LastCell_1()
     
     'Arrange:
     Dim WB As Workbook
-    Dim r1 As Range
+    Dim R1 As Range
     
     'Act:
     Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
-    Set r1 = LastCell(WB.Sheets(1))
+    Set R1 = LastCell(WB.Sheets(1))
 
     'Assert:
-    Assert.AreEqual 1, CInt(r1.Count)
-    Assert.AreEqual 1, CInt(r1.Rows.Count)
-    Assert.AreEqual 1, CInt(r1.Columns.Count)
-    Assert.AreEqual "$N$19", r1.Address
-    Assert.AreEqual 100, CInt(r1.Value)
+    Assert.AreEqual 1, CInt(R1.Count)
+    Assert.AreEqual 1, CInt(R1.Rows.Count)
+    Assert.AreEqual 1, CInt(R1.Columns.Count)
+    Assert.AreEqual "$N$19", R1.Address
+    Assert.AreEqual 100, CInt(R1.Value)
 
 TestExit:
     WB.Close False
@@ -293,19 +293,19 @@ Private Sub Test_LastCell_2()
     
     'Arrange:
     Dim WB As Workbook
-    Dim r1 As Range
+    Dim R1 As Range
     
     'Act:
     Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges.xlsx"), True, False)
     WB.Sheets(1).Cells(4, 14).Value = 4
-    Set r1 = LastCell(WB.Sheets(1))
+    Set R1 = LastCell(WB.Sheets(1))
 
     'Assert:
-    Assert.AreEqual 1, CInt(r1.Count)
-    Assert.AreEqual 1, CInt(r1.Rows.Count)
-    Assert.AreEqual 1, CInt(r1.Columns.Count)
-    Assert.AreEqual "", r1.Value
-    Assert.AreEqual "$N$11", r1.Address
+    Assert.AreEqual 1, CInt(R1.Count)
+    Assert.AreEqual 1, CInt(R1.Rows.Count)
+    Assert.AreEqual 1, CInt(R1.Columns.Count)
+    Assert.AreEqual "", R1.Value
+    Assert.AreEqual "$N$11", R1.Address
 
 TestExit:
     WB.Close False
@@ -321,23 +321,23 @@ Private Sub Test_RelevantRange()
     
     'Arrange:
     Dim WB As Workbook
-    Dim r1 As Range
-    Dim arr As Variant
+    Dim R1 As Range
+    Dim Arr As Variant
     
     'Act:
     Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges.xlsx"), True, True)
-    Set r1 = RelevantRange(WB.Sheets(1))
-    arr = r1.Value
+    Set R1 = RelevantRange(WB.Sheets(1))
+    Arr = R1.Value
     
     'Assert:
-    Assert.AreEqual 99, CInt(r1.Count)
-    Assert.AreEqual 11, CInt(r1.Rows.Count)
-    Assert.AreEqual 9, CInt(r1.Columns.Count)
-    Assert.AreEqual 1, CInt(LBound(arr, 1))
-    Assert.AreEqual 11, CInt(UBound(arr, 1))
-    Assert.AreEqual 1, CInt(LBound(arr, 2))
-    Assert.AreEqual 9, CInt(UBound(arr, 2))
-    Assert.AreEqual "$I$11", r1.Range(Cells(UBound(arr, 1), UBound(arr, 2)), Cells(UBound(arr, 1), UBound(arr, 2))).Address
+    Assert.AreEqual 99, CInt(R1.Count)
+    Assert.AreEqual 11, CInt(R1.Rows.Count)
+    Assert.AreEqual 9, CInt(R1.Columns.Count)
+    Assert.AreEqual 1, CInt(LBound(Arr, 1))
+    Assert.AreEqual 11, CInt(UBound(Arr, 1))
+    Assert.AreEqual 1, CInt(LBound(Arr, 2))
+    Assert.AreEqual 9, CInt(UBound(Arr, 2))
+    Assert.AreEqual "$I$11", R1.Range(Cells(UBound(Arr, 1), UBound(Arr, 2)), Cells(UBound(Arr, 1), UBound(Arr, 2))).Address
 
 TestExit:
     WB.Close False
@@ -353,15 +353,15 @@ Private Sub Test_RelevantRange2()
     
     'Arrange:
     Dim WB As Workbook
-    Dim r1 As Range
-    Dim arr As Variant
+    Dim R1 As Range
+    Dim Arr As Variant
     
     'Act:
     Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges2.xlsx"), True, True)
-    Set r1 = RelevantRange(WB.Sheets(1))
+    Set R1 = RelevantRange(WB.Sheets(1))
 
     'Assert:
-    If r1 Is Nothing Then
+    If R1 Is Nothing Then
         Assert.Succeed
     Else
         Assert.Fail

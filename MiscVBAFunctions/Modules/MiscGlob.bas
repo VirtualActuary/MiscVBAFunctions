@@ -373,11 +373,11 @@ NextIteration:
 End Function
 
 
-Private Function ReverseArray(arr() As String) As String()
+Private Function ReverseArray(Arr() As String) As String()
     Dim StartPos As Long
     Dim EndPos As Long
-    StartPos = LBound(arr)
-    EndPos = UBound(arr)
+    StartPos = LBound(Arr)
+    EndPos = UBound(Arr)
     Dim ReverseArr() As String
     ReDim ReverseArr(StartPos To EndPos)
 
@@ -385,7 +385,7 @@ Private Function ReverseArray(arr() As String) As String()
     Dim Counter As Long
     Counter = StartPos
     For I = EndPos To StartPos Step -1
-        ReverseArr(Counter) = arr(I)
+        ReverseArr(Counter) = Arr(I)
         Counter = Counter + 1
     Next I
     ReverseArray = ReverseArr
