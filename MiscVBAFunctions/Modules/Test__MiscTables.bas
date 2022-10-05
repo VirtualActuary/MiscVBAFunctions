@@ -153,14 +153,14 @@ Private Sub Test_TableColumnToArray()
 
     'Arrange:
     Dim col1 As Collection
-    Dim arr() As Variant
+    Dim Arr() As Variant
     'Act:
     Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
-    arr = TableColumnToArray(col1, "b")
+    Arr = TableColumnToArray(col1, "b")
 
     'Assert:
-    Assert.AreEqual 2, arr(0)
-    Assert.AreEqual 20, arr(1)
+    Assert.AreEqual 2, Arr(0)
+    Assert.AreEqual 20, Arr(1)
 
 TestExit:
     Exit Sub
@@ -285,16 +285,16 @@ Private Sub Test_GetTableColumnDataRange()
     'Arrange:
     Dim SelectedTable As ListObject
     Dim r As Range
-    Dim arr() As Variant
+    Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
     Set r = GetTableColumnDataRange(SelectedTable, "Column2")
-    arr = r.Value
+    Arr = r.Value
     'Assert:
-    Assert.AreEqual 12, CInt(arr(1, 1))
-    Assert.AreEqual 22, CInt(arr(2, 1))
-    Assert.AreEqual 32, CInt(arr(3, 1))
+    Assert.AreEqual 12, CInt(Arr(1, 1))
+    Assert.AreEqual 22, CInt(Arr(2, 1))
+    Assert.AreEqual 32, CInt(Arr(3, 1))
 
 TestExit:
     Exit Sub
@@ -336,16 +336,16 @@ Private Sub Test_GetTableRowNumberDataRange()
     'Arrange:
     Dim SelectedTable As ListObject
     Dim r As Range
-    Dim arr() As Variant
+    Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
     Set r = GetTableRowNumberDataRange(SelectedTable, 2)
-    arr = r.Value
+    Arr = r.Value
     'Assert:
-    Assert.AreEqual 21, CInt(arr(1, 1))
-    Assert.AreEqual 22, CInt(arr(1, 2))
-    Assert.AreEqual 23, CInt(arr(1, 3))
+    Assert.AreEqual 21, CInt(Arr(1, 1))
+    Assert.AreEqual 22, CInt(Arr(1, 2))
+    Assert.AreEqual 23, CInt(Arr(1, 3))
 
 TestExit:
     Exit Sub
@@ -415,7 +415,7 @@ Private Sub Test_GetTableColumnDataRange_2()
     'Arrange:
     Dim SelectedTable As ListObject
     Dim r As Range
-    Dim arr() As Variant
+    Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table4", WB)

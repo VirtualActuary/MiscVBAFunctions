@@ -38,24 +38,24 @@ Private Sub Test_EnsureDotSeparatorTransformation()
     
     'Arrange:
     Dim I As Long, J As Long
-    Dim arr(2, 2)
+    Dim Arr(2, 2)
     
     Dim arr2(3)
     
     'Act:
-    arr(0, 0) = 100.2: arr(0, 1) = 1.9
-    arr(1, 0) = 2.1: arr(1, 1) = 2.2
-    EnsureDotSeparatorTransformation arr
+    Arr(0, 0) = 100.2: Arr(0, 1) = 1.9
+    Arr(1, 0) = 2.1: Arr(1, 1) = 2.2
+    EnsureDotSeparatorTransformation Arr
 
     arr2(0) = 1.2: arr2(1) = 2.1: arr2(2) = 3.8
     EnsureDotSeparatorTransformation arr2
     
     
     'Assert:
-    Assert.AreEqual "100.2", arr(0, 0)
-    Assert.AreEqual "1.9", arr(0, 1)
-    Assert.AreEqual "2.1", arr(1, 0)
-    Assert.AreEqual "2.2", arr(1, 1)
+    Assert.AreEqual "100.2", Arr(0, 0)
+    Assert.AreEqual "1.9", Arr(0, 1)
+    Assert.AreEqual "2.1", Arr(1, 0)
+    Assert.AreEqual "2.2", Arr(1, 1)
     
     Assert.AreEqual "1.2", arr2(0)
     Assert.AreEqual "2.1", arr2(1)
@@ -73,23 +73,23 @@ Private Sub Test_ErrorToNullStringTransformation()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim arr(2, 2)
+    Dim Arr(2, 2)
     Dim arrSecond(3)
     
     'Act:
-    arr(0, 0) = 100.2: arr(0, 1) = CVErr(xlErrName)
-    arr(1, 0) = 2.1: arr(1, 1) = CVErr(xlErrNA)
-    ErrorToNullStringTransformation arr
+    Arr(0, 0) = 100.2: Arr(0, 1) = CVErr(xlErrName)
+    Arr(1, 0) = 2.1: Arr(1, 1) = CVErr(xlErrNA)
+    ErrorToNullStringTransformation Arr
 
     arrSecond(0) = 1.2: arrSecond(1) = CVErr(xlErrRef): arrSecond(2) = 3.8
     ErrorToNullStringTransformation arrSecond
 
 
     'Assert:
-    Assert.AreEqual 100.2, arr(0, 0)
-    Assert.AreEqual vbNullString, arr(0, 1)
-    Assert.AreEqual 2.1, arr(1, 0)
-    Assert.AreEqual vbNullString, arr(1, 1)
+    Assert.AreEqual 100.2, Arr(0, 0)
+    Assert.AreEqual vbNullString, Arr(0, 1)
+    Assert.AreEqual 2.1, Arr(1, 0)
+    Assert.AreEqual vbNullString, Arr(1, 1)
     
     Assert.AreEqual 1.2, arrSecond(0)
     Assert.AreEqual vbNullString, arrSecond(1)
@@ -107,16 +107,16 @@ Private Sub Test_DateToStringTransformation()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim arr(2, 2)
+    Dim Arr(2, 2)
     Dim arrSecond(3)
     Dim arrThird(1)
     Dim arrFourth(1)
     Dim arrFifth(1)
 
     'Act:
-    arr(0, 0) = CDate("2021-1-2"): arr(0, 1) = CDate("2021-01-28 10:2")
-    arr(1, 0) = 13: arr(1, 1) = 2.5
-    DateToStringTransformation arr
+    Arr(0, 0) = CDate("2021-1-2"): Arr(0, 1) = CDate("2021-01-28 10:2")
+    Arr(1, 0) = 13: Arr(1, 1) = 2.5
+    DateToStringTransformation Arr
 
     arrSecond(0) = 1.2: arrSecond(1) = 2.1: arrSecond(2) = CDate("2021-3-28 10:2:10")
     DateToStringTransformation arrSecond
@@ -126,10 +126,10 @@ Private Sub Test_DateToStringTransformation()
     arrFifth(0) = CDate("2021-01-28 10:2:10")
     
     'Assert:
-    Assert.AreEqual "2021-01-02", arr(0, 0)
-    Assert.AreEqual "2021-01-28", arr(0, 1)
-    Assert.AreEqual 13, arr(1, 0)
-    Assert.AreEqual 2.5, arr(1, 1)
+    Assert.AreEqual "2021-01-02", Arr(0, 0)
+    Assert.AreEqual "2021-01-28", Arr(0, 1)
+    Assert.AreEqual 13, Arr(1, 0)
+    Assert.AreEqual 2.5, Arr(1, 1)
     
     Assert.AreEqual 1.2, arrSecond(0)
     Assert.AreEqual 2.1, arrSecond(1)
@@ -151,14 +151,14 @@ Private Sub Test_ArrayToCollection()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim arr(3) As Variant
+    Dim Arr(3) As Variant
     Dim col1 As Collection
     'Act:
-    arr(0) = 10
-    arr(1) = 11
-    arr(2) = 12
-    arr(3) = 13
-    Set col1 = ArrayToCollection(arr)
+    Arr(0) = 10
+    Arr(1) = 11
+    Arr(2) = 12
+    Arr(3) = 13
+    Set col1 = ArrayToCollection(Arr)
     'Assert:
     Assert.AreEqual 10, CInt(col1(1))
     Assert.AreEqual 11, CInt(col1(2))
@@ -170,4 +170,149 @@ TestExit:
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToRange()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(1, 2) As Variant
+    Dim RangeObj As Range
+    Dim RangeOutput As Range
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "col1"
+    Arr(0, 1) = "col2"
+    Arr(0, 2) = "col3"
+    Arr(1, 0) = "=[d]"
+    Arr(1, 1) = "=d"
+    Arr(1, 2) = 1
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set RangeOutput = ArrayToRange(Arr, RangeObj, True)
+
+    'Assert:
+    Assert.AreEqual 6, CInt(RangeOutput.Count)
+    Assert.AreEqual 2, CInt(RangeOutput.Column)
+    Assert.AreEqual 4, CInt(RangeOutput.Row)
+    Assert.AreEqual "col2", RangeOutput(1, 2).Value
+    Assert.AreEqual 1, CInt(RangeOutput(2, 3).Value)
+    
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToNewTable()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(1, 2) As Variant
+    Dim RangeObj As Range
+    Dim LO As ListObject
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "col1"
+    Arr(0, 1) = "col2"
+    Arr(0, 2) = "col3"
+    Arr(1, 0) = "=[d]"
+    Arr(1, 1) = "=d"
+    Arr(1, 2) = 1
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set LO = ArrayToNewTable("TestTable", Arr, RangeObj, True)
+    
+    'Assert:
+    Assert.AreEqual "TestTable", LO.Name
+    Assert.AreEqual "col2", LO.Range(1, 2).Value
+    Assert.AreEqual 1, CInt(LO.Range(2, 3).Value)
+    
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToRange_fail()
+    Const ExpectedError As Long = 9
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(2) As Variant
+    Dim RangeObj As Range
+    Dim LO As ListObject
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0) = "col1"
+    Arr(1) = "col2"
+    Arr(2) = "col3"
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set LO = ArrayToRange(Arr, RangeObj, True)
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToNewTable_fail()
+    Const ExpectedError As Long = -999
+    On Error GoTo TestFail
+    
+    ''Arrange:
+    Dim WB As New Workbook
+    Dim Arr(1, 2) As Variant
+    Dim RangeObj As Range
+    Dim LO As ListObject
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "col1"
+    Arr(0, 1) = "col2"
+    Arr(0, 2) = "col3"
+    Arr(1, 0) = "=[d]"
+    Arr(1, 1) = "=d"
+    Arr(1, 2) = 1
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set LO = ArrayToNewTable("TestTable", Arr, RangeObj, True)
+    Set LO = ArrayToNewTable("TestTable", Arr, RangeObj, True)
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
 End Sub

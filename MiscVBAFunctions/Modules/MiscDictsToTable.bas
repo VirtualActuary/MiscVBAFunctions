@@ -1,13 +1,22 @@
 Attribute VB_Name = "MiscDictsToTable"
 Option Explicit
 
-Public Function DictsToTable(TableDicts As Collection, start_range As Range, TableName As String) As ListObject
+Public Function DictsToTable( _
+        TableDicts As Collection, _
+        start_range As Range, _
+        TableName As String, _
+        Optional EscapeFormulas As Boolean = False _
+    ) As ListObject
 
     ' Converts a TableToDicts object back to a list object.
     '
     ' Args:
     '   TableDicts: Collection of dictionaries that represents a table [{"col1": 1, "col2": 2}, {"col1": 3, "col2": 4}]
     '   OutputStartRange: 1x1 range where the first header of the table should start
+    '   EscapeFormulas: Optional Boolean input.
+    '                   If True, formulas get copied as text. (E.x. "=d" -> "'=d")
+    '                   If False, the data is copied as is.
+    '                   If this is False and "=[foo]" gets copied, the function will crash.
     '
     ' Returns:
     '   ListObject of the new table
@@ -38,24 +47,9 @@ Public Function DictsToTable(TableDicts As Collection, start_range As Range, Tab
         Next DictEntry
     Next dict
     
-    ' Add column headers.
-    For I = 1 To NumberOfColumns
-        start_range.Offset(0, I - 1).Value = TableDicts(1).Keys()(I - 1)
-    Next I
-    
-    ' add values.
-    For J = 1 To NumberOfRows
-        For I = 1 To NumberOfColumns
-            SetCellValue start_range.Offset(J, I - 1), TableDicts(J)(ColumnNames(I - 1))
-        Next I
-    Next J
-    
-    Set CurrentTable = start_range.Worksheet.ListObjects.Add(SourceType:=xlSrcRange, Source:=start_range.Resize(NumberOfRows + 1, NumberOfColumns), _
-    xlListObjectHasHeaders:=xlYes, tablestyleName:="TableStyleMedium2")
-    
-    CurrentTable.Name = TableName
-
-    Set DictsToTable = CurrentTable
+    Dim Arr() As Variant
+    Arr = DictsToArray(TableDicts)
+    Set DictsToTable = ArrayToNewTable(TableName, Arr, start_range, EscapeFormulas)
 End Function
 
 

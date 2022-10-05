@@ -74,22 +74,22 @@ Private Sub Test_EnsureDictIContainer()
     Dim cI As Collection
     Set cI = New Collection
     
-    Dim d1 As Dictionary
-    Set d1 = New Dictionary
+    Dim D1 As Dictionary
+    Set D1 = New Dictionary
     
-    Dim d2 As Dictionary
-    Set d2 = New Dictionary
+    Dim D2 As Dictionary
+    Set D2 = New Dictionary
     
     Dim d3 As Dictionary
     Set d3 = New Dictionary
     
     'Act:
-    d1.Add "A", "foo"  ' uppercase
-    d2.Add "b", "foo"  ' lowercase
+    D1.Add "A", "foo"  ' uppercase
+    D2.Add "b", "foo"  ' lowercase
     d3.Add "C", "foo"  ' uppercase
     
-    C.Add d1
-    C.Add d2
+    C.Add D1
+    C.Add D2
     C.Add d3
     
     Set cI = EnsureDictI(C)

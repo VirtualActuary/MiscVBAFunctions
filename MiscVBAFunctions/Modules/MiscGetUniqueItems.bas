@@ -3,26 +3,26 @@ Attribute VB_Name = "MiscGetUniqueItems"
 Option Explicit
 
 Private Sub TestGetUniqueItems()
-    Dim arr(3) As Variant
+    Dim Arr(3) As Variant
     
-    arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "b"
-    Debug.Print UBound(GetUniqueItems(arr), 1), 2 ' zero index
+    Arr(0) = "a": Arr(1) = "b": Arr(2) = "c": Arr(3) = "b"
+    Debug.Print UBound(GetUniqueItems(Arr), 1), 2 ' zero index
     
-    arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "B"
-    Debug.Print UBound(GetUniqueItems(arr), 1), 3 ' zero index + case sensitive
+    Arr(0) = "a": Arr(1) = "b": Arr(2) = "c": Arr(3) = "B"
+    Debug.Print UBound(GetUniqueItems(Arr), 1), 3 ' zero index + case sensitive
     
-    arr(0) = "a": arr(1) = "b": arr(2) = "c": arr(3) = "B"
-    Debug.Print UBound(GetUniqueItems(arr, False), 1), 2 ' zero index + case insensitive
+    Arr(0) = "a": Arr(1) = "b": Arr(2) = "c": Arr(3) = "B"
+    Debug.Print UBound(GetUniqueItems(Arr, False), 1), 2 ' zero index + case insensitive
     
-    arr(0) = 1: arr(1) = 2: arr(2) = 3: arr(3) = 2
-    Debug.Print UBound(GetUniqueItems(arr), 1), 2 ' zero index
+    Arr(0) = 1: Arr(1) = 2: Arr(2) = 3: Arr(3) = 2
+    Debug.Print UBound(GetUniqueItems(Arr), 1), 2 ' zero index
     
-    arr(0) = 1: arr(1) = 1: arr(2) = "a": arr(3) = "a"
-    Debug.Print UBound(GetUniqueItems(arr), 1), 1 ' zero index
+    Arr(0) = 1: Arr(1) = 1: Arr(2) = "a": Arr(3) = "a"
+    Debug.Print UBound(GetUniqueItems(Arr), 1), 1 ' zero index
     
 End Sub
 
-Public Function GetUniqueItems(arr() As Variant, _
+Public Function GetUniqueItems(Arr() As Variant, _
             Optional CaseSensitive As Boolean = True) As Variant
     'Return an array with unique values from the input array.
     '
@@ -33,7 +33,7 @@ Public Function GetUniqueItems(arr() As Variant, _
     ' Returns:
     '   An array with unique entries.
     
-    If ArrayLen(arr) = 0 Then
+    If ArrayLen(Arr) = 0 Then
         GetUniqueItems = Array()
     Else
         Dim d As New Dictionary
@@ -42,9 +42,9 @@ Public Function GetUniqueItems(arr() As Variant, _
         End If
         
         Dim I As Long
-        For I = LBound(arr) To UBound(arr)
-            If Not d.Exists(arr(I)) Then
-                d.Add arr(I), arr(I)
+        For I = LBound(Arr) To UBound(Arr)
+            If Not d.Exists(Arr(I)) Then
+                d.Add Arr(I), Arr(I)
             End If
         Next
         
@@ -54,13 +54,13 @@ End Function
 
 
 ' Returns the number of elements in an array for a given dimension.
-Private Function ArrayLen(arr As Variant, _
+Private Function ArrayLen(Arr As Variant, _
     Optional dimNum As Integer = 1) As Long
     
-    If IsEmpty(arr) Then
+    If IsEmpty(Arr) Then
         ArrayLen = 0
     Else
-        ArrayLen = UBound(arr, dimNum) - LBound(arr, dimNum) + 1
+        ArrayLen = UBound(Arr, dimNum) - LBound(Arr, dimNum) + 1
     End If
 End Function
 

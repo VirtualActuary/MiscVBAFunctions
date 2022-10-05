@@ -3,7 +3,103 @@ Attribute VB_Name = "MiscArray"
 Option Explicit
 
 
-Public Function ArrayToCollection(arr() As Variant) As Collection
+Public Function ArrayToRange(DataIncludingHeaders() As Variant, StartCell As Range, Optional EscapeFormulas As Boolean = False) As Range
+    ' This function copies the input array's data to a Range object.
+    ' Since the StartCell argument is connected to a WorkSheet, this data will be copied to the cells in that WorkSheet.
+    ' If the input array isn't 2D, an error is raised.
+    '
+    ' Args:
+    '   DataIncludingHeaders: Array containing the headers and data.
+    '                         The first row is treated as the header.
+    '   StartCell: Cell object. The Range will start at this cell.
+    '              The WorkBook and WorkSheet connected to this object is used in this function.
+    '   EscapeFormulas: Optional Boolean input.
+    '                   If True, formulas get copied as text. (E.x. "=d" -> "'=d")
+    '                   If False, the data is copied as is.
+    '                   If this is False and "=[foo]" gets copied, the function will crash.
+    '
+    ' Returns:
+    '   The Range of the data is returned, starting ath the StartCell cell.
+    
+    If Not is2D(DataIncludingHeaders) Then
+        Err.Raise Number:=9, _
+              Description:="2D array required."
+    End If
+    
+    Dim StartRow As Long
+    Dim EndRow As Long
+    Dim StartColumn As Long
+    Dim EndColumn As Long
+
+    StartRow = StartCell.Row
+    StartColumn = StartCell.Column
+    EndRow = StartRow + UBound(DataIncludingHeaders) - LBound(DataIncludingHeaders)
+    EndColumn = StartColumn + UBound(DataIncludingHeaders, 2) - LBound(DataIncludingHeaders, 2)
+
+    Dim CellRange As Range
+    Set CellRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(EndRow, EndColumn))
+
+
+    Dim CountOuter As Long
+    Dim CountInner As Long
+    
+    If EscapeFormulas Then
+        For CountOuter = LBound(DataIncludingHeaders) To UBound(DataIncludingHeaders)
+            For CountInner = LBound(DataIncludingHeaders, 2) To UBound(DataIncludingHeaders, 2)
+                If Left(DataIncludingHeaders(CountOuter, CountInner), 1) = "=" Then
+                    DataIncludingHeaders(CountOuter, CountInner) = "'" & DataIncludingHeaders(CountOuter, CountInner)
+                End If
+            Next
+        Next
+    End If
+    
+    CellRange.Value = DataIncludingHeaders
+    Set ArrayToRange = CellRange
+
+End Function
+
+
+Public Function ArrayToNewTable( _
+        TableName As String, _
+        DataIncludingHeaders() As Variant, _
+        StartCell As Range, _
+        Optional EscapeFormulas As Boolean = False _
+    ) As ListObject
+    ' This function creates a Table (as ListObject) and populates the table with the
+    ' array's data (DataIncludingHeaders).
+    ' If the input array isn't 2D, an error is raised.
+    ' If the input table name (TableName) already exists in the WorkBook, an error is raised.
+    '
+    ' Args:
+    '   TableName: Name of new table. Must be a unique name in the selected WB
+    '   DataIncludingHeaders: Array containing the headers and data.
+    '                         The first row is treated as the header.
+    '   StartCell: Cell object. The Table will start at this cell.
+    '              The WorkBook and WorkSheet connected to this object is used in this function.
+    '   EscapeFormulas: Optional Boolean input.
+    '                   If True, formulas get copied as text. (E.x. "=d" -> "'=d")
+    '                   If False, the data is copied as is.
+    '                   If this is False and "=[foo]" gets copied, the function will crash.
+    '
+    ' Returns:
+    '   The Table is returned as a ListObject
+    
+    If HasLO(TableName, StartCell.Worksheet.Parent) Then
+        Err.Raise Number:=-999, _
+              Description:="Table name already exists."
+    End If
+    
+    Dim CellRange As Range
+    Set CellRange = ArrayToRange(DataIncludingHeaders, StartCell, EscapeFormulas)
+    
+    Set ArrayToNewTable = StartCell.Worksheet.ListObjects.Add(SourceType:=xlSrcRange, Source:=CellRange, _
+    xlListObjectHasHeaders:=xlYes, tablestyleName:="TableStyleMedium2")
+    ArrayToNewTable.Name = TableName
+End Function
+
+
+
+Public Function ArrayToCollection(Arr() As Variant) As Collection
     ' Take an array as an input and return it as a Collection
     '
     ' Args:
@@ -15,7 +111,7 @@ Public Function ArrayToCollection(arr() As Variant) As Collection
     Dim CurrVal As Variant
     Dim col1 As Collection
     Set col1 = New Collection
-    For Each CurrVal In arr
+    For Each CurrVal In Arr
         col1.Add CurrVal
     Next
     Set ArrayToCollection = col1
@@ -85,9 +181,9 @@ End Function
 
 ' Check if a collection is 1D or 2D.
 ' 3D is not supported
-Private Function is2D(arr As Variant)
+Private Function is2D(Arr As Variant)
     On Error GoTo Err
-    is2D = (UBound(arr, 2) - LBound(arr, 2) > 1)
+    is2D = (UBound(Arr, 2) - LBound(Arr, 2) > 1)
     Exit Function
 Err:
     is2D = False

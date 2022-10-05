@@ -257,14 +257,14 @@ Private Sub Test_Join_Collections_fail_2()
     
     'Arrange:
     Dim d As Dictionary
-    Dim d1 As Dictionary
+    Dim D1 As Dictionary
     Dim C As New Collection
     'Act:
 
-    Set d1 = dict("a", 1, "b", 2)
+    Set D1 = dict("a", 1, "b", 2)
     Set C = col(1, 2, 3)
     
-    Set d = JoinCollections(d1, C)
+    Set d = JoinCollections(D1, C)
     
 
 Assert:
@@ -317,14 +317,14 @@ Private Sub Test_Concat_Collections_fail()
     
     'Arrange:
     Dim d As Dictionary
-    Dim d1 As Dictionary
+    Dim D1 As Dictionary
     Dim C As New Collection
     'Act:
 
-    Set d1 = dict("a", 1, "b", 2)
+    Set D1 = dict("a", 1, "b", 2)
     Set C = col(1, 2, 3)
     
-    ConcatCollections d1, C
+    ConcatCollections D1, C
 Assert:
     Assert.Fail "Expected error was not raised"
 
@@ -345,12 +345,12 @@ Private Sub Test_CollectionToArray()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c1 As Collection
-    Set c1 = col(7, 4, 5, 6)
+    Dim C1 As Collection
+    Set C1 = col(7, 4, 5, 6)
 
     'Act:
     Dim a1 As Variant
-    a1 = CollectionToArray(c1)
+    a1 = CollectionToArray(C1)
 
     'Assert:
     
