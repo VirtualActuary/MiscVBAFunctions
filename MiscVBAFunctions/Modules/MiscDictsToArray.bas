@@ -20,7 +20,7 @@ Public Function DictsToArray(TableDicts As Collection) As Variant()
     DictLen = TableDicts(1).Count
 
     Dim Arr() As Variant
-    ReDim Preserve Arr(TableDicts.Count + 1, DictLen)  ' +1 for header
+    ReDim Preserve Arr(0 To TableDicts.Count, 0 To DictLen - 1)   ' +1 for header
     Dim DictItems() As Variant
     
     Dim Keys() As Variant

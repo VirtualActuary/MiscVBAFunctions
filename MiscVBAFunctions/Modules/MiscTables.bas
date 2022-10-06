@@ -195,7 +195,8 @@ End Function
 Public Sub CopyTable(InputTableName As String _
                     , StartRange As Range _
                     , Optional OutputTableName As String _
-                    , Optional InputWB As Workbook)
+                    , Optional InputWB As Workbook _
+                    , Optional EscapeFormulas As Boolean = False)
     ' Copy a List Object or TableRange to the desired location as a Table.
     ' This can be in the same Workbook, or a different workbook.
     ' The of the output Table NumberFormat is the same as the input table's.
@@ -206,6 +207,7 @@ Public Sub CopyTable(InputTableName As String _
     '   OutputTableName: Name of the output table.
     '                    If left empty, the input table's name gets used.
     '   InputWB: WorkBook of the input Table. ThisWorkBook is used if left empty.
+    '   EscapeFormulas: whether to escape formulas in the copy (ie cells starting with =)
 
     Dim col1 As Collection
     Dim InputTableRange As Range
@@ -219,7 +221,7 @@ Public Sub CopyTable(InputTableName As String _
 
     Set col1 = TableToDicts(InputTableName, InputWB)
     Set InputTableRange = TableRange(InputTableName, InputWB)
-    Set OutputTableRange = DictsToTable(col1, StartRange, OutputTableName).Range
+    Set OutputTableRange = DictsToTable(col1, StartRange, OutputTableName, EscapeFormulas).Range
 
     For I = 1 To InputTableRange.Count
         OutputTableRange(I).NumberFormat = InputTableRange(I).NumberFormat

@@ -211,6 +211,40 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscArray")
+Private Sub Test_ArrayToRange2dWithOneColumn()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(1, 0) As Variant
+    Dim RangeObj As Range
+    Dim RangeOutput As Range
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "col1"
+    Arr(1, 0) = "=[d]"
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set RangeOutput = ArrayToRange(Arr, RangeObj, True)
+
+    'Assert:
+    Assert.AreEqual 2, CInt(RangeOutput.Count)
+    Assert.AreEqual 2, CInt(RangeOutput.Column)
+    Assert.AreEqual 4, CInt(RangeOutput.Row)
+    Assert.AreEqual "col1", RangeOutput(1, 1).Value
+    Assert.AreEqual "=[d]", CStr(RangeOutput(2, 1).Value)
+    
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
 Private Sub Test_ArrayToNewTable()
     On Error GoTo TestFail
     
