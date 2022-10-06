@@ -46,8 +46,10 @@ Public Function ArrayToRange(DataIncludingHeaders() As Variant, StartCell As Ran
     If EscapeFormulas Then
         For CountOuter = LBound(DataIncludingHeaders) To UBound(DataIncludingHeaders)
             For CountInner = LBound(DataIncludingHeaders, 2) To UBound(DataIncludingHeaders, 2)
-                If Left(DataIncludingHeaders(CountOuter, CountInner), 1) = "=" Then
-                    DataIncludingHeaders(CountOuter, CountInner) = "'" & DataIncludingHeaders(CountOuter, CountInner)
+                If Not IsError(DataIncludingHeaders(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
+                    If Left(DataIncludingHeaders(CountOuter, CountInner), 1) = "=" Then
+                        DataIncludingHeaders(CountOuter, CountInner) = "'" & DataIncludingHeaders(CountOuter, CountInner)
+                    End If
                 End If
             Next
         Next
@@ -183,7 +185,7 @@ End Function
 ' 3D is not supported
 Private Function is2D(Arr As Variant)
     On Error GoTo Err
-    is2D = (UBound(Arr, 2) - LBound(Arr, 2) > 1)
+    is2D = (UBound(Arr, 2) > LBound(Arr, 2))
     Exit Function
 Err:
     is2D = False

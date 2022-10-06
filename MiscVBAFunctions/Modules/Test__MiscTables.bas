@@ -115,7 +115,7 @@ Private Sub Test_CopyTable()
     Dim LOEntries As Range
     'Act:
     Set WB2 = ExcelBook()
-    CopyTable "TableForCopy", WB2.Worksheets(1).Cells(5, 3), , WB
+    CopyTable "TableForCopy", WB2.Worksheets(1).Cells(5, 3), , WB, True
     Set LO = GetLO("TableForCopy", WB2)
     Set LOEntries = LO.DataBodyRange
 
