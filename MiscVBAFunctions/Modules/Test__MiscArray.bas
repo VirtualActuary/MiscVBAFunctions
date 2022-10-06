@@ -230,10 +230,10 @@ Private Sub Test_ArrayToRange2dWithOneColumn()
 
     'Assert:
     Assert.AreEqual 2, CInt(RangeOutput.Count)
-    Assert.AreEqual 1, CInt(RangeOutput.Column)
-    Assert.AreEqual 2, CInt(RangeOutput.Row)
-    Assert.AreEqual "col2", RangeOutput(1, 1).Value
-    Assert.AreEqual "=[d]", CStr(RangeOutput(1, 2).Value)
+    Assert.AreEqual 2, CInt(RangeOutput.Column)
+    Assert.AreEqual 4, CInt(RangeOutput.Row)
+    Assert.AreEqual "col1", RangeOutput(1, 1).Value
+    Assert.AreEqual "=[d]", CStr(RangeOutput(2, 1).Value)
     
 
 TestExit:

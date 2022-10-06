@@ -185,7 +185,7 @@ End Function
 ' 3D is not supported
 Private Function is2D(Arr As Variant)
     On Error GoTo Err
-    is2D = (UBound(Arr, 2) > LBound(Arr, 2))
+    is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
     Exit Function
 Err:
     is2D = False
