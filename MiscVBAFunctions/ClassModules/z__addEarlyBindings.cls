@@ -68,7 +68,7 @@ End Function
 '**********************************************************************************
 '* Print all current active GUIDs
 '**********************************************************************************
-Private Sub printAllEarlyBindings()
+Public Sub printAllEarlyBindings()
     ' https://www.ozgrid.com/forum/index.php?thread/62123-check-if-ref-library-is-loaded/&postID=575116#post575116
     Dim xRef As Variant
     For Each xRef In ThisWorkbook.VBProject.References
