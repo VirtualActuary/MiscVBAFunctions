@@ -385,7 +385,7 @@ Private Sub Test_SanitiseExcelName()
     'Act:
     Assert.AreEqual "_1", SanitiseExcelName("1")
     Assert.AreEqual "a_b", SanitiseExcelName("a b")
-    Assert.AreEqual "_______________", SanitiseExcelName("- /*+=?:[]~()"",")
+    Assert.AreEqual "______________________________", SanitiseExcelName("- /*+=^!@#$%&?`~:;[](){}""'|,<>")
     
 
 TestExit:
