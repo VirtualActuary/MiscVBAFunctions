@@ -180,3 +180,33 @@ Public Function RelevantRange(WS As Worksheet) As Range
     
     Set RelevantRange = WS.Range(WS.Cells(1, 1), LastCellEntry)
 End Function
+
+
+Public Function SanitiseExcelName(Name As String)
+    ' Sanitises a proposed name to be a valid Excel name
+    ' Any disallowed characters are replaced with `_`
+    ' If the name starts with a number, `_` is prepended to the name
+    ' Some documentation:
+    ' https://support.microsoft.com/en-us/office/use-names-in-formulas-9cd0e25e-88b9-46e4-956c-cc395b74582a#:~:text=Guidelines%20for%20creating%20names
+    '
+    ' Args:
+    '   Name: Proposed Excel name
+    '
+    ' Returns:
+    '   A valid Excel name
+    
+    SanitiseExcelName = Name
+    
+    Dim Disallowed As String, I As Integer
+    Disallowed = "- /*+=^!@#$%&?`~:;[](){}""'|,<>"
+    For I = 1 To Len(Disallowed)
+        If InStr(SanitiseExcelName, Mid(Disallowed, I, 1)) > 0 Then
+            SanitiseExcelName = Replace(SanitiseExcelName, Mid(Disallowed, I, 1), "_")
+        End If
+    Next I
+    
+    If IsNumeric(Left(SanitiseExcelName, 1)) Then ' excel tables cannot start with a number
+        SanitiseExcelName = "_" & SanitiseExcelName
+    End If
+    
+End Function

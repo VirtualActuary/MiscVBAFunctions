@@ -375,3 +375,22 @@ TestFail:
     Resume TestExit
 End Sub
                                                                         
+
+'@TestMethod("MiscExcel")
+Private Sub Test_SanitiseExcelName()
+    On Error GoTo TestFail
+    
+    'Arrange:
+
+    'Act:
+    Assert.AreEqual "_1", SanitiseExcelName("1")
+    Assert.AreEqual "a_b", SanitiseExcelName("a b")
+    Assert.AreEqual "______________________________", SanitiseExcelName("- /*+=^!@#$%&?`~:;[](){}""'|,<>")
+    
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
