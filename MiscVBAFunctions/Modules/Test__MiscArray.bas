@@ -244,6 +244,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("MiscArray")
 Private Sub Test_ArrayToNewTable()
     On Error GoTo TestFail
@@ -349,4 +350,36 @@ TestFail:
     Else
         Resume Assert
     End If
+End Sub
+
+
+'@TestMethod("MiscArray")
+Private Sub Test_Ensure2DArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim arr1() As Variant
+    Dim arr2() As Variant
+    
+    'Act:
+    arr1 = Array("a", "b", "c")
+    arr1 = Ensure2dArray(arr1)
+    Assert.AreEqual "a", arr1(0, 0)
+    Assert.AreEqual "b", arr1(0, 1)
+    Assert.AreEqual "c", arr1(0, 2)
+    
+    ReDim arr2(0 To 0, 0 To 2)
+    arr2(0, 0) = "a": arr2(0, 1) = "b": arr2(0, 2) = "c"
+    arr2 = Ensure2dArray(arr2)
+    Assert.AreEqual "a", arr2(0, 0)
+    Assert.AreEqual "b", arr2(0, 1)
+    Assert.AreEqual "c", arr2(0, 2)
+    
+    'Assert:
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub

@@ -100,6 +100,31 @@ Public Function ArrayToNewTable( _
 End Function
 
 
+Public Function Ensure2dArray(Arr() As Variant) As Variant()
+    ' ensures an array to be 2-dimensional
+    ' if an array is 1-dimensional, the second dimension will be expanded with the values
+    ' therefore, when converting to a table, they will be shown as the columns of the table
+    '
+    ' Args:
+    '   Arr: the input array
+    '
+    ' Returns:
+    '   The 2-dimensional array
+    
+    Dim ArrOut() As Variant
+    If is1D(Arr) Then
+        Dim I As Long
+        ReDim ArrOut(0 To 0, 0 To UBound(Arr))
+        For I = LBound(Arr) To UBound(Arr)
+            ArrOut(0, I) = Arr(I)
+        Next I
+    Else
+        ArrOut = Arr
+    End If
+    
+    Ensure2dArray = ArrOut
+End Function
+
 
 Public Function ArrayToCollection(Arr() As Variant) As Collection
     ' Take an array as an input and return it as a Collection
@@ -181,9 +206,9 @@ Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt A
 End Function
 
 
-' Check if a collection is 1D or 2D.
-' 3D is not supported
 Private Function is2D(Arr As Variant)
+    ' Check if a collection is 1D or 2D.
+    ' 3D is not supported
     On Error GoTo Err
     is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
     Exit Function
@@ -191,6 +216,14 @@ Err:
     is2D = False
 End Function
 
+Public Function is1D(Arr As Variant)
+    On Error GoTo Err
+    Dim foo As Variant
+    foo = UBound(Arr, 2)
+    Exit Function
+Err:
+    is1D = True
+End Function
 
 Private Function dateToString(d As Date, fmt As String) As String
     dateToString = Format(d, fmt)
