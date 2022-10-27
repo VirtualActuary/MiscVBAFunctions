@@ -3,14 +3,14 @@ Attribute VB_Name = "MiscArray"
 Option Explicit
 
 
-Public Function ArrayToRange(DataIncludingHeaders() As Variant, StartCell As Range, Optional EscapeFormulas As Boolean = False) As Range
+Public Function ArrayToRange(Data() As Variant, StartCell As Range, Optional EscapeFormulas As Boolean = False) As Range
     ' This function copies the input array's data to a Range object.
     ' Since the StartCell argument is connected to a WorkSheet, this data will be copied to the cells in that WorkSheet.
     ' If the input array isn't 2D, an error is raised.
     '
     ' Args:
-    '   DataIncludingHeaders: Array containing the headers and data.
-    '                         The first row is treated as the header.
+    '   Data: Array containing the data.
+    '         The first row is treated as the header.
     '   StartCell: Cell object. The Range will start at this cell.
     '              The WorkBook and WorkSheet connected to this object is used in this function.
     '   EscapeFormulas: Optional Boolean input.
@@ -21,10 +21,8 @@ Public Function ArrayToRange(DataIncludingHeaders() As Variant, StartCell As Ran
     ' Returns:
     '   The Range of the data is returned, starting ath the StartCell cell.
     
-    If Not is2D(DataIncludingHeaders) Then
-        Err.Raise Number:=9, _
-              Description:="2D array required."
-    End If
+    Dim Data2d() As Variant
+    Data2d = Ensure2dArray(Data)
     
     Dim StartRow As Long
     Dim EndRow As Long
@@ -33,29 +31,28 @@ Public Function ArrayToRange(DataIncludingHeaders() As Variant, StartCell As Ran
 
     StartRow = StartCell.Row
     StartColumn = StartCell.Column
-    EndRow = StartRow + UBound(DataIncludingHeaders) - LBound(DataIncludingHeaders)
-    EndColumn = StartColumn + UBound(DataIncludingHeaders, 2) - LBound(DataIncludingHeaders, 2)
+    EndRow = StartRow + UBound(Data2d) - LBound(Data2d)
+    EndColumn = StartColumn + UBound(Data2d, 2) - LBound(Data2d, 2)
 
     Dim CellRange As Range
     Set CellRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(EndRow, EndColumn))
-
 
     Dim CountOuter As Long
     Dim CountInner As Long
     
     If EscapeFormulas Then
-        For CountOuter = LBound(DataIncludingHeaders) To UBound(DataIncludingHeaders)
-            For CountInner = LBound(DataIncludingHeaders, 2) To UBound(DataIncludingHeaders, 2)
-                If Not IsError(DataIncludingHeaders(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
-                    If Left(DataIncludingHeaders(CountOuter, CountInner), 1) = "=" Then
-                        DataIncludingHeaders(CountOuter, CountInner) = "'" & DataIncludingHeaders(CountOuter, CountInner)
+        For CountOuter = LBound(Data2d) To UBound(Data2d)
+            For CountInner = LBound(Data2d, 2) To UBound(Data2d, 2)
+                If Not IsError(Data2d(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
+                    If Left(Data2d(CountOuter, CountInner), 1) = "=" Then
+                        Data2d(CountOuter, CountInner) = "'" & Data2d(CountOuter, CountInner)
                     End If
                 End If
             Next
         Next
     End If
     
-    CellRange.Value = DataIncludingHeaders
+    CellRange.Value = Data2d
     Set ArrayToRange = CellRange
 
 End Function
@@ -99,6 +96,31 @@ Public Function ArrayToNewTable( _
     ArrayToNewTable.Name = TableName
 End Function
 
+
+Public Function Ensure2dArray(Arr() As Variant) As Variant()
+    ' ensures an array to be 2-dimensional
+    ' if an array is 1-dimensional, the second dimension will be expanded with the values
+    ' therefore, when converting to a table, they will be shown as the columns of the table
+    '
+    ' Args:
+    '   Arr: the input array
+    '
+    ' Returns:
+    '   The 2-dimensional array
+    
+    Dim ArrOut() As Variant
+    If is1D(Arr) Then
+        Dim I As Long
+        ReDim ArrOut(0 To 0, 0 To UBound(Arr))
+        For I = LBound(Arr) To UBound(Arr)
+            ArrOut(0, I) = Arr(I)
+        Next I
+    Else
+        ArrOut = Arr
+    End If
+    
+    Ensure2dArray = ArrOut
+End Function
 
 
 Public Function ArrayToCollection(Arr() As Variant) As Collection
@@ -181,9 +203,9 @@ Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt A
 End Function
 
 
-' Check if a collection is 1D or 2D.
-' 3D is not supported
 Private Function is2D(Arr As Variant)
+    ' Check if a collection is 1D or 2D.
+    ' 3D is not supported
     On Error GoTo Err
     is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
     Exit Function
@@ -191,6 +213,14 @@ Err:
     is2D = False
 End Function
 
+Public Function is1D(Arr As Variant)
+    On Error GoTo Err
+    Dim foo As Variant
+    foo = UBound(Arr, 2)
+    Exit Function
+Err:
+    is1D = True
+End Function
 
 Private Function dateToString(d As Date, fmt As String) As String
     dateToString = Format(d, fmt)

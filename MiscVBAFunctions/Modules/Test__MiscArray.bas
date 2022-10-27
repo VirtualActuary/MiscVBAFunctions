@@ -244,6 +244,7 @@ TestFail:
     Resume TestExit
 End Sub
 
+
 '@TestMethod("MiscArray")
 Private Sub Test_ArrayToNewTable()
     On Error GoTo TestFail
@@ -278,6 +279,38 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToNewTable_1dArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(2) As Variant
+    Dim RangeObj As Range
+    Dim LO As ListObject
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0) = "col1"
+    Arr(1) = "col2"
+    Arr(2) = "col3"
+    
+    Set RangeObj = WB.ActiveSheet.Range("K4")
+    Set LO = ArrayToNewTable("TestTable2", Arr, RangeObj, True)
+    
+    'Assert:
+    Assert.AreEqual "TestTable2", LO.Name
+    Assert.AreEqual "col2", LO.Range(1, 2).Value
+    
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
 
 '@TestMethod("MiscArray")
 Private Sub Test_ArrayToRange_fail()
@@ -349,4 +382,36 @@ TestFail:
     Else
         Resume Assert
     End If
+End Sub
+
+
+'@TestMethod("MiscArray")
+Private Sub Test_Ensure2DArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim arr1() As Variant
+    Dim arr2() As Variant
+    
+    'Act:
+    arr1 = Array("a", "b", "c")
+    arr1 = Ensure2dArray(arr1)
+    Assert.AreEqual "a", arr1(0, 0)
+    Assert.AreEqual "b", arr1(0, 1)
+    Assert.AreEqual "c", arr1(0, 2)
+    
+    ReDim arr2(0 To 0, 0 To 2)
+    arr2(0, 0) = "a": arr2(0, 1) = "b": arr2(0, 2) = "c"
+    arr2 = Ensure2dArray(arr2)
+    Assert.AreEqual "a", arr2(0, 0)
+    Assert.AreEqual "b", arr2(0, 1)
+    Assert.AreEqual "c", arr2(0, 2)
+    
+    'Assert:
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub
