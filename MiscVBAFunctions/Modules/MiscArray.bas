@@ -3,14 +3,14 @@ Attribute VB_Name = "MiscArray"
 Option Explicit
 
 
-Public Function ArrayToRange(DataIncludingHeaders() As Variant, StartCell As Range, Optional EscapeFormulas As Boolean = False) As Range
+Public Function ArrayToRange(Data() As Variant, StartCell As Range, Optional EscapeFormulas As Boolean = False) As Range
     ' This function copies the input array's data to a Range object.
     ' Since the StartCell argument is connected to a WorkSheet, this data will be copied to the cells in that WorkSheet.
     ' If the input array isn't 2D, an error is raised.
     '
     ' Args:
-    '   DataIncludingHeaders: Array containing the headers and data.
-    '                         The first row is treated as the header.
+    '   Data: Array containing the data.
+    '         The first row is treated as the header.
     '   StartCell: Cell object. The Range will start at this cell.
     '              The WorkBook and WorkSheet connected to this object is used in this function.
     '   EscapeFormulas: Optional Boolean input.
