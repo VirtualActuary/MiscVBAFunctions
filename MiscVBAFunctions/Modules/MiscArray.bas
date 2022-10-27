@@ -21,10 +21,8 @@ Public Function ArrayToRange(Data() As Variant, StartCell As Range, Optional Esc
     ' Returns:
     '   The Range of the data is returned, starting ath the StartCell cell.
     
-    If Not is2D(DataIncludingHeaders) Then
-        Err.Raise Number:=9, _
-              Description:="2D array required."
-    End If
+    Dim Data2d() As Variant
+    Data2d = Ensure2dArray(Data)
     
     Dim StartRow As Long
     Dim EndRow As Long
@@ -33,29 +31,28 @@ Public Function ArrayToRange(Data() As Variant, StartCell As Range, Optional Esc
 
     StartRow = StartCell.Row
     StartColumn = StartCell.Column
-    EndRow = StartRow + UBound(DataIncludingHeaders) - LBound(DataIncludingHeaders)
-    EndColumn = StartColumn + UBound(DataIncludingHeaders, 2) - LBound(DataIncludingHeaders, 2)
+    EndRow = StartRow + UBound(Data2d) - LBound(Data2d)
+    EndColumn = StartColumn + UBound(Data2d, 2) - LBound(Data2d, 2)
 
     Dim CellRange As Range
     Set CellRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(EndRow, EndColumn))
-
 
     Dim CountOuter As Long
     Dim CountInner As Long
     
     If EscapeFormulas Then
-        For CountOuter = LBound(DataIncludingHeaders) To UBound(DataIncludingHeaders)
-            For CountInner = LBound(DataIncludingHeaders, 2) To UBound(DataIncludingHeaders, 2)
-                If Not IsError(DataIncludingHeaders(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
-                    If Left(DataIncludingHeaders(CountOuter, CountInner), 1) = "=" Then
-                        DataIncludingHeaders(CountOuter, CountInner) = "'" & DataIncludingHeaders(CountOuter, CountInner)
+        For CountOuter = LBound(Data2d) To UBound(Data2d)
+            For CountInner = LBound(Data2d, 2) To UBound(Data2d, 2)
+                If Not IsError(Data2d(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
+                    If Left(Data2d(CountOuter, CountInner), 1) = "=" Then
+                        Data2d(CountOuter, CountInner) = "'" & Data2d(CountOuter, CountInner)
                     End If
                 End If
             Next
         Next
     End If
     
-    CellRange.Value = DataIncludingHeaders
+    CellRange.Value = Data2d
     Set ArrayToRange = CellRange
 
 End Function

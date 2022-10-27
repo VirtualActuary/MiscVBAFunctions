@@ -281,6 +281,38 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscArray")
+Private Sub Test_ArrayToNewTable_1dArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(2) As Variant
+    Dim RangeObj As Range
+    Dim LO As ListObject
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0) = "col1"
+    Arr(1) = "col2"
+    Arr(2) = "col3"
+    
+    Set RangeObj = WB.ActiveSheet.Range("K4")
+    Set LO = ArrayToNewTable("TestTable2", Arr, RangeObj, True)
+    
+    'Assert:
+    Assert.AreEqual "TestTable2", LO.Name
+    Assert.AreEqual "col2", LO.Range(1, 2).Value
+    
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscArray")
 Private Sub Test_ArrayToRange_fail()
     Const ExpectedError As Long = 9
     On Error GoTo TestFail
