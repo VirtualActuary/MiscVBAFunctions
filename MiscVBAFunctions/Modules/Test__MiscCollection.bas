@@ -370,3 +370,36 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+
+
+'@TestMethod("MiscCollection.CollectionToArray")
+Private Sub Test_CollectionToArray_empty()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim c1 As Collection
+    Set c1 = col()
+
+    'Act:
+    Dim a1 As Variant
+    a1 = CollectionToArray(c1)
+
+    'Assert:
+    
+    Assert.IsTrue IsArray(a1), "Result is an array"
+    
+    Dim expectedLowerBound As Long
+    expectedLowerBound = 0
+    Assert.AreEqual expectedLowerBound, LBound(a1), "Lower bound"
+    
+    Dim expectedUpperBound As Long
+    expectedUpperBound = -1
+    Assert.AreEqual expectedUpperBound, UBound(a1), "Upper bound"
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub

@@ -168,6 +168,11 @@ End Function
 
 Function CollectionToArray(Coll As Collection) As Variant
     ' Create an Array from a Collection.
+    If Coll.Count < 1 Then
+        CollectionToArray = Array()
+        Exit Function
+    End If
+    
     Dim Result As Variant
     Dim I As Long
     ReDim Result(Coll.Count - 1)
