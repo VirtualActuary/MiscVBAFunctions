@@ -3,110 +3,121 @@ Attribute VB_Name = "MiscArray"
 Option Explicit
 
 
-Public Function ArrayToRange(Data() As Variant, StartCell As Range, Optional EscapeFormulas As Boolean = False) As Range
-    ' This function copies the input array's data to a Range object.
-    ' Since the StartCell argument is connected to a WorkSheet, this data will be copied to the cells in that WorkSheet.
-    ' If the input array isn't 2D, an error is raised.
+Public Function ArrayToRange( _
+    Data() As Variant, _
+    StartCell As Range, _
+    Optional EscapeFormulas As Boolean = False _
+) As Range
+    ' This function copies data from the input array to a Range.
     '
     ' Args:
-    '   Data: Array containing the data.
-    '         The first row is treated as the header.
-    '   StartCell: Cell object. The Range will start at this cell.
-    '              The WorkBook and WorkSheet connected to this object is used in this function.
-    '   EscapeFormulas: Optional Boolean input.
-    '                   If True, formulas get copied as text. (E.x. "=d" -> "'=d")
-    '                   If False, the data is copied as is.
-    '                   If this is False and "=[foo]" gets copied, the function will crash.
+    '     Data:
+    '         Array containing the data. If this is not 2D, an error will be thrown.
+    '         Use `Ensure2dArray` if the data might be 1D (e.g. a single row).
+    '     StartCell:
+    '         Cell object. The Range will start at this cell.
+    '         The WorkBook and WorkSheet connected to this object is used in this function.
+    '         Since this is tied to a WorkSheet, the data will be written to that sheet.
+    '     EscapeFormulas:
+    '         If True, formulas get copied as text. (E.x. "=d" -> "'=d")
+    '         If False, the data is copied as is.
+    '         If this is False and "=[foo]" gets copied, the function will crash.
     '
     ' Returns:
-    '   The Range of the data is returned, starting ath the StartCell cell.
-    
-    Dim Data2d() As Variant
-    Data2d = Ensure2dArray(Data)
+    '     The Range to which the data was written.
     
     Dim StartRow As Long
     Dim EndRow As Long
     Dim StartColumn As Long
     Dim EndColumn As Long
-
+    
     StartRow = StartCell.Row
     StartColumn = StartCell.Column
-    EndRow = StartRow + UBound(Data2d) - LBound(Data2d)
-    EndColumn = StartColumn + UBound(Data2d, 2) - LBound(Data2d, 2)
-
+    EndRow = StartRow + UBound(Data) - LBound(Data)
+    EndColumn = StartColumn + UBound(Data, 2) - LBound(Data, 2)
+    
     Dim CellRange As Range
     Set CellRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(EndRow, EndColumn))
-
+    
     Dim CountOuter As Long
     Dim CountInner As Long
     
     If EscapeFormulas Then
-        For CountOuter = LBound(Data2d) To UBound(Data2d)
-            For CountInner = LBound(Data2d, 2) To UBound(Data2d, 2)
-                If Not IsError(Data2d(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
-                    If Left(Data2d(CountOuter, CountInner), 1) = "=" Then
-                        Data2d(CountOuter, CountInner) = "'" & Data2d(CountOuter, CountInner)
+        For CountOuter = LBound(Data) To UBound(Data)
+            For CountInner = LBound(Data, 2) To UBound(Data, 2)
+                If Not IsError(Data(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
+                    If Left(Data(CountOuter, CountInner), 1) = "=" Then
+                        Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
                     End If
                 End If
             Next
         Next
     End If
     
-    CellRange.Value = Data2d
+    CellRange.Value = Data
     Set ArrayToRange = CellRange
 
 End Function
 
 
 Public Function ArrayToNewTable( _
-        TableName As String, _
-        DataIncludingHeaders() As Variant, _
-        StartCell As Range, _
-        Optional EscapeFormulas As Boolean = False _
-    ) As ListObject
-    ' This function creates a Table (as ListObject) and populates the table with the
-    ' array's data (DataIncludingHeaders).
-    ' If the input array isn't 2D, an error is raised.
-    ' If the input table name (TableName) already exists in the WorkBook, an error is raised.
+    TableName As String, _
+    DataIncludingHeaders() As Variant, _
+    StartCell As Range, _
+    Optional EscapeFormulas As Boolean = False _
+) As ListObject
+    ' Create a ListObject and populate it with data from `DataIncludingHeaders`.
     '
     ' Args:
-    '   TableName: Name of new table. Must be a unique name in the selected WB
-    '   DataIncludingHeaders: Array containing the headers and data.
-    '                         The first row is treated as the header.
-    '   StartCell: Cell object. The Table will start at this cell.
-    '              The WorkBook and WorkSheet connected to this object is used in this function.
-    '   EscapeFormulas: Optional Boolean input.
-    '                   If True, formulas get copied as text. (E.x. "=d" -> "'=d")
-    '                   If False, the data is copied as is.
-    '                   If this is False and "=[foo]" gets copied, the function will crash.
+    '     TableName:
+    '         Name of new table. Must be a unique name in the selected WB. If another table by
+    '         this name already exists, an error is raised.
+    '     DataIncludingHeaders:
+    '         Array containing the headers and data. The first row is treated as the header.
+    '         If this is not 2D, an error will be thrown.
+    '         Use `Ensure2dArray` if the data might be 1D (e.g. a single row).
+    '     StartCell:
+    '         Cell object. The Range will start at this cell.
+    '         The WorkBook and WorkSheet connected to this object is used in this function.
+    '     EscapeFormulas:
+    '         If True, formulas get copied as text. (E.x. "=d" -> "'=d")
+    '         If False, the data is copied as is.
+    '         If this is False and "=[foo]" gets copied, the function will crash.
     '
     ' Returns:
-    '   The Table is returned as a ListObject
+    '     The new ListObject.
     
     If HasLO(TableName, StartCell.Worksheet.Parent) Then
-        Err.Raise Number:=-999, _
-              Description:="Table name already exists."
+        Err.Raise Number:=-999, Description:="A table named '" & TableName & "' already exists."
     End If
     
     Dim CellRange As Range
-    Set CellRange = ArrayToRange(DataIncludingHeaders, StartCell, EscapeFormulas)
+    Set CellRange = ArrayToRange( _
+        Data:=DataIncludingHeaders, _
+        StartCell:=StartCell, _
+        EscapeFormulas:=EscapeFormulas _
+    )
     
-    Set ArrayToNewTable = StartCell.Worksheet.ListObjects.Add(SourceType:=xlSrcRange, Source:=CellRange, _
-    xlListObjectHasHeaders:=xlYes, tablestyleName:="TableStyleMedium2")
+    Set ArrayToNewTable = StartCell.Worksheet.ListObjects.Add( _
+        SourceType:=xlSrcRange, _
+        Source:=CellRange, _
+        xlListObjectHasHeaders:=xlYes, _
+        tablestyleName:="TableStyleMedium2" _
+    )
     ArrayToNewTable.Name = TableName
 End Function
 
 
 Public Function Ensure2dArray(Arr() As Variant) As Variant()
-    ' ensures an array to be 2-dimensional
-    ' if an array is 1-dimensional, the second dimension will be expanded with the values
-    ' therefore, when converting to a table, they will be shown as the columns of the table
+    ' Ensures an array is two-dimensional.
+    '
+    ' If the array is 1-dimensional, it will be used as the first row of the resulting 2-dimensional array.
     '
     ' Args:
-    '   Arr: the input array
+    '     Arr: the input array.
     '
     ' Returns:
-    '   The 2-dimensional array
+    '     The input array if it was already 2D, or a new 2D array if the original was 1D.
     
     Dim ArrOut() As Variant
     If is1D(Arr) Then
