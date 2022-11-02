@@ -244,6 +244,46 @@ TestFail:
     Resume TestExit
 End Sub
 
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToRange_FunkyHeaders()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(1, 3) As Variant
+    Dim RangeObj As Range
+    Dim RangeOutput As Range
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "asdf"
+    Arr(0, 1) = 1234
+    Arr(0, 2) = "2022/11/02"
+    Arr(0, 3) = False
+    Arr(1, 0) = "a"
+    Arr(1, 1) = "b"
+    Arr(1, 2) = "c"
+    Arr(1, 3) = "d"
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set RangeOutput = ArrayToRange(Arr, RangeObj, False, True)
+
+    'Assert:
+    Assert.AreEqual 8, CInt(RangeOutput.Count)
+    Assert.AreEqual 4, CInt(RangeOutput.Columns.Count)
+    Assert.AreEqual 2, CInt(RangeOutput.Rows.Count)
+    Assert.AreEqual "asdf", RangeOutput.Cells(1, 1).Text
+    Assert.AreEqual "1234", RangeOutput.Cells(1, 2).Text
+    Assert.AreEqual "2022/11/02", RangeOutput.Cells(1, 3).Text
+    Assert.AreEqual "FALSE", RangeOutput.Cells(1, 4).Text
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
 
 '@TestMethod("MiscArray")
 Private Sub Test_ArrayToNewTable()
@@ -271,6 +311,52 @@ Private Sub Test_ArrayToNewTable()
     Assert.AreEqual "TestTable", LO.Name
     Assert.AreEqual "col2", LO.Range(1, 2).Value
     Assert.AreEqual 1, CInt(LO.Range(2, 3).Value)
+    
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayToNewTable_FunkyHeaders()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As New Workbook
+    Dim Arr(1, 3) As Variant
+    Dim RangeObj As Range
+    Dim LO As ListObject
+    
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "asdf"
+    Arr(0, 1) = 1234
+    Arr(0, 2) = "2022/11/02"
+    Arr(0, 3) = False
+    Arr(1, 0) = "a"
+    Arr(1, 1) = "b"
+    Arr(1, 2) = "c"
+    Arr(1, 3) = "d"
+    
+    Set RangeObj = WB.ActiveSheet.Range("B4")
+    Set LO = ArrayToNewTable("TestTable", Arr, RangeObj, False)
+    
+    'Assert:
+    Assert.AreEqual "TestTable", LO.Name
+    Assert.AreEqual 8, CInt(LO.Range.Count)
+    Assert.AreEqual 4, CInt(LO.Range.Columns.Count)
+    Assert.AreEqual 2, CInt(LO.Range.Rows.Count)
+    Assert.AreEqual "asdf", LO.Range.Cells(1, 1).Text
+    Assert.AreEqual "1234", LO.Range.Cells(1, 2).Text
+    Assert.AreEqual "2022/11/02", LO.Range.Cells(1, 3).Text
+    Assert.AreEqual "FALSE", LO.Range.Cells(1, 4).Text
+    Assert.AreEqual "asdf", LO.ListColumns(1).Name
+    Assert.AreEqual "1234", LO.ListColumns(2).Name
+    Assert.AreEqual "2022/11/02", LO.ListColumns(3).Name
+    Assert.AreEqual "FALSE", LO.ListColumns(4).Name
     
 TestExit:
     WB.Close False
