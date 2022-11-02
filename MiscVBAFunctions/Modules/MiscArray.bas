@@ -6,7 +6,8 @@ Option Explicit
 Public Function ArrayToRange( _
     Data() As Variant, _
     StartCell As Range, _
-    Optional EscapeFormulas As Boolean = False _
+    Optional EscapeFormulas As Boolean = False, _
+    Optional IncludesHeader As Boolean = False _
 ) As Range
     ' This function copies data from the input array to a Range.
     '
@@ -22,6 +23,9 @@ Public Function ArrayToRange( _
     '         If True, formulas get copied as text. (E.x. "=d" -> "'=d")
     '         If False, the data is copied as is.
     '         If this is False and "=[foo]" gets copied, the function will crash.
+    '     IncludesHeader:
+    '         Whether `Data` includes a header. The header will be written with a number format
+    '         of `@`, because headers must be strings, especially when creating `ListObject`s.
     '
     ' Returns:
     '     The Range to which the data was written.
@@ -36,6 +40,13 @@ Public Function ArrayToRange( _
     EndRow = StartRow + UBound(Data) - LBound(Data)
     EndColumn = StartColumn + UBound(Data, 2) - LBound(Data, 2)
     
+    If IncludesHeader Then
+        ' Format the header as `@`, because headers should always be strings.
+        Dim HeaderRange As Range
+        Set HeaderRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(StartRow, EndColumn))
+        HeaderRange.NumberFormat = "@"
+    End If
+    
     Dim CellRange As Range
     Set CellRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(EndRow, EndColumn))
     
@@ -43,7 +54,7 @@ Public Function ArrayToRange( _
     Dim CountInner As Long
     
     If EscapeFormulas Then
-        For CountOuter = LBound(Data) To UBound(Data)
+        For CountOuter = LBound(Data) + 1 To UBound(Data)
             For CountInner = LBound(Data, 2) To UBound(Data, 2)
                 If Not IsError(Data(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
                     If Left(Data(CountOuter, CountInner), 1) = "=" Then
@@ -73,8 +84,8 @@ Public Function ArrayToNewTable( _
     '         Name of new table. Must be a unique name in the selected WB. If another table by
     '         this name already exists, an error is raised.
     '     DataIncludingHeaders:
-    '         Array containing the headers and data. The first row is treated as the header.
-    '         If this is not 2D, an error will be thrown.
+    '         Array containing the headers and data. The first row is treated as the header,
+    '         and will use `@` formatting. If this is not 2D, an error will be thrown.
     '         Use `Ensure2dArray` if the data might be 1D (e.g. a single row).
     '     StartCell:
     '         Cell object. The Range will start at this cell.
@@ -95,7 +106,8 @@ Public Function ArrayToNewTable( _
     Set CellRange = ArrayToRange( _
         Data:=DataIncludingHeaders, _
         StartCell:=StartCell, _
-        EscapeFormulas:=EscapeFormulas _
+        EscapeFormulas:=EscapeFormulas, _
+        IncludesHeader:=True _
     )
     
     Set ArrayToNewTable = StartCell.Worksheet.ListObjects.Add( _
