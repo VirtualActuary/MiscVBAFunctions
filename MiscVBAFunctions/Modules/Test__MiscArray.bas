@@ -297,7 +297,7 @@ Private Sub Test_ArrayToNewTable_1dArray()
     Arr(2) = "col3"
     
     Set RangeObj = WB.ActiveSheet.Range("K4")
-    Set LO = ArrayToNewTable("TestTable2", Arr, RangeObj, True)
+    Set LO = ArrayToNewTable("TestTable2", Ensure2dArray(Arr), RangeObj, True)
     
     'Assert:
     Assert.AreEqual "TestTable2", LO.Name
