@@ -54,7 +54,7 @@ Public Function ArrayToRange( _
     Dim CountInner As Long
     
     If EscapeFormulas Then
-        For CountOuter = LBound(Data) + 1 To UBound(Data)
+        For CountOuter = LBound(Data) To UBound(Data)
             For CountInner = LBound(Data, 2) To UBound(Data, 2)
                 If Not IsError(Data(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
                     If Left(Data(CountOuter, CountInner), 1) = "=" Then
