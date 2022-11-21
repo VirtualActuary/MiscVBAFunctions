@@ -378,12 +378,12 @@ Private Sub Test_CollectionToArray_empty()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim c1 As Collection
-    Set c1 = col()
+    Dim C1 As Collection
+    Set C1 = col()
 
     'Act:
     Dim a1 As Variant
-    a1 = CollectionToArray(c1)
+    a1 = CollectionToArray(C1)
 
     'Assert:
     
