@@ -123,6 +123,10 @@ Public Function Path(ParamArray Args() As Variant) As String
         Next Arg
     End If
     
+    ' Check for empty string as input
+    ' Return empty string witout go through the below
+    If ArgsCollection.Count = 1 And ArgsCollection(1) = vbNullString Then Exit Function
+    
     ' Always use backslash, because we need to support server paths like `\\server1\asdf` on Windows.
     ' This is unfortunate, because forward slashes `/` are the universal standard, and is even
     ' supported by Windows in most places, while backslash `\` works ONLY on Windows.

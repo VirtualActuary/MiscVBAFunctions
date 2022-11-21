@@ -41,6 +41,11 @@ End Sub
 Private Sub Test_Path()
     On Error GoTo TestFail
     
+    ' Empty path should return empty path
+    Assert.AreEqual vbNullString, Path("")
+    Assert.AreEqual vbNullString, Path(Array(""))
+    Assert.AreEqual vbNullString, Path(col(""))
+    
     ' Normalize slashes to '\'.
     Assert.AreEqual "C:\foo\bar", Path("C:", "foo", "bar")
     Assert.AreEqual "C:\foo\bar", Path("C:/", "foo", "bar")
