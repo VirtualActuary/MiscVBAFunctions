@@ -154,7 +154,7 @@ Private Sub TestGetTableRowIndex()
     IndexTest = 999
     On Error GoTo NoFind
         ' this should throw an error as no match of the same index should be found
-        IndexTest = GetTableRowIndex(Table, col("a", "b"), col("baz", "bla"), IgnoreValuesCase:=False)
+        IndexTest = GetTableRowIndex(Table, col("a", "b"), col("baz", "bla"), IgnoreCaseValues:=False)
 NoFind:
     On Error GoTo TestFail
     Assert.AreEqual CLng(999), CLng(IndexTest)

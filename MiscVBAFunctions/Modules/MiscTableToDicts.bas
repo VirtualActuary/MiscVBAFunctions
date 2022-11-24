@@ -183,7 +183,7 @@ Public Function GetTableRowIndex( _
     , Columns As Collection _
     , Values As Collection _
     , Optional WB As Workbook _
-    , Optional IgnoreValuesCase As Boolean = True _
+    , Optional IgnoreCaseValues As Boolean = True _
     ) As Long
     ' Given a table name, Columns and Values to match this function returns the row in which the first set of values matches
     ' Comparison is case sensitive
@@ -213,7 +213,7 @@ Public Function GetTableRowIndex( _
             assign ValLhs, dict(keyValuePair(1))  ' Allow entries to be objects
             assign ValRhs, keyValuePair(2)
             
-            If Not IgnoreValuesCase Then
+            If Not IgnoreCaseValues Then
                 If IsString(ValLhs) Then ValLhs = LCase(ValLhs)
                 If IsString(ValRhs) Then ValRhs = LCase(ValRhs)
             End If
