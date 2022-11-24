@@ -213,7 +213,7 @@ Public Function GetTableRowIndex( _
             assign ValLhs, dict(keyValuePair(1))  ' Allow entries to be objects
             assign ValRhs, keyValuePair(2)
             
-            If Not IgnoreCaseValues Then
+            If IgnoreCaseValues Then
                 If IsString(ValLhs) Then ValLhs = LCase(ValLhs)
                 If IsString(ValRhs) Then ValRhs = LCase(ValRhs)
             End If
