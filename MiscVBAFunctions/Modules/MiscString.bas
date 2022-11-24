@@ -19,3 +19,23 @@ Public Function randomString(length As Variant)
     randomString = Mid(s, 1, length)
 End Function
 
+
+Public Function IsString(ByVal v As Variant) As Boolean
+    ' Test is a Variant is of type String
+    '
+    ' Args:
+    '   v: Variant variable to test
+    '
+    ' Returns
+    '   Boolean indication if the input is a String
+    IsString = False
+    
+    Dim s As String
+    
+    ' If not an object (s=v error test) then test if not numeric
+    On Error Resume Next
+        s = v
+        If Err.Number = 0 Then
+            If Not IsNumeric(v) Then IsString = True
+        End If
+End Function

@@ -183,11 +183,9 @@ Public Function GetTableRowIndex( _
     , Columns As Collection _
     , Values As Collection _
     , Optional WB As Workbook _
+    , Optional IgnoreValuesCase As Boolean = True _
     ) As Long
-    ' Table can either be a TableToDicts collection, _
-      or the name of the table to find
-    ' Given a table name, Columns and Values to match _
-      this function returns the row in which the first set of values matches
+    ' Given a table name, Columns and Values to match this function returns the row in which the first set of values matches
     ' Comparison is case sensitive
     ' If no match is found, SubscriptOutOfRange error is raised
     '
@@ -204,12 +202,23 @@ Public Function GetTableRowIndex( _
     Dim keyValuePair As Collection
     Dim isMatch As Boolean
     Dim RowNumber As Long
+    Dim ValLhs As Variant
+    Dim ValRhs As Variant
     
-    For Each dict In EnsureTableDicts(Table, WB)
+    
+    For Each dict In EnsureTableDicts(Table, WB) ' Already a Dicti
         isMatch = True
         RowNumber = RowNumber + 1
         For Each keyValuePair In zip(Columns, Values)
-            If dict(keyValuePair(1)) <> keyValuePair(2) Then
+            assign ValLhs, dict(keyValuePair(1))  ' Allow entries to be objects
+            assign ValRhs, keyValuePair(2)
+            
+            If Not IgnoreValuesCase Then
+                If IsString(ValLhs) Then ValLhs = LCase(ValLhs)
+                If IsString(ValRhs) Then ValRhs = LCase(ValRhs)
+            End If
+                
+            If ValLhs <> ValRhs Then
                 isMatch = False
             End If
         Next keyValuePair

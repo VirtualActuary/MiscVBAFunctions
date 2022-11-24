@@ -142,11 +142,23 @@ Private Sub TestGetTableRowIndex()
     Dim Table As Collection
     
     'Act:
-    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
+    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"), dicti("a", "Baz", "b", "Bla"))
     
     'Assert:
     Assert.AreEqual CLng(2), GetTableRowIndex(Table, col("a", "b"), col(3, 4))
     Assert.AreEqual CLng(3), GetTableRowIndex(Table, col("a", "b"), col("foo", "bar"))
+    Assert.AreEqual CLng(3), GetTableRowIndex(Table, col("a", "b"), col("FoO", "BAr"))
+    
+    
+    Dim IndexTest As Variant
+    IndexTest = 999
+    On Error GoTo NoFind
+        ' this should throw an error as no match of the same index should be found
+        IndexTest = GetTableRowIndex(Table, col("a", "b"), col("baz", "bla"), IgnoreValuesCase:=False)
+NoFind:
+    On Error GoTo TestFail
+    Assert.AreEqual CLng(999), CLng(IndexTest)
+    
 
 TestExit:
     Exit Sub
