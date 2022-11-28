@@ -76,12 +76,10 @@ Private Sub Test_CreateFolders()
     
     'Act:
     Dir = Path(ExpandEnvironmentalVariables("%temp%"), "folder1", "folder2", "folder3")
-    CreateFolders (Dir)
+    makedirs (Dir)
     
     'Assert:
     Assert.IsTrue fso.FolderExists(Dir)
-    
-    
     
 TestExit:
     fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "folder1")
@@ -103,4 +101,25 @@ TestExit:
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
+End Sub
+
+'@TestMethod("MiscOs")
+Private Sub Test_CreateFolders_fail()
+    Const ExpectedError As Long = 53
+    On Error GoTo TestFail
+
+    'Act:
+    makedirs ("\\MadeUpDir\Foo")
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
 End Sub
