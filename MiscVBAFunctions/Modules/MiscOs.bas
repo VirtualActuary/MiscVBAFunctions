@@ -74,7 +74,7 @@ Private Function parentDir(ByVal folder)
 End Function
 
 
-Public Function MakeDirs(ByVal StrPath As String) As folder
+Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = True) As folder
     ' source: https://stackoverflow.com/questions/10803834/is-there-a-way-to-create-a-folder-and-sub-folders-in-excel-vba
     ' this code will make the folders recursively if required.
     ' the StrPath can, therefore, be a Path where multiple sub-dirs don't exist yet.
@@ -90,8 +90,16 @@ Public Function MakeDirs(ByVal StrPath As String) As folder
     Dim PathTemp As String ' for when the relative names becomes too long:
     PathTemp = EvalPath(StrPath)
 
-    If fso.FolderExists(PathTemp) Then Exit Function
+    If fso.FolderExists(PathTemp) Then
         ' if the folder already exists, no need to create anything
+        If ExistOk = False Then
+            Err.Raise ErrNr.FileAlreadyExists, , ErrorMessage(ErrNr.FileAlreadyExists, "Could not create folder with path: " & PathTemp & ". Folder already exists.")
+        Else
+            Set MakeDirs = fso.GetFolder(PathTemp)
+            Exit Function
+        End If
+    End If
+    
 
     StrCheckPath = ""
     PathTempSplit = Split(PathTemp, "\")
