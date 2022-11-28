@@ -74,7 +74,7 @@ Private Function parentDir(ByVal folder)
 End Function
 
 
-Public Function makedirs(ByVal StrPath As String) As folder
+Public Function MakeDirs(ByVal StrPath As String) As folder
     ' source: https://stackoverflow.com/questions/10803834/is-there-a-way-to-create-a-folder-and-sub-folders-in-excel-vba
     ' this code will make the folders recursively if required.
     ' the StrPath can, therefore, be a Path where multiple sub-dirs don't exist yet.
@@ -114,7 +114,7 @@ Public Function makedirs(ByVal StrPath As String) As folder
     If Not fso.FolderExists(PathTemp) Then
         Err.Raise ErrNr.FileNotFound, , ErrorMessage(ErrNr.FileNotFound, "Could not create folder with path: " & PathTemp & ". Ensure you have write access to the required folder.")
     End If
-    Set makedirs = fso.GetFolder(PathTemp)
+    Set MakeDirs = fso.GetFolder(PathTemp)
 End Function
 
 

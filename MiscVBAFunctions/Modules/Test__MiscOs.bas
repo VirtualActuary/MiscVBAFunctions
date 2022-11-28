@@ -76,7 +76,7 @@ Private Sub Test_CreateFolders()
     
     'Act:
     Dir = Path(ExpandEnvironmentalVariables("%temp%"), "folder1", "folder2", "folder3")
-    makedirs (Dir)
+    MakeDirs (Dir)
     
     'Assert:
     Assert.IsTrue fso.FolderExists(Dir)
@@ -109,7 +109,7 @@ Private Sub Test_CreateFolders_fail()
     On Error GoTo TestFail
 
     'Act:
-    makedirs ("\\MadeUpDir\Foo")
+    MakeDirs ("\\MadeUpDir\Foo")
 
 Assert:
     Assert.Fail "Expected error was not raised"
