@@ -31,13 +31,13 @@ Public Function TableToDictsLogSource( _
     '   The collection of Dicts containing the info as well as the source of each row.
     
     Set TableToDictsLogSource = TableToDicts(TableName, WB, Columns)
-    Dim dict As Dictionary
+    Dim Dict As Dictionary
     Dim RowIndex As Long
     RowIndex = 0
-    For Each dict In TableToDictsLogSource
+    For Each Dict In TableToDictsLogSource
         RowIndex = RowIndex + 1
-        dict.Add "__source__", dicti("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
-    Next dict
+        Dict.Add "__source__", DictI("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
+    Next Dict
 End Function
 
 
@@ -96,9 +96,9 @@ End Function
 
 Private Function TestGetTableRowIndex()
     Dim Table As Collection
-    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
-    Debug.Print GetTableRowIndex(Table, col("a", "b"), col(3, 4)), 2
-    Debug.Print GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")), 3
+    Set Table = Col(DictI("a", 1, "b", 2), DictI("a", 3, "b", 4), DictI("a", "foo", "b", "bar"))
+    Debug.Print GetTableRowIndex(Table, Col("a", "b"), Col(3, 4)), 2
+    Debug.Print GetTableRowIndex(Table, Col("a", "b"), Col("foo", "bar")), 3
 End Function
 
 
@@ -131,9 +131,9 @@ Public Function TableLookupValue( _
     ' for when GetTableRowIndex fails
     If Not IsEmpty(default) Then On Error GoTo SetDefault
     
-    Dim dict As Dictionary
-    Set dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
-    TableLookupValue = dictget(dict, ValueColName, default)
+    Dim Dict As Dictionary
+    Set Dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
+    TableLookupValue = dictget(Dict, ValueColName, default)
     
     Exit Function
 SetDefault:
@@ -198,7 +198,7 @@ Public Function GetTableRowIndex( _
     ' Returns:
     '   The row in which the values matches the comparison.
     
-    Dim dict As Dictionary
+    Dim Dict As Dictionary
     Dim keyValuePair As Collection
     Dim isMatch As Boolean
     Dim RowNumber As Long
@@ -206,11 +206,11 @@ Public Function GetTableRowIndex( _
     Dim ValRhs As Variant
     
     
-    For Each dict In EnsureTableDicts(Table, WB) ' Already a Dicti
+    For Each Dict In EnsureTableDicts(Table, WB) ' Already a Dicti
         isMatch = True
         RowNumber = RowNumber + 1
-        For Each keyValuePair In zip(Columns, Values)
-            assign ValLhs, dict(keyValuePair(1))  ' Allow entries to be objects
+        For Each keyValuePair In Zip(Columns, Values)
+            assign ValLhs, Dict(keyValuePair(1))  ' Allow entries to be objects
             assign ValRhs, keyValuePair(2)
             
             If IgnoreCaseValues Then
@@ -223,7 +223,7 @@ Public Function GetTableRowIndex( _
             End If
         Next keyValuePair
         If isMatch = True Then Exit For
-    Next dict
+    Next Dict
     
     If isMatch Then
         GetTableRowIndex = RowNumber
@@ -248,7 +248,7 @@ Public Function TableDictToArray(TableDicts As Collection) As Variant()
     Dim NumberOfColumns As Long
     Dim I As Integer
     Dim J As Integer
-    Dim dict As Dictionary
+    Dim Dict As Dictionary
     Dim ColumnNames() As Variant
     Dim ColumnNamesAsString As String
     Dim DictEntry As Variant
@@ -260,18 +260,18 @@ Public Function TableDictToArray(TableDicts As Collection) As Variant()
     ColumnNames = TableDicts(1).Keys()
     ColumnNamesAsString = Join(ColumnNames, ",")
 
-    For Each dict In TableDicts
-        If dict.Count <> NumberOfColumns Then
+    For Each Dict In TableDicts
+        If Dict.Count <> NumberOfColumns Then
             Err.Raise -997, , "Mismatch lengths for the dictionary entries. "
         End If
         
-        For Each DictEntry In dict.Keys()
+        For Each DictEntry In Dict.Keys()
         
             If (InStr(ColumnNamesAsString, DictEntry) = 0) Then
                 Err.Raise -996, , "Mismatching dictionaries found. "
             End If
         Next DictEntry
-    Next dict
+    Next Dict
 
     For I = 0 To UBound(ColumnNames)
         Arr(0, I) = ColumnNames(I)

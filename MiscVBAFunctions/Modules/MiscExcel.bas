@@ -210,3 +210,23 @@ Public Function SanitiseExcelName(Name As String)
     End If
     
 End Function
+
+
+Function VbaLocked() As Boolean
+    ' Test if we have access to vba
+    ' It's false if either protection <> pp_none or if user doesn't have access (an error)
+    
+    Dim VbProjectFlag As Boolean, VbaOpen As Boolean
+    VbaOpen = True
+    On Error GoTo VbProjectFlag_False
+        If ThisWorkbook.VBProject.Protection <> vbext_ProjectProtection.vbext_pp_none Then
+            VbaOpen = False
+        End If
+    GoTo VbProjectFlag_Keep
+
+VbProjectFlag_False:
+    VbaOpen = False
+VbProjectFlag_Keep:
+
+    VbaLocked = Not VbaOpen
+End Function

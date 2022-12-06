@@ -152,18 +152,18 @@ Private Sub Test_ArrayToCollection()
     
     'Arrange:
     Dim Arr(3) As Variant
-    Dim col1 As Collection
+    Dim Col1 As Collection
     'Act:
     Arr(0) = 10
     Arr(1) = 11
     Arr(2) = 12
     Arr(3) = 13
-    Set col1 = ArrayToCollection(Arr)
+    Set Col1 = ArrayToCollection(Arr)
     'Assert:
-    Assert.AreEqual 10, CInt(col1(1))
-    Assert.AreEqual 11, CInt(col1(2))
-    Assert.AreEqual 12, CInt(col1(3))
-    Assert.AreEqual 13, CInt(col1(4))
+    Assert.AreEqual 10, CInt(Col1(1))
+    Assert.AreEqual 11, CInt(Col1(2))
+    Assert.AreEqual 12, CInt(Col1(3))
+    Assert.AreEqual 13, CInt(Col1(4))
 
 TestExit:
     Exit Sub

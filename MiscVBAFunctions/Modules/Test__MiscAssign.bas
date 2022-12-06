@@ -64,7 +64,7 @@ Private Sub Test_MiscAssign_object()
     Dim x As Variant
     Dim y As Variant
     Dim I As Variant
-    Set I = col(4, 5, 6)
+    Set I = Col(4, 5, 6)
     assign x, I
     
     'Assert:

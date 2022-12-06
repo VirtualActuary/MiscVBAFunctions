@@ -8,7 +8,7 @@ Private Sub TestHasKey()
 
     Dim C As New Collection
     C.Add "a", "a"
-    C.Add col("x", "y", "z"), "b"
+    C.Add Col("x", "y", "z"), "b"
     
     Debug.Print vbLf & "*********** TestHasKey tests ***********"
     Debug.Print True, hasKey(C, "a") ' True for scalar
@@ -19,7 +19,7 @@ Private Sub TestHasKey()
     
     Dim d As New Dictionary
     d.Add "a", "a"
-    d.Add "b", col("x", "y", "z")
+    d.Add "b", Col("x", "y", "z")
     
     Debug.Print True, hasKey(d, "a") ' True for scalar
     Debug.Print True, hasKey(d, "b") ' True for object
@@ -29,7 +29,7 @@ Private Sub TestHasKey()
     Set dObj = CreateObject("Scripting.Dictionary")
     
     dObj.Add "a", "a"
-    dObj.Add "b", col("x", "y", "z")
+    dObj.Add "b", Col("x", "y", "z")
     
     Debug.Print True, hasKey(dObj, "a") ' True for scalar
     Debug.Print True, hasKey(dObj, "b") ' True for object

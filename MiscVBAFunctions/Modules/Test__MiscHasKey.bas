@@ -42,7 +42,7 @@ Private Sub Test_HasKey_Collection()
 
     'Act:
     C.Add "foo", "a"
-    C.Add col("x", "y", "z"), "b"
+    C.Add Col("x", "y", "z"), "b"
     
     'Assert:
     Assert.AreEqual True, hasKey(C, "a") ' True for scalar
@@ -85,7 +85,7 @@ Private Sub Test_HasKey_Dictionary()
     
     'Act:
     d.Add "a", "foo"
-    d.Add "b", col("x", "y", "z")
+    d.Add "b", Col("x", "y", "z")
 
     'Assert:
     Assert.AreEqual True, hasKey(d, "a") ' True for scalar
@@ -109,7 +109,7 @@ Private Sub Test_HasKey_Dictionary_object()
     Set dObj = CreateObject("Scripting.Dictionary")
     'Act:
     dObj.Add "a", "foo"
-    dObj.Add "b", col("x", "y", "z")
+    dObj.Add "b", Col("x", "y", "z")
 
     'Assert:
     Assert.AreEqual True, hasKey(dObj, "a") ' True for scalar

@@ -40,7 +40,7 @@ Private Sub Test_GetListOfChildren()
     Dim Depths As Collection
 
     'Act:
-    Set Depths = col( _
+    Set Depths = Col( _
     1, _
       2, _
       2, _

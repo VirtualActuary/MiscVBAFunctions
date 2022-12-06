@@ -152,11 +152,11 @@ Private Sub Test_TableColumnToArray()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
-    Arr = TableColumnToArray(col1, "b")
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("a", 10, "b", 20))
+    Arr = TableColumnToArray(Col1, "b")
 
     'Assert:
     Assert.AreEqual 2, Arr(0)
@@ -174,15 +174,15 @@ Private Sub Test_TableColumnToCollection()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim col1 As Collection
-    Dim col2 As Collection
+    Dim Col1 As Collection
+    Dim Col2 As Collection
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
-    Set col2 = TableColumnToCollection(col1, "b")
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("a", 10, "b", 20))
+    Set Col2 = TableColumnToCollection(Col1, "b")
 
     'Assert:
-    Assert.AreEqual 2, col2(1)
-    Assert.AreEqual 20, col2(2)
+    Assert.AreEqual 2, Col2(1)
+    Assert.AreEqual 20, Col2(2)
 
 
 TestExit:
@@ -393,10 +393,10 @@ Private Sub Test_GetTableRowRange()
     Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
     ' Test list object:
     Dim r As Range
-    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB2)
+    Set r = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB2)
     Assert.AreEqual "$B$6:$D$6", r.Address
 
-    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB2)
+    Set r = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB2)
     Assert.AreEqual "$G$6:$I$6", r.Address
 
 TestExit:

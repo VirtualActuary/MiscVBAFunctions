@@ -4,7 +4,7 @@ Option Explicit
 
 Private Sub TestBubbleSort()
     Dim Coll As Collection
-    Set Coll = col("variables10", "variables", "variables2", "variables_10", "variables_2")
+    Set Coll = Col("variables10", "variables", "variables2", "variables_10", "variables_2")
     Set Coll = BubbleSort(Coll)
     
     Debug.Print Coll(1), "variables"

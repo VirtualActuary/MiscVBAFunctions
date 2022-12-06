@@ -156,12 +156,12 @@ Public Function ArrayToCollection(Arr() As Variant) As Collection
     '   Collection containing the values of the input array.
     
     Dim CurrVal As Variant
-    Dim col1 As Collection
-    Set col1 = New Collection
+    Dim Col1 As Collection
+    Set Col1 = New Collection
     For Each CurrVal In Arr
-        col1.Add CurrVal
+        Col1.Add CurrVal
     Next
-    Set ArrayToCollection = col1
+    Set ArrayToCollection = Col1
 End Function
 
 

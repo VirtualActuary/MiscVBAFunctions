@@ -41,8 +41,8 @@ Private Sub Test_min()
     'Act:
 
     'Assert:
-    Assert.AreEqual 4, min(col(7, 4, 5, 6)), "min test succeeded"
-    Assert.AreEqual 5, min(col(9, 5, 6)), "min test succeeded"
+    Assert.AreEqual 4, min(Col(7, 4, 5, 6)), "min test succeeded"
+    Assert.AreEqual 5, min(Col(9, 5, 6)), "min test succeeded"
 
 TestExit:
     Exit Sub
@@ -87,8 +87,8 @@ Private Sub Test_max()
     'Act:
 
     'Assert:
-    Assert.AreEqual 6, max(col(4, 5, 6, 1, 2)), "max test succeeded"
-    Assert.AreEqual 6.1, max(col(5.3, 6.1)), "max test succeeded"
+    Assert.AreEqual 6, max(Col(4, 5, 6, 1, 2)), "max test succeeded"
+    Assert.AreEqual 6.1, max(Col(5.3, 6.1)), "max test succeeded"
 
 
 TestExit:
@@ -131,8 +131,8 @@ Private Sub Test_mean()
     'Act:
 
     'Assert:
-    Assert.AreEqual 4#, mean(col(4, 5, 6, 3, 2)), "mean test succeeded"
-    Assert.AreEqual 6#, mean(col(5, 7)), "mean test succeeded"
+    Assert.AreEqual 4#, mean(Col(4, 5, 6, 3, 2)), "mean test succeeded"
+    Assert.AreEqual 6#, mean(Col(5, 7)), "mean test succeeded"
 
 TestExit:
     Exit Sub
@@ -175,9 +175,9 @@ Private Sub Test_IsValueInCollection()
 
     'Assert:
 
-    Assert.IsTrue IsValueInCollection(col("a", "b"), "b")
-    Assert.IsFalse IsValueInCollection(col("a", "b"), "c")
-    Assert.IsFalse IsValueInCollection(col("a", "b"), "B", True)
+    Assert.IsTrue IsValueInCollection(Col("a", "b"), "b")
+    Assert.IsFalse IsValueInCollection(Col("a", "b"), "c")
+    Assert.IsFalse IsValueInCollection(Col("a", "b"), "B", True)
 
 TestExit:
     Exit Sub
@@ -197,9 +197,9 @@ Private Sub Test_Join_Collections()
     Dim z As New Collection
     
     'Act:
-    Set w = col(1, 2)
-    Set x = col(3, 4)
-    Set y = col(5, 6)
+    Set w = Col(1, 2)
+    Set x = Col(3, 4)
+    Set y = Col(5, 6)
     Set z = JoinCollections(x, y, w)
     
     'Assert:
@@ -228,8 +228,8 @@ Private Sub Test_Join_Collections_fail()
     Dim y As New Collection
     
     'Act:
-    Set x = col(1, 2, 3)
-    Set y = col(4, 5, 6)
+    Set x = Col(1, 2, 3)
+    Set y = Col(4, 5, 6)
     Set z = JoinCollections(x, y)
     
     'Assert:
@@ -261,8 +261,8 @@ Private Sub Test_Join_Collections_fail_2()
     Dim C As New Collection
     'Act:
 
-    Set D1 = dict("a", 1, "b", 2)
-    Set C = col(1, 2, 3)
+    Set D1 = Dict("a", 1, "b", 2)
+    Set C = Col(1, 2, 3)
     
     Set d = JoinCollections(D1, C)
     
@@ -289,9 +289,9 @@ Private Sub Test_Concat_Collections()
     Dim z As Collection
 
     'Act:
-    Set x = col(1, 2)
-    Set y = col(3, 4)
-    Set z = col(5, 6)
+    Set x = Col(1, 2)
+    Set y = Col(3, 4)
+    Set z = Col(5, 6)
     ConcatCollections x, z, y
     
     'Assert:
@@ -321,8 +321,8 @@ Private Sub Test_Concat_Collections_fail()
     Dim C As New Collection
     'Act:
 
-    Set D1 = dict("a", 1, "b", 2)
-    Set C = col(1, 2, 3)
+    Set D1 = Dict("a", 1, "b", 2)
+    Set C = Col(1, 2, 3)
     
     ConcatCollections D1, C
 Assert:
@@ -346,7 +346,7 @@ Private Sub Test_CollectionToArray()
     
     'Arrange:
     Dim C1 As Collection
-    Set C1 = col(7, 4, 5, 6)
+    Set C1 = Col(7, 4, 5, 6)
 
     'Act:
     Dim a1 As Variant
@@ -379,7 +379,7 @@ Private Sub Test_CollectionToArray_empty()
     
     'Arrange:
     Dim C1 As Collection
-    Set C1 = col()
+    Set C1 = Col()
 
     'Act:
     Dim a1 As Variant
@@ -397,6 +397,34 @@ Private Sub Test_CollectionToArray_empty()
     expectedUpperBound = -1
     Assert.AreEqual expectedUpperBound, UBound(a1), "Upper bound"
 
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscCollection")
+Private Sub Test_indexOf()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Coll As Collection
+    Dim Col2 As Collection
+
+    'Act:
+    Set Coll = Col("variables10", 0, "variables", 10, "variables2", "20", "variables_10", 30, "variables_2", 40)
+    Set Col2 = Col(12, 23, 34, 45, 56, 67)
+    
+    'Assert:
+    Assert.AreEqual 3, CInt(indexOf(Coll, "variables"))
+    Assert.AreEqual 2, CInt(indexOf(Coll, 0))
+    Assert.AreEqual 0, CInt(indexOf(Coll, "Foo"))
+
+    Assert.AreEqual 5, CInt(indexOf(Col2, 56))
+    Assert.AreEqual 0, CInt(indexOf(Col2, "23"))
+
+    
 TestExit:
     Exit Sub
 TestFail:

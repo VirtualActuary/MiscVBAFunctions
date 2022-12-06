@@ -111,13 +111,13 @@ Public Function Path(ParamArray Args() As Variant) As String
         Set ArgsCollection = Args(0)
     ElseIf IsArray(Args(0)) Then
         ' Path(array("a", "b"))
-        Set ArgsCollection = col()
+        Set ArgsCollection = Col()
         For Each Arg In Args(0)
             ArgsCollection.Add Arg
         Next Arg
     Else
         ' Path("a", "b")
-        Set ArgsCollection = col()
+        Set ArgsCollection = Col()
         For Each Arg In Args
             ArgsCollection.Add Arg
         Next Arg
@@ -137,7 +137,7 @@ Public Function Path(ParamArray Args() As Variant) As String
     Dim SegmentsRegex As Object
     Set SegmentsRegex = PathSegmentsRegex()
     Dim Segments As Collection
-    Set Segments = col()
+    Set Segments = Col()
     Dim I As Integer
     Dim SegmentMatches As Variant
     Dim SegmentMatch As Variant
@@ -150,17 +150,17 @@ Public Function Path(ParamArray Args() As Variant) As String
         If PathHasDrive(ArgStr) Then
             ' This is an absolute path with a drive letter.
             ' Throw away everything that came before it.
-            Set Segments = col()
+            Set Segments = Col()
             LastKnownDrive = PathGetDrive(ArgStr)
         ElseIf PathHasServer(ArgStr) Then
             ' This is a network path.
             ' Throw away everything that came before it, but preserve the extra leading
             ' backslash, which indicates a network path.
-            Set Segments = col("\")
+            Set Segments = Col("\")
         ElseIf PathStartsWithSlash(ArgStr) Then
             ' This is an absolute path without a drive letter.
             ' Throw away everything that came before it, but preserve the last known drive letter.
-            Set Segments = col(LastKnownDrive)
+            Set Segments = Col(LastKnownDrive)
         Else
             ' This is a relative path. Continue collecting segments as normal.
         End If
