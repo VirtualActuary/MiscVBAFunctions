@@ -8,8 +8,6 @@ Option Explicit
 'Dim M
 'Dim WB
 'Dim WS
-'Dim dict ' for now... :/
-'Dim r ' for now... :/
 'Dim Keys
 'Dim Columns
 'Dim Values
@@ -24,6 +22,7 @@ Option Explicit
 'Dim Destination
 'Dim Row
 'Dim Arr
+'Dim Err
 
 
 

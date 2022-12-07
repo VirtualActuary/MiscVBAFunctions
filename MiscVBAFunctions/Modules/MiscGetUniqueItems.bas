@@ -36,19 +36,19 @@ Public Function GetUniqueItems(Arr() As Variant, _
     If ArrayLen(Arr) = 0 Then
         GetUniqueItems = Array()
     Else
-        Dim d As New Dictionary
+        Dim D As New Dictionary
         If Not CaseSensitive Then
-            d.CompareMode = TextCompare
+            D.CompareMode = TextCompare
         End If
         
         Dim I As Long
         For I = LBound(Arr) To UBound(Arr)
-            If Not d.Exists(Arr(I)) Then
-                d.Add Arr(I), Arr(I)
+            If Not D.Exists(Arr(I)) Then
+                D.Add Arr(I), Arr(I)
             End If
         Next
         
-        GetUniqueItems = d.Keys()
+        GetUniqueItems = D.Keys()
     End If
 End Function
 

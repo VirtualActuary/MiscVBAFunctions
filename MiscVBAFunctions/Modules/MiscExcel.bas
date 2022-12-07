@@ -14,6 +14,7 @@ Public Function ExcelBook( _
     ) As Workbook
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
     ' Create an Excel Workbook with custom arguments.
+    ' If Path = "", a temp WB gets created.
     '
     ' Args:
     '   Path: Path to the file.
@@ -229,4 +230,85 @@ VbProjectFlag_False:
 VbProjectFlag_Keep:
 
     VbaLocked = Not VbaOpen
+End Function
+
+
+Sub RenameSheet(NewSheetName As String, WS As Worksheet, Optional RaiseErrorIfSheetNameExists = False)
+    ' name a sheet given the proposed name (check first if it exists).
+    ' Add "(NextAvailableNumber)" to the new sheet name if RaiseErrorIfSheetNameExists = False
+    '
+    ' Args:
+    '   NewSheetName: Desired new worksheet name
+    '   WS: Worksheet whose name must be changed.
+    '   RaiseErrorIfSheetNameExists: Optional argument - If True, raise an error if the NewSheetName
+    '       already exists in the WorkBook.
+
+    Dim SheetNames As New Collection
+    Dim S As Worksheet
+    For Each S In WS.Parent.Sheets
+        SheetNames.Add S, S.Name
+    Next S
+    
+    If RaiseErrorIfSheetNameExists Then
+        If hasKey(SheetNames, NewSheetName) Then
+            Err.Raise ErrNr.FileAlreadyExists, , "Worksheet name already exists."
+        End If
+    End If
+
+    Dim Name As String
+    Dim I As Integer
+    I = 0
+    Name = NewSheetName
+    Do While hasKey(SheetNames, Name)
+        I = I + 1
+        Name = Left(NewSheetName, 25) & " (" & I & ")" ' 31 max characters - ie supports up to 999 sheets
+    Loop
+    WS.Name = Left(Name, 31)
+End Sub
+
+
+Function AddWS(ByVal Name As String, _
+               Optional After As Worksheet, _
+               Optional Before As Worksheet, _
+               Optional WB As Workbook, _
+               Optional RemoveGridLinesAndGreyFill As Boolean = True, _
+               Optional ErrIfExists As Boolean = False, _
+               Optional ForceNewIfExists As Boolean = False) As Worksheet
+    
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Name = Left(Name, 31)
+    
+    If hasKey(WB.Sheets, Name) Then
+        If ErrIfExists Then
+            Err.Raise ErrNr.FileAlreadyExists, , "Worksheet '" & Name & "' already exists"
+        End If
+
+        If ForceNewIfExists Then
+            ' to allow new names up to *99 (99 sheets)
+            Name = EnsureUniqueKey(WB.Sheets, Left(Name, 29))
+        Else
+            Set AddWS = WB.Sheets(Name)
+            Exit Function
+        End If
+    End If
+    
+  
+    If Not After Is Nothing Then
+        Set AddWS = WB.Sheets.Add(After:=After)
+    ElseIf Not Before Is Nothing Then
+        Set AddWS = WB.Sheets.Add(Before:=Before)
+    Else
+        ' by default add to the last sheet
+        Set AddWS = WB.Sheets.Add(After:=WB.Sheets(WB.Sheets.Count))
+    End If
+    
+    AddWS.Name = Name
+    
+'    If RemoveGridLinesAndGreyFill Then
+'        turnOffSheetGridLines AddWS
+'        makeDark -0.25, AddWS.Cells
+'    End If
+
 End Function

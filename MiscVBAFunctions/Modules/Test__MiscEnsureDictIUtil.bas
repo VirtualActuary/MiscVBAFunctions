@@ -37,19 +37,19 @@ Private Sub Test_EnsureDictI()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
-    Set d = New Dictionary
+    Dim D As Dictionary
+    Set D = New Dictionary
     
     Dim dI As Dictionary
     Set dI = New Dictionary
     
     'Act:
-    d.Add "a", 1  ' lowercase
-    Set dI = EnsureDictI(d)
+    D.Add "a", 1  ' lowercase
+    Set dI = EnsureDictI(D)
 
     'Assert:
-    Assert.AreEqual False, d.Exists("A")
-    Assert.AreEqual True, d.Exists("a")
+    Assert.AreEqual False, D.Exists("A")
+    Assert.AreEqual True, D.Exists("a")
     
     Assert.AreEqual True, dI.Exists("A")
     Assert.AreEqual True, dI.Exists("a")

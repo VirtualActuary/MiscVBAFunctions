@@ -43,7 +43,7 @@ Private Sub TestGetNewKey()
 End Sub
 
 
-Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional depth As Long = 0) As String
+Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLength As Long = -1, Optional Depth As Long = 0) As String
     ' get a key that does not exists in a container (dict or collection)
     ' we keep appending, 1, 2, 3, ..., 10, 11 until the key is unique
     ' MaxLength is used when the key has a restriction on the maximum length
@@ -69,17 +69,17 @@ Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLeng
         Exit Function
     Else
         ' 31 max characters for sheet name
-        depth = depth + 1
+        Depth = Depth + 1
         If MaxLength = -1 Then
-            GetNewKey = GetNewKey & depth
+            GetNewKey = GetNewKey & Depth
         Else
-            GetNewKey = Left(GetNewKey, MaxLength - Len(CStr(depth))) & depth
+            GetNewKey = Left(GetNewKey, MaxLength - Len(CStr(Depth))) & Depth
         End If
         
         If Not hasKey(Container, GetNewKey) Then
             Exit Function
         End If
         
-        GetNewKey = GetNewKey(Name, Container, MaxLength, depth)
+        GetNewKey = GetNewKey(Name, Container, MaxLength, Depth)
     End If
 End Function

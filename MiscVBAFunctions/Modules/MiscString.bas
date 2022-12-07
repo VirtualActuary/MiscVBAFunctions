@@ -12,11 +12,11 @@ Public Function randomString(length As Variant)
     ' Returns:
     '   The Random string.
     
-    Dim s As String
-    While Len(s) < length
-        s = s & Hex(Rnd * 16777216)
+    Dim S As String
+    While Len(S) < length
+        S = S & Hex(Rnd * 16777216)
     Wend
-    randomString = Mid(s, 1, length)
+    randomString = Mid(S, 1, length)
 End Function
 
 
@@ -30,11 +30,11 @@ Public Function IsString(ByVal v As Variant) As Boolean
     '   Boolean indication if the input is a String
     IsString = False
     
-    Dim s As String
+    Dim S As String
     
     ' If not an object (s=v error test) then test if not numeric
     On Error Resume Next
-        s = v
+        S = v
         If Err.Number = 0 Then
             If Not IsNumeric(v) Then IsString = True
         End If
@@ -73,7 +73,7 @@ Public Function StartsWith(Str As String, Start As String) As Boolean
 End Function
 
 
-Public Function decStr(Num As Variant) As String
+Public Function DecStr(Num As Variant) As String
     ' Convert to string and ensure decimal point (for doubles)
     '
     ' Args:
@@ -82,11 +82,11 @@ Public Function decStr(Num As Variant) As String
     ' Returns:
     '   String value converted from the input.
     
-    decStr = CStr(Num)
+    DecStr = CStr(Num)
 
     'Frikin ridiculous loops for VBA
     If IsNumeric(Num) Then
-       decStr = Replace(decStr, Format(0, "."), ".")
+       DecStr = Replace(DecStr, Format(0, "."), ".")
        ' Format(0, ".") gives the system decimal separator
     End If
 

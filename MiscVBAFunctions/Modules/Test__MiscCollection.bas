@@ -35,10 +35,6 @@ End Sub
 '@TestMethod("MiscCollection.min")
 Private Sub Test_min()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
 
     'Assert:
     Assert.AreEqual 4, min(Col(7, 4, 5, 6)), "min test succeeded"
@@ -59,8 +55,7 @@ Private Sub Test_min_fail()
     'Arrange:
     Dim C As Collection
     'Act:
-    
-    
+       
     min C
     
 Assert:
@@ -82,14 +77,9 @@ End Sub
 Private Sub Test_max()
     On Error GoTo TestFail
     
-    'Arrange:
-
-    'Act:
-
     'Assert:
     Assert.AreEqual 6, max(Col(4, 5, 6, 1, 2)), "max test succeeded"
     Assert.AreEqual 6.1, max(Col(5.3, 6.1)), "max test succeeded"
-
 
 TestExit:
     Exit Sub
@@ -125,10 +115,6 @@ End Sub
 '@TestMethod("MiscCollection.mean")
 Private Sub Test_mean()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
 
     'Assert:
     Assert.AreEqual 4#, mean(Col(4, 5, 6, 3, 2)), "mean test succeeded"
@@ -168,13 +154,8 @@ End Sub
 '@TestMethod("MiscCollection.IsValueInCollection")
 Private Sub Test_IsValueInCollection()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
 
     'Assert:
-
     Assert.IsTrue IsValueInCollection(Col("a", "b"), "b")
     Assert.IsFalse IsValueInCollection(Col("a", "b"), "c")
     Assert.IsFalse IsValueInCollection(Col("a", "b"), "B", True)
@@ -256,7 +237,7 @@ Private Sub Test_Join_Collections_fail_2()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     Dim D1 As Dictionary
     Dim C As New Collection
     'Act:
@@ -264,7 +245,7 @@ Private Sub Test_Join_Collections_fail_2()
     Set D1 = Dict("a", 1, "b", 2)
     Set C = Col(1, 2, 3)
     
-    Set d = JoinCollections(D1, C)
+    Set D = JoinCollections(D1, C)
     
 
 Assert:
@@ -316,7 +297,7 @@ Private Sub Test_Concat_Collections_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     Dim D1 As Dictionary
     Dim C As New Collection
     'Act:
@@ -409,20 +390,20 @@ Private Sub Test_indexOf()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim Coll As Collection
-    Dim Col2 As Collection
+    Dim C As Collection
+    Dim C2 As Collection
 
     'Act:
-    Set Coll = Col("variables10", 0, "variables", 10, "variables2", "20", "variables_10", 30, "variables_2", 40)
-    Set Col2 = Col(12, 23, 34, 45, 56, 67)
+    Set C = Col("variables10", 0, "variables", 10, "variables2", "20", "variables_10", 30, "variables_2", 40)
+    Set C2 = Col(12, 23, 34, 45, 56, 67)
     
     'Assert:
-    Assert.AreEqual 3, CInt(indexOf(Coll, "variables"))
-    Assert.AreEqual 2, CInt(indexOf(Coll, 0))
-    Assert.AreEqual 0, CInt(indexOf(Coll, "Foo"))
+    Assert.AreEqual 3, CInt(indexOf(C, "variables"))
+    Assert.AreEqual 2, CInt(indexOf(C, 0))
+    Assert.AreEqual 0, CInt(indexOf(C, "Foo"))
 
-    Assert.AreEqual 5, CInt(indexOf(Col2, 56))
-    Assert.AreEqual 0, CInt(indexOf(Col2, "23"))
+    Assert.AreEqual 5, CInt(indexOf(C2, 56))
+    Assert.AreEqual 0, CInt(indexOf(C2, "23"))
 
     
 TestExit:

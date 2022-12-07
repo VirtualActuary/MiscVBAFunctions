@@ -284,13 +284,13 @@ Private Sub Test_GetTableColumnDataRange()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
     Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableColumnDataRange(SelectedTable, "Column2")
-    Arr = r.Value
+    Set R = GetTableColumnDataRange(SelectedTable, "Column2")
+    Arr = R.Value
     'Assert:
     Assert.AreEqual 12, CInt(Arr(1, 1))
     Assert.AreEqual 22, CInt(Arr(2, 1))
@@ -310,11 +310,11 @@ Private Sub Test_GetTableColumnDataRange_fail()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableColumnDataRange(SelectedTable, "NonExistingColumn")
+    Set R = GetTableColumnDataRange(SelectedTable, "NonExistingColumn")
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -335,13 +335,13 @@ Private Sub Test_GetTableRowNumberDataRange()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
     Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableRowNumberDataRange(SelectedTable, 2)
-    Arr = r.Value
+    Set R = GetTableRowNumberDataRange(SelectedTable, 2)
+    Arr = R.Value
     'Assert:
     Assert.AreEqual 21, CInt(Arr(1, 1))
     Assert.AreEqual 22, CInt(Arr(1, 2))
@@ -361,11 +361,11 @@ Private Sub Test_GetTableRowNumberDataRange_fail()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableRowNumberDataRange(SelectedTable, 20)
+    Set R = GetTableRowNumberDataRange(SelectedTable, 20)
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -386,18 +386,19 @@ Private Sub Test_GetTableRowRange()
     On Error GoTo TestFail
 
     'Arrange:
-    'Act:
     Dim Dicts As Collection
     Dim Source As Dictionary
     Dim WB2 As Workbook
+    Dim R As Range
+    
+    'Act:
     Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
     ' Test list object:
-    Dim r As Range
-    Set r = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB2)
-    Assert.AreEqual "$B$6:$D$6", r.Address
+    Set R = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB2)
+    Assert.AreEqual "$B$6:$D$6", R.Address
 
-    Set r = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB2)
-    Assert.AreEqual "$G$6:$I$6", r.Address
+    Set R = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB2)
+    Assert.AreEqual "$G$6:$I$6", R.Address
 
 TestExit:
     WB2.Close False
@@ -414,16 +415,16 @@ Private Sub Test_GetTableColumnDataRange_2()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
     Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table4", WB)
     ResizeLO SelectedTable, 0
-    Set r = GetTableColumnDataRange(SelectedTable, "Column2")
+    Set R = GetTableColumnDataRange(SelectedTable, "Column2")
 
 '    'Assert:
-    If r Is Nothing Then
+    If R Is Nothing Then
         Assert.Succeed
     Else
         Assert.Fail

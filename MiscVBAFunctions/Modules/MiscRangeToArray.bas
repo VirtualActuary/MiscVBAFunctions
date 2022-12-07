@@ -2,7 +2,7 @@ Attribute VB_Name = "MiscRangeToArray"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-Public Function RangeToArray(r As Range, _
+Public Function RangeToArray(R As Range, _
                 Optional IgnoreEmptyInFlatArray As Boolean) As Variant()
     ' Converts a range to a normalized array.
     ' vectors allocated to 1-dimensional arrays
@@ -15,17 +15,17 @@ Public Function RangeToArray(r As Range, _
     ' Returns:
     '   The normalized array.
     
-    If r.Cells.Count = 1 Then
-        RangeToArray = Array(r.Value)
-    ElseIf r.Rows.Count = 1 Or r.Columns.Count = 1 Then
-        RangeToArray = RangeTo1DArray(r, IgnoreEmptyInFlatArray)
+    If R.Cells.Count = 1 Then
+        RangeToArray = Array(R.Value)
+    ElseIf R.Rows.Count = 1 Or R.Columns.Count = 1 Then
+        RangeToArray = RangeTo1DArray(R, IgnoreEmptyInFlatArray)
     Else
-        RangeToArray = RangeTo2DArray(r)
+        RangeToArray = RangeTo2DArray(R)
     End If
 End Function
 
 Public Function RangeTo1DArray( _
-              r As Range _
+              R As Range _
             , Optional IgnoreEmpty As Boolean = True _
             ) As Variant()
     ' currently does the same as rangeToArray, just named better and is more efficient
@@ -39,16 +39,16 @@ Public Function RangeTo1DArray( _
     '   The normalized array.
     
     Dim Arr() As Variant ' the output array
-    ReDim Arr(r.Cells.Count - 1)
+    ReDim Arr(R.Cells.Count - 1)
     
     Dim Values() As Variant ' values of the whole range
-    If r.Cells.Count = 1 Then
-        Arr(0) = r.Value
+    If R.Cells.Count = 1 Then
+        Arr(0) = R.Value
         RangeTo1DArray = Arr
         Exit Function
     End If
     
-    Values = r.Value
+    Values = R.Value
     Dim I As Long
     Dim J As Long
     Dim Counter As Long
@@ -73,7 +73,7 @@ Public Function RangeTo1DArray( _
 End Function
 
 
-Public Function RangeTo2DArray(r As Range) As Variant()
+Public Function RangeTo2DArray(R As Range) As Variant()
     ' ensure a range is converted to a 2-dimensional array
     ' special treatment on edge cases where a range is a 1x1 scalar
     '
@@ -83,16 +83,16 @@ Public Function RangeTo2DArray(r As Range) As Variant()
     ' Returns:
     '   2D array.
     
-    If r.Cells.Count = 1 Then
+    If R.Cells.Count = 1 Then
         Dim arr_single() As Variant
         ReDim arr_single(1 To 1, 1 To 1) ' make it base 1, similar to what .value does for non-scalars
-        arr_single(1, 1) = r.Value
+        arr_single(1, 1) = R.Value
         RangeTo2DArray = arr_single
         Exit Function
     End If
     
     Dim Values() As Variant ' values of the whole range
-    Values = r.Value
+    Values = R.Value
 
     Dim Arr() As Variant ' the output array
     ReDim Arr(UBound(Values, 1) - LBound(Values, 1), UBound(Values, 2) - LBound(Values, 2))

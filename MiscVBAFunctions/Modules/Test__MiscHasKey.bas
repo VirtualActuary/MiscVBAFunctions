@@ -60,10 +60,6 @@ End Sub
 '@TestMethod("MiscHasKey")
 Private Sub Test_HasKey_Workbook()
     On Error GoTo TestFail
-    
-    'Arrange:
-
-    'Act:
 
     'Assert:
     Assert.AreEqual True, hasKey(Workbooks, ThisWorkbook.Name)
@@ -81,16 +77,16 @@ Private Sub Test_HasKey_Dictionary()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As New Dictionary
+    Dim D As New Dictionary
     
     'Act:
-    d.Add "a", "foo"
-    d.Add "b", Col("x", "y", "z")
+    D.Add "a", "foo"
+    D.Add "b", Col("x", "y", "z")
 
     'Assert:
-    Assert.AreEqual True, hasKey(d, "a") ' True for scalar
-    Assert.AreEqual True, hasKey(d, "b") ' True for scalar
-    Assert.AreEqual False, hasKey(d, "A") ' False - case sensitive by default
+    Assert.AreEqual True, hasKey(D, "a") ' True for scalar
+    Assert.AreEqual True, hasKey(D, "b") ' True for scalar
+    Assert.AreEqual False, hasKey(D, "A") ' False - case sensitive by default
     
 
 TestExit:
@@ -127,8 +123,6 @@ End Sub
 Private Sub Test_HasKey_Dictionary_fail()                        'TODO Rename test
     Const ExpectedError As Long = 9              'TODO Change to expected error number
     On Error GoTo TestFail
-    
-    'Arrange:
 
     'Act:
     hasKey 5, "a"

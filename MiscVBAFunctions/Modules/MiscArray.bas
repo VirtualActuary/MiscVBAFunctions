@@ -132,7 +132,7 @@ Public Function Ensure2dArray(Arr() As Variant) As Variant()
     '     The input array if it was already 2D, or a new 2D array if the original was 1D.
     
     Dim ArrOut() As Variant
-    If is1D(Arr) Then
+    If Is1D(Arr) Then
         Dim I As Long
         ReDim ArrOut(0 To 0, 0 To UBound(Arr))
         For I = LBound(Arr) To UBound(Arr)
@@ -176,7 +176,7 @@ Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Varian
     ' Returns:
     '   Array with the changed values.
     
-    If is2D(tableArr) Then
+    If Is2D(tableArr) Then
         ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
     Else
         ErrorToNullStringTransformation = ErrorToNull1D(tableArr)
@@ -198,7 +198,7 @@ Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Varia
     ' Returns:
     '   Array with the changed string values.
     
-    If is2D(tableArr) Then
+    If Is2D(tableArr) Then
         EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
     Else
         EnsureDotSeparatorTransformation = EnsureDotSeparator1D(tableArr)
@@ -218,7 +218,7 @@ Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt A
     ' Returns:
     '   Array where the Date/DateTime entries have been converted.
 
-    If is2D(tableArr) Then
+    If Is2D(tableArr) Then
         DateToStringTransformation = DateToString2D(tableArr, fmt)
     Else
         DateToStringTransformation = DateToString1D(tableArr, fmt)
@@ -226,36 +226,129 @@ Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt A
 End Function
 
 
-Private Function is2D(Arr As Variant)
+Private Function Is2D(Arr As Variant)
     ' Check if a collection is 1D or 2D.
     ' 3D is not supported
     On Error GoTo Err
-    is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
+    Is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
     Exit Function
 Err:
-    is2D = False
+    Is2D = False
 End Function
 
-Public Function is1D(Arr As Variant)
+Public Function Is1D(Arr As Variant)
     On Error GoTo Err
     Dim foo As Variant
     foo = UBound(Arr, 2)
     Exit Function
 Err:
-    is1D = True
-End Function
-
-Private Function dateToString(d As Date, fmt As String) As String
-    dateToString = Format(d, fmt)
+    Is1D = True
 End Function
 
 
-Private Function decStr(x As Variant) As String
-     decStr = CStr(x)
+Public Function IsArrayAllocated(Arr() As Variant) As Boolean
+    ' From: http://www.cpearson.com/excel/vbaarrays.htm
+    ' this could contain some other useful array helpers...
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' IsArrayAllocated
+    ' Returns TRUE if the array is allocated (either a static array or a dynamic array that has been
+    ' sized with Redim) or FALSE if the array is not allocated (a dynamic that has not yet
+    ' been sized with Redim, or a dynamic array that has been Erased). Static arrays are always
+    ' allocated.
+    '
+    ' The VBA IsArray function indicates whether a variable is an array, but it does not
+    ' distinguish between allocated and unallocated arrays. It will return TRUE for both
+    ' allocated and unallocated arrays. This function tests whether the array has actually
+    ' been allocated.
+    '
+    ' This function is just the reverse of IsArrayEmpty.
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This function only accepts arrays as inputs (variant previously).
+    '
+    ' Args:
+    '   arr: array to check if allocated.
+    '
+    ' Returns:
+    '   True if array is allocated, False otherwise.
+    
+    Dim n As Long
+    On Error Resume Next
+
+    ' Attempt to get the UBound of the array. If the array has not been allocated,
+    ' an error will occur. Test Err.Number to see if an error occurred.
+    n = UBound(Arr, 1)
+    If (Err.Number = 0) Then
+        ''''''''''''''''''''''''''''''''''''''
+        ' Under some circumstances, if an array
+        ' is not allocated, Err.Number will be
+        ' 0. To acccomodate this case, we test
+        ' whether LBound <= Ubound. If this
+        ' is True, the array is allocated. Otherwise,
+        ' the array is not allocated.
+        '''''''''''''''''''''''''''''''''''''''
+        If LBound(Arr) <= UBound(Arr) Then
+            ' no error. array has been allocated.
+            IsArrayAllocated = True
+        Else
+            IsArrayAllocated = False
+        End If
+    Else
+        ' error. unallocated array
+        IsArrayAllocated = False
+    End If
+
+End Function
+
+
+Function JaggedArrayToLO(Table() As Variant, LoName As String, WS As Worksheet, Optional StartR As Range) As ListObject
+    ' uses a staggedArray (https://stackoverflow.com/questions/9435608/how-do-i-set-up-a-jagged-array-in-vba)
+    ' created like this: https://stackoverflow.com/a/24584110/6822528
+    ' assumes the first entry contains all the "columns"
+    ' subsequent rows may have fewer columns, but not more
+    '
+    ' Args:
+    '   Table: Array of Arrays input. Content to be inserted into the LO
+    '   LoName: Desired List Object name
+    '   WS: Selected WorkSheet.
+    '   StartR: Optional - Start range in the WS.
+    '
+    ' Returns:
+    '   A ListObject with the Array of arrays as its content
+    
+    If StartR Is Nothing Then Set StartR = ActiveCell
+    Dim index As Integer, NrCols As Integer
+    index = LBound(Table, 1)
+    NrCols = UBound(Table(0), 1) - LBound(Table(0), 1) + 1
+    
+    Dim I As Integer, J As Integer
+    For I = LBound(Table, 1) To UBound(Table, 1)
+        For J = LBound(Table(I), 1) To UBound(Table(I), 1)
+            If J > NrCols - 1 + index Then Err.Raise ErrNr.SubscriptOutOfRange, , "Subsequent rows of jagged Array may not have more columns than the header"
+            
+            StartR.Offset(I - index, J - index).Value = Table(I)(J)
+        Next J
+    Next I
+    
+    Dim TableR As Range
+    Set TableR = StartR.Resize(UBound(Table, 1) - LBound(Table, 1) + 1, NrCols)
+    
+    Set JaggedArrayToLO = WS.ListObjects.Add(xlSrcRange, TableR, , xlYes)
+    JaggedArrayToLO.Name = LoName
+    
+End Function
+
+
+Private Function DateToString(D As Date, fmt As String) As String
+    DateToString = Format(D, fmt)
+End Function
+
+
+Private Function DecStr(x As Variant) As String
+     DecStr = CStr(x)
 
      'Frikin ridiculous loops for VBA
      If IsNumeric(x) Then
-        decStr = Replace(decStr, Format(0, "."), ".")
+        DecStr = Replace(DecStr, Format(0, "."), ".")
         ' Format(0, ".") gives the system decimal separator
      End If
 
@@ -291,7 +384,7 @@ Private Function EnsureDotSeparator2D(tableArr As Variant) As Variant
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         For J = LBound(tableArr, 2) To UBound(tableArr, 2)
             If IsNumeric(tableArr(I, J)) Then ' force numeric values to use . as decimal separator
-                tableArr(I, J) = decStr(tableArr(I, J))
+                tableArr(I, J) = DecStr(tableArr(I, J))
             End If
         Next J
     Next I
@@ -303,7 +396,7 @@ Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
     Dim I As Long
     For I = LBound(tableArr) To UBound(tableArr)
         If IsNumeric(tableArr(I)) Then ' force numeric values to use . as decimal separator
-            tableArr(I) = decStr(tableArr(I))
+            tableArr(I) = DecStr(tableArr(I))
         End If
     Next I
     EnsureDotSeparator1D = tableArr
@@ -315,7 +408,7 @@ Private Function DateToString2D(tableArr As Variant, fmt As String) As Variant
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         For J = LBound(tableArr, 2) To UBound(tableArr, 2)
             If IsDate(tableArr(I, J)) Then ' format dates as strings to avoid some user's stupid default date settings
-                tableArr(I, J) = dateToString(CDate(tableArr(I, J)), fmt)
+                tableArr(I, J) = DateToString(CDate(tableArr(I, J)), fmt)
             End If
         Next J
     Next I
@@ -327,8 +420,9 @@ Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
     Dim I As Long
     For I = LBound(tableArr, 1) To UBound(tableArr, 1)
         If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
-            tableArr(I) = dateToString(CDate(tableArr(I)), fmt)
+            tableArr(I) = DateToString(CDate(tableArr(I)), fmt)
         End If
     Next I
     DateToString1D = tableArr
 End Function
+

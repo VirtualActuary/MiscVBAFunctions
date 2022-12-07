@@ -408,3 +408,103 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_RenameSheet()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+
+    'Act:
+    Set WB = ExcelBook("")
+    
+    RenameSheet "foo", WB.Worksheets(1)
+
+    'Assert:
+    Assert.AreEqual "foo", WB.Worksheets(1).Name
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_RenameSheet_2()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+
+    'Act:
+    Set WB = ExcelBook("")
+    
+    WB.Worksheets.Add , WB.Worksheets(1)
+    RenameSheet "foo", WB.Worksheets(1)
+    RenameSheet "foo", WB.Worksheets(2)
+
+    'Assert:
+    Assert.AreEqual "foo", WB.Worksheets(1).Name
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_RenameSheet_fail()
+    Const ExpectedError As Long = 58
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+
+    'Act:
+    Set WB = ExcelBook("")
+    
+    WB.Worksheets.Add , WB.Worksheets(1)
+    RenameSheet "foo", WB.Worksheets(1)
+    RenameSheet "foo", WB.Worksheets(2), True
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_AddWS()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim WS As Worksheet
+    
+    'Act:
+    Set WB = ExcelBook("")
+    Set WS = AddWS("NewSheet", WB:=WB)
+    
+    'Assert:
+    Assert.Succeed
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub

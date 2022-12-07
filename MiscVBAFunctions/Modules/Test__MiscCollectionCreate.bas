@@ -60,14 +60,14 @@ Private Sub Test_zip()
     
     'Arrange:
     Dim C1 As Collection
-    Dim c2 As Collection
+    Dim C2 As Collection
     Dim cOut As Collection
 
     'Act:
     Set C1 = Col(1, 2, 3)
-    Set c2 = Col(4, 5, 6, 7)
+    Set C2 = Col(4, 5, 6, 7)
     
-    Set cOut = Zip(C1, c2)
+    Set cOut = Zip(C1, C2)
 
     'Assert:
     Assert.AreEqual 1, cOut(1)(1), "zip test succeeded"

@@ -36,10 +36,6 @@ End Sub
 Private Sub Test_randomString()
     On Error GoTo TestFail
     
-    'Arrange:
-
-    'Act:
-
     'Assert:
     Assert.AreEqual 4, CInt(Len(randomString(4)))
     Assert.AreNotEqual randomString(5), randomString(5)
@@ -90,11 +86,10 @@ Private Sub Test_decStr()
     On Error GoTo TestFail
     
     'Assert:
-    Assert.AreEqual "4.5", decStr(4.5)
-    Assert.AreEqual "0.5", decStr(0.5)
-    Assert.AreEqual "4", decStr(4)
-    Assert.AreEqual "foo", decStr("foo")
-    
+    Assert.AreEqual "4.5", DecStr(4.5)
+    Assert.AreEqual "0.5", DecStr(0.5)
+    Assert.AreEqual "4", DecStr(4)
+    Assert.AreEqual "foo", DecStr("foo")
 
 TestExit:
     Exit Sub
@@ -194,3 +189,4 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+

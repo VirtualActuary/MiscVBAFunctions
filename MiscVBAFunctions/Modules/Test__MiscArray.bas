@@ -501,3 +501,103 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_IsArrayAllocated()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim ArrTest1() As Variant
+    Dim ArrTest2() As Variant
+    Dim ArrTest3() As Variant
+    Dim ArrTest4(4) As Variant
+    Dim ArrTest5() As Variant
+    Dim ArrTest6() As Variant
+    
+    'Act:
+    ArrTest1 = Array("a", "b", "c")
+    ReDim ArrTest3(10) As Variant
+    ArrTest5 = Array("a", "b", "c")
+    ReDim ArrTest5(10) As Variant
+    ArrTest6 = Array("a", "b", "c")
+    ReDim Preserve ArrTest6(10) As Variant
+    
+    'Assert:
+    Assert.IsTrue IsArrayAllocated(ArrTest1)
+    Assert.IsFalse IsArrayAllocated(ArrTest2)
+    Assert.IsTrue IsArrayAllocated(ArrTest3)
+    Assert.IsTrue IsArrayAllocated(ArrTest4)
+    Assert.IsTrue IsArrayAllocated(ArrTest5)
+    Assert.IsTrue IsArrayAllocated(ArrTest6)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_jaggedArrayToLO()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim ArrTest(3) As Variant
+    Dim WB As Workbook
+    Dim LO As ListObject
+
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    
+    ArrTest(0) = Array("col1", "col2", "col3")
+    ArrTest(1) = Array(1, 2, 3)
+    ArrTest(2) = Array(10)
+    ArrTest(3) = Array(100, 200)
+    
+    Set LO = JaggedArrayToLO(ArrTest, "TableName", WB.Worksheets(1))
+
+    'Assert:
+    Assert.AreEqual "TableName", LO.DisplayName
+    Assert.AreEqual 2, CInt(LO.DataBodyRange(1, 2).Value)
+    Assert.AreEqual 10, CInt(LO.DataBodyRange(2, 1).Value)
+    Assert.AreEqual 200, CInt(LO.DataBodyRange(3, 2).Value)
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_jaggedArrayToLO_fail()
+    Const ExpectedError As Long = 9
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim ArrTest(1) As Variant
+    Dim WB As Workbook
+    Dim LO As ListObject
+
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    
+    ArrTest(0) = Array("col1", "col2", "col3")
+    ArrTest(1) = Array(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+    Set LO = JaggedArrayToLO(ArrTest, "TableName", WB.Worksheets(1))
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub

@@ -224,15 +224,15 @@ Private Sub TestGetTableRowRange()
     'Arrange:
     Dim Dicts As Collection
     Dim Source As Dictionary
-    Dim r As Range
+    Dim R As Range
     
     'Act:
     ' Test list object:
-    Set r = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB)
-    Assert.AreEqual "$B$6:$D$6", r.Address
+    Set R = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB)
+    Assert.AreEqual "$B$6:$D$6", R.Address
     
-    Set r = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB)
-    Assert.AreEqual "$G$6:$I$6", r.Address
+    Set R = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB)
+    Assert.AreEqual "$G$6:$I$6", R.Address
 
 TestExit:
     Exit Sub
