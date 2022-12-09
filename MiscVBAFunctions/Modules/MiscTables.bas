@@ -440,3 +440,97 @@ Public Function GetTableRowNumberDataRange(LO As ListObject, RowNumber As Long) 
     Set listR = LO.ListRows(RowNumber)
     Set GetTableRowNumberDataRange = listR.Range
 End Function
+
+
+Function GetMatchingTables(BaseName As String, Optional WB As Workbook) As Collection
+    ' Get tables that match the BaseName. It's considered a match when a table name
+    ' matches the BaseName followed by a numerical value only.
+    '
+    ' Args:
+    '   BaseName: String to compare against
+    '   WB: WorkBook to get the matching tables in
+    '
+    ' Returns:
+    '   A Collection with all table objects in.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Set GetMatchingTables = New Collection
+    Dim TableName As Variant
+    For Each TableName In GetAllTables(WB)
+        If IsTableMatch(CStr(TableName), BaseName) Then
+            GetMatchingTables.Add TableName
+        End If
+    Next TableName
+    
+End Function
+
+
+Public Function IsTableMatch(Name As String, BaseName As String) As Boolean
+    ' Check if the name starts with with the BaseName and then only followed by a numberical value
+    '
+    ' Args:
+    '   Name: Name to check if it matches the BaseName
+    '   BaseName: The BaseName to compare against
+    '
+    ' Returns:
+    '   True if the names match, False if not.
+    
+    If LCase(Name) = LCase(BaseName) Then
+        IsTableMatch = True
+    ElseIf StartsWith(LCase(Name), LCase(BaseName)) And _
+                IsNumeric(Mid(Name, Len(BaseName) + 1)) Then
+        IsTableMatch = True
+    Else
+        IsTableMatch = False
+    End If
+    
+End Function
+
+
+Function getInputsTables(BaseName As String, Optional WB As Workbook) As Collection
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim ColInput As Collection
+    Set ColInput = GetMatchingTables(BaseName, WB)
+    
+    Dim ColOutput As Collection
+    Set ColOutput = New Collection
+    Dim DictSorting As Dictionary
+    Set DictSorting = New Dictionary
+    
+
+    Dim Count As Long
+    Dim Val As Variant
+    
+    ' Add all numeric values to a dict to be sorted.
+    ' All non-numeric values get added to the output Collection first.
+    For Count = 1 To ColInput.Count
+        Val = Split(ColInput(Count), BaseName)(1)
+        If IsNumeric(Val) Then
+            DictSorting.Add CLng(Val), ColInput(Count)
+        Else
+            ColOutput.Add ColInput(Count)
+        End If
+    Next
+    
+    Dim ColTemp As Collection
+    Dim ArrayTemp() As Variant
+    ArrayTemp = DictSorting.Keys
+    
+    ' Sort the numerical keys
+    Set ColTemp = BubbleSort(ArrayToCollection(ArrayTemp))
+    ' Add the ordered results to the output
+    For Count = 1 To ColTemp.Count
+        ColOutput.Add DictSorting(ColTemp(Count))
+    Next
+
+    Set getInputsTables = ColOutput
+End Function
+
+
+
+
+
+
+

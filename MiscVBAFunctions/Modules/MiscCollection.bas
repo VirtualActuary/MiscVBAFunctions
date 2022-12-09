@@ -80,7 +80,7 @@ Public Function mean(ByVal Col As Collection) As Variant
 End Function
 
 
-Public Function IsValueInCollection(ColInput As Collection, val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
+Public Function IsValueInCollection(ColInput As Collection, Val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
     ' Check if a value exists in the input Collection.
     '
     ' Args:
@@ -96,9 +96,9 @@ Public Function IsValueInCollection(ColInput As Collection, val As Variant, Opti
         ' only check if not an object:
         If Not IsObject(ValI) Then
             If CaseSensitive Then
-                IsValueInCollection = ValI = val
+                IsValueInCollection = ValI = Val
             Else
-                IsValueInCollection = VBA.LCase(ValI) = VBA.LCase(val)
+                IsValueInCollection = VBA.LCase(ValI) = VBA.LCase(Val)
             End If
             ' exit if found
             If IsValueInCollection Then Exit Function
@@ -189,19 +189,27 @@ Public Function JoinCollections(ParamArray CollectionArr()) As Collection
 End Function
 
 
-Function CollectionToArray(coll As Collection) As Variant
-    ' Create an Array from a Collection.
-    If coll.Count < 1 Then
+Function CollectionToArray(C As Collection) As Variant
+    ' Create an Array from the content of a Collection.
+    ' Ignore the Collection's keys.
+    '
+    ' Args:
+    '   C: Input Collection
+    '
+    ' Returns:
+    '   An array with the same content as the input collection.
+    
+    If C.Count < 1 Then
         CollectionToArray = Array()
         Exit Function
     End If
     
     Dim Result As Variant
     Dim I As Long
-    ReDim Result(coll.Count - 1)
+    ReDim Result(C.Count - 1)
     
-    For I = 1 To coll.Count
-        Result(I - 1) = coll(I)
+    For I = 1 To C.Count
+        Result(I - 1) = C(I)
     Next I
     
     CollectionToArray = Result

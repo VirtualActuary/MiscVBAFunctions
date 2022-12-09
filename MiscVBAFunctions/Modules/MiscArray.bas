@@ -246,6 +246,28 @@ Err:
 End Function
 
 
+Function ArrayGetDimension(Arr() As Variant) As Long
+    ' Get the number of dimensions of an array.
+    '
+    ' Args:
+    '   Arr: Array to get the dimensions of
+    '
+    ' Returns:
+    '   Number of dimensions of the input array
+    
+    On Error GoTo Err
+    Dim I As Long
+    Dim Tmp As Long
+    I = 0
+    Do While True
+        I = I + 1
+        Tmp = UBound(Arr, I)
+    Loop
+Err:
+    ArrayGetDimension = I - 1
+End Function
+
+
 Public Function IsArrayAllocated(Arr() As Variant) As Boolean
     ' From: http://www.cpearson.com/excel/vbaarrays.htm
     ' this could contain some other useful array helpers...
@@ -271,12 +293,12 @@ Public Function IsArrayAllocated(Arr() As Variant) As Boolean
     ' Returns:
     '   True if array is allocated, False otherwise.
     
-    Dim n As Long
+    Dim N As Long
     On Error Resume Next
 
     ' Attempt to get the UBound of the array. If the array has not been allocated,
     ' an error will occur. Test Err.Number to see if an error occurred.
-    n = UBound(Arr, 1)
+    N = UBound(Arr, 1)
     If (Err.Number = 0) Then
         ''''''''''''''''''''''''''''''''''''''
         ' Under some circumstances, if an array
@@ -424,5 +446,144 @@ Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
         End If
     Next I
     DateToString1D = tableArr
+End Function
+
+
+Function IsInArray(Arr As Variant, ValueToBeFound) As Boolean
+    ' Source: https://stackoverflow.com/questions/38267950/check-if-a-value-is-in-an-array-or-not-with-excel-vba
+    ' Check if a value is in the array.
+    ' Not limited to string only.
+    '
+    ' Args:
+    '   Arr: Input array
+    '   ValueToBeFound: Value to look for in the array
+    '
+    ' Returns:
+    '   True if value exists in the array, False otherwise.
+    
+    Dim I As Integer
+    For I = LBound(Arr) To UBound(Arr)
+        If Arr(I) = ValueToBeFound Then
+            IsInArray = True
+            Exit Function
+        End If
+    Next I
+    IsInArray = False
+End Function
+
+
+Function IsArrayUnique(Arr()) As Boolean
+    ' Check if the array contains unique entries only
+    '
+    ' Args:
+    '   Arr: Input array
+    '
+    ' Returns:
+    '   True if all entries in the array is unique.
+    
+    IsArrayUnique = UBound(Arr) = UBound(ArrayUniqueValues(Arr))
+End Function
+
+
+Function ArrayDuplicates(Arr(), Optional IncludePosition As Boolean = False) As Variant()
+    ' Finds all duplicates in the input array and returns a new array with only duplicates.
+    ' If no duplicates exist, an empty array is returned.
+    ' If an entry has multiple duplicates in the input array, there will be multiple entries in the output array.
+    '
+    ' Args:
+    '   Arr: Input array with potential duplicates.
+    '   IncludePosition: Optional - If True, Include: "{Entry: IndexOfEntry}: " with the duplicate value.
+    '        If False, only return the duplicate value.
+    '
+    ' Returns:
+    '   The array with duplicates only, or an empty array if there are no duplicates.
+    
+    Dim Dups() As Variant, I As Long
+    Dim D As Object
+    Dim Duplicates As Collection
+    Set D = CreateObject("Scripting.Dictionary")
+    Set Duplicates = New Collection
+    Dim PrependStr As String
+    
+    For I = LBound(Arr) To UBound(Arr)
+        If D.Exists(Arr(I)) Then
+            If IncludePosition Then
+                Duplicates.Add "{Entry: " & I + 1 & "}: " & Arr(I)
+            Else
+                Duplicates.Add Arr(I)
+            End If
+        Else
+            D.Add Item:=Arr(I), Key:=Arr(I)
+        End If
+        
+    Next I
+    
+    If Duplicates.Count > 0 Then
+        ReDim Dups(Duplicates.Count - 1)
+        For I = 1 To Duplicates.Count
+            Dups(I - 1) = Duplicates(I)
+        Next I
+    End If
+    
+    ArrayDuplicates = Dups
+    
+End Function
+
+
+Function ArrayUniqueValues(Arr() As Variant)  ' , Optional Dimension As Integer = 1
+    ' Finds all unique entries in the input array and returns a new array with only these values.
+    ' If no duplicates exist, a copy of the input array is returned.
+    ' Works on 1D and 2D arrays
+    '
+    ' Args:
+    '   Arr: Input array with potential duplicates.
+    '   Dimension: 1 or 2. The dimension of the input array.
+    '
+    ' Returns:
+    '   The array with unique entries only, or an empty array if there are no unique entries.
+    
+    Dim TmpArray() As Variant
+    Dim M As Integer, N As Integer
+    Dim Dimension As Long
+    
+    Dimension = ArrayGetDimension(Arr)
+    If Dimension = 2 Then
+        ReDim TmpArray((UBound(Arr, 1) - LBound(Arr, 1) + 1) * (UBound(Arr, 2) - LBound(Arr, 2) + 1) - 1)
+        
+        For N = LBound(Arr, 1) To UBound(Arr, 1)
+            For M = LBound(Arr, 2) To UBound(Arr, 2)
+                TmpArray(N * (UBound(Arr, 2) - LBound(Arr, 2) + 1) + M) = Arr(N, M)
+            Next M
+        Next N
+    Else
+        ReDim TmpArray(UBound(Arr))
+        For M = LBound(Arr) To UBound(Arr)
+            TmpArray(M) = Arr(M)
+        Next M
+    End If
+    
+    Dim D As Object
+    Set D = CreateObject("Scripting.Dictionary")
+    
+    Dim I As Long
+    For I = LBound(TmpArray) To UBound(TmpArray)
+        D(TmpArray(I)) = 1
+    Next I
+    
+    Dim UniqueValues() As Variant
+    ReDim UniqueValues(D.Count - 1)
+    
+    Dim J As Long
+    J = 0
+    Dim V As Variant
+    For Each V In D.Keys()
+        UniqueValues(J) = V
+        J = J + 1
+        'd.Keys() is a Variant array of the unique values in myArray.
+        'v will iterate through each of them.
+    Next V
+    
+    ArrayUniqueValues = UniqueValues
+
 End Function
 

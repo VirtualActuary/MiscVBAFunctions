@@ -20,7 +20,7 @@ Public Function randomString(length As Variant)
 End Function
 
 
-Public Function IsString(ByVal v As Variant) As Boolean
+Public Function IsString(ByVal V As Variant) As Boolean
     ' Test is a Variant is of type String
     '
     ' Args:
@@ -34,9 +34,9 @@ Public Function IsString(ByVal v As Variant) As Boolean
     
     ' If not an object (s=v error test) then test if not numeric
     On Error Resume Next
-        S = v
+        S = V
         If Err.Number = 0 Then
-            If Not IsNumeric(v) Then IsString = True
+            If Not IsNumeric(V) Then IsString = True
         End If
 End Function
 
@@ -73,8 +73,8 @@ Public Function StartsWith(Str As String, Start As String) As Boolean
 End Function
 
 
-Public Function DecStr(Num As Variant) As String
-    ' Convert to string and ensure decimal point (for doubles)
+Public Function NumberToStr(Num As Variant) As String
+    ' Convert a number to string and ensure decimal point (for doubles)
     '
     ' Args:
     '   Num: Input value (likely numerical) to be converted to Str
@@ -82,11 +82,11 @@ Public Function DecStr(Num As Variant) As String
     ' Returns:
     '   String value converted from the input.
     
-    DecStr = CStr(Num)
+    NumberToStr = CStr(Num)
 
     'Frikin ridiculous loops for VBA
     If IsNumeric(Num) Then
-       DecStr = Replace(DecStr, Format(0, "."), ".")
+       NumberToStr = Replace(NumberToStr, Format(0, "."), ".")
        ' Format(0, ".") gives the system decimal separator
     End If
 
@@ -141,7 +141,6 @@ Public Function DeStringify(StrInput As String, Optional IgnoreNonStringified = 
     End If
 
 End Function
-
 
 
 Public Function StrRepr(StrInput As Variant) As Variant

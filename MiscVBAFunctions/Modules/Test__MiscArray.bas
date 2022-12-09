@@ -40,15 +40,15 @@ Private Sub Test_EnsureDotSeparatorTransformation()
     Dim I As Long, J As Long
     Dim Arr(2, 2)
     
-    Dim arr2(3)
+    Dim Arr2(3)
     
     'Act:
     Arr(0, 0) = 100.2: Arr(0, 1) = 1.9
     Arr(1, 0) = 2.1: Arr(1, 1) = 2.2
     EnsureDotSeparatorTransformation Arr
 
-    arr2(0) = 1.2: arr2(1) = 2.1: arr2(2) = 3.8
-    EnsureDotSeparatorTransformation arr2
+    Arr2(0) = 1.2: Arr2(1) = 2.1: Arr2(2) = 3.8
+    EnsureDotSeparatorTransformation Arr2
     
     
     'Assert:
@@ -57,9 +57,9 @@ Private Sub Test_EnsureDotSeparatorTransformation()
     Assert.AreEqual "2.1", Arr(1, 0)
     Assert.AreEqual "2.2", Arr(1, 1)
     
-    Assert.AreEqual "1.2", arr2(0)
-    Assert.AreEqual "2.1", arr2(1)
-    Assert.AreEqual "3.8", arr2(2)
+    Assert.AreEqual "1.2", Arr2(0)
+    Assert.AreEqual "2.1", Arr2(1)
+    Assert.AreEqual "3.8", Arr2(2)
     
 TestExit:
     Exit Sub
@@ -476,22 +476,22 @@ Private Sub Test_Ensure2DArray()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim arr1() As Variant
-    Dim arr2() As Variant
+    Dim Arr1() As Variant
+    Dim Arr2() As Variant
     
     'Act:
-    arr1 = Array("a", "b", "c")
-    arr1 = Ensure2dArray(arr1)
-    Assert.AreEqual "a", arr1(0, 0)
-    Assert.AreEqual "b", arr1(0, 1)
-    Assert.AreEqual "c", arr1(0, 2)
+    Arr1 = Array("a", "b", "c")
+    Arr1 = Ensure2dArray(Arr1)
+    Assert.AreEqual "a", Arr1(0, 0)
+    Assert.AreEqual "b", Arr1(0, 1)
+    Assert.AreEqual "c", Arr1(0, 2)
     
-    ReDim arr2(0 To 0, 0 To 2)
-    arr2(0, 0) = "a": arr2(0, 1) = "b": arr2(0, 2) = "c"
-    arr2 = Ensure2dArray(arr2)
-    Assert.AreEqual "a", arr2(0, 0)
-    Assert.AreEqual "b", arr2(0, 1)
-    Assert.AreEqual "c", arr2(0, 2)
+    ReDim Arr2(0 To 0, 0 To 2)
+    Arr2(0, 0) = "a": Arr2(0, 1) = "b": Arr2(0, 2) = "c"
+    Arr2 = Ensure2dArray(Arr2)
+    Assert.AreEqual "a", Arr2(0, 0)
+    Assert.AreEqual "b", Arr2(0, 1)
+    Assert.AreEqual "c", Arr2(0, 2)
     
     'Assert:
     
@@ -600,4 +600,215 @@ TestFail:
     Else
         Resume Assert
     End If
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_IsInArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr(3) As Variant
+    
+    'Act:
+    Arr(0) = 1
+    Arr(1) = "2"
+    Arr(2) = "k"
+    Arr(3) = 3.4
+    
+    'Assert:
+    Assert.IsTrue IsInArray(Arr, 1)
+    Assert.IsFalse IsInArray(Arr, "1")
+    Assert.IsFalse IsInArray(Arr, 2)
+    Assert.IsTrue IsInArray(Arr, "2")
+    Assert.IsTrue IsInArray(Arr, 3.4)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayDuplicates()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr(7) As Variant
+    Dim ArrOut() As Variant
+
+    'Act:
+    Arr(0) = 1
+    Arr(1) = "1"
+    Arr(2) = 1
+    Arr(3) = 3.4
+    Arr(4) = "asdf"
+    Arr(5) = 3.4
+    Arr(6) = 3.4
+    Arr(7) = "1"
+    ArrOut = ArrayDuplicates(Arr)
+    
+    'Assert:
+    Assert.AreEqual CLng(4), UBound(ArrOut) - LBound(ArrOut) + 1
+    Assert.AreEqual 1, ArrOut(0)
+    Assert.AreEqual 3.4, ArrOut(1)
+    Assert.AreEqual 3.4, ArrOut(2)
+    Assert.AreEqual "1", ArrOut(3)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayDuplicates2()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr(7) As Variant
+    Dim ArrOut() As Variant
+
+    'Act:
+    Arr(0) = 1
+    Arr(1) = "1"
+    Arr(2) = 1
+    Arr(3) = 3.4
+    Arr(4) = "asdf"
+    Arr(5) = 3.4
+    Arr(6) = 3.4
+    Arr(7) = "1"
+    ArrOut = ArrayDuplicates(Arr, True)
+
+    'Assert:
+    Assert.AreEqual CLng(4), UBound(ArrOut) - LBound(ArrOut) + 1
+    Assert.AreEqual "{Entry: 3}: 1", ArrOut(0)
+    Assert.AreEqual "{Entry: 6}: 3,4", ArrOut(1)
+    Assert.AreEqual "{Entry: 7}: 3,4", ArrOut(2)
+    Assert.AreEqual "{Entry: 8}: 1", ArrOut(3)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayGetDimension()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr1() As Variant
+    Dim Arr2(1) As Variant
+    Dim Arr3(1, 1) As Variant
+    Dim Arr4(1, 1, 1) As Variant
+    Dim Arr5(1, 1, 1, 1) As Variant
+
+    'Assert:
+    Assert.AreEqual CLng(0), ArrayGetDimension(Arr1)
+    Assert.AreEqual CLng(1), ArrayGetDimension(Arr2)
+    Assert.AreEqual CLng(2), ArrayGetDimension(Arr3)
+    Assert.AreEqual CLng(3), ArrayGetDimension(Arr4)
+    Assert.AreEqual CLng(4), ArrayGetDimension(Arr5)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayUniqueValues()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr(7) As Variant
+    Dim ArrOut() As Variant
+
+    'Act:
+    Arr(0) = 1
+    Arr(1) = "1"
+    Arr(2) = 1
+    Arr(3) = 3.4
+    Arr(4) = "asdf"
+    Arr(5) = 3.4
+    Arr(6) = 3.4
+    Arr(7) = "1"
+    ArrOut = ArrayUniqueValues(Arr)
+    
+    'Assert:
+    Assert.AreEqual CLng(4), UBound(ArrOut) - LBound(ArrOut) + 1
+    Assert.AreEqual 1, ArrOut(0)
+    Assert.AreEqual "1", ArrOut(1)
+    Assert.AreEqual 3.4, ArrOut(2)
+    Assert.AreEqual "asdf", ArrOut(3)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_ArrayUniqueValues_2D()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr(1, 2) As Variant
+    Dim ArrOut() As Variant
+
+    'Act:
+    Arr(0, 0) = 1
+    Arr(0, 1) = "1"
+    Arr(0, 2) = 1
+    Arr(1, 0) = 3.4
+    Arr(1, 1) = "asdf"
+    Arr(1, 2) = 3.4
+    ArrOut = ArrayUniqueValues(Arr)
+    
+    'Assert:
+    Assert.AreEqual CLng(4), UBound(ArrOut) - LBound(ArrOut) + 1
+    Assert.AreEqual 1, ArrOut(0)
+    Assert.AreEqual "1", ArrOut(1)
+    Assert.AreEqual 3.4, ArrOut(2)
+    Assert.AreEqual "asdf", ArrOut(3)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscArray")
+Private Sub Test_isArrayUnique()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr(3) As Variant
+    Dim Arr2(3) As Variant
+
+    'Act:
+    Arr(0) = 1
+    Arr(1) = "1"
+    Arr(2) = "3.4"
+    Arr(3) = 3.4
+    
+    Arr2(0) = "asdf"
+    Arr2(1) = 3.4
+    Arr2(2) = 3.4
+    Arr2(3) = "1"
+    'Assert:
+    Assert.IsTrue IsArrayUnique(Arr)
+    Assert.IsFalse IsArrayUnique(Arr2)
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
 End Sub

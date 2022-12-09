@@ -82,14 +82,14 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscString")
-Private Sub Test_decStr()
+Private Sub Test_NumberToStr()
     On Error GoTo TestFail
     
     'Assert:
-    Assert.AreEqual "4.5", DecStr(4.5)
-    Assert.AreEqual "0.5", DecStr(0.5)
-    Assert.AreEqual "4", DecStr(4)
-    Assert.AreEqual "foo", DecStr("foo")
+    Assert.AreEqual "4.5", NumberToStr(4.5)
+    Assert.AreEqual "0.5", NumberToStr(0.5)
+    Assert.AreEqual "4", NumberToStr(4)
+    Assert.AreEqual "foo", NumberToStr("foo")
 
 TestExit:
     Exit Sub

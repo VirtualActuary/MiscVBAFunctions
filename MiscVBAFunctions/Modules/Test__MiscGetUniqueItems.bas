@@ -37,25 +37,25 @@ Private Sub Test_GetUniqueItems()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim arr1(3) As Variant
-    Dim arr2(3) As Variant
-    Dim arr3(3) As Variant
-    Dim arr4(3) As Variant
-    Dim arr5(3) As Variant
+    Dim Arr1(3) As Variant
+    Dim Arr2(3) As Variant
+    Dim Arr3(3) As Variant
+    Dim Arr4(3) As Variant
+    Dim Arr5(3) As Variant
     
     'Act:
-    arr1(0) = "a": arr1(1) = "b": arr1(2) = "c": arr1(3) = "b"
-    arr2(0) = "a": arr2(1) = "b": arr2(2) = "c": arr2(3) = "B"
-    arr3(0) = "a": arr3(1) = "b": arr3(2) = "c": arr3(3) = "B"
-    arr4(0) = 1: arr4(1) = 2: arr4(2) = 3: arr4(3) = 2
-    arr5(0) = 1: arr5(1) = 1: arr5(2) = "a": arr5(3) = "a"
+    Arr1(0) = "a": Arr1(1) = "b": Arr1(2) = "c": Arr1(3) = "b"
+    Arr2(0) = "a": Arr2(1) = "b": Arr2(2) = "c": Arr2(3) = "B"
+    Arr3(0) = "a": Arr3(1) = "b": Arr3(2) = "c": Arr3(3) = "B"
+    Arr4(0) = 1: Arr4(1) = 2: Arr4(2) = 3: Arr4(3) = 2
+    Arr5(0) = 1: Arr5(1) = 1: Arr5(2) = "a": Arr5(3) = "a"
     
     'Assert:
-    Assert.AreEqual CLng(2), UBound(GetUniqueItems(arr1))  ' zero index
-    Assert.AreEqual CLng(3), UBound(GetUniqueItems(arr2), 1) ' zero index + case sensitive
-    Assert.AreEqual CLng(2), UBound(GetUniqueItems(arr3, False), 1) ' zero index + case insensitive
-    Assert.AreEqual CLng(2), UBound(GetUniqueItems(arr4), 1) ' zero index
-    Assert.AreEqual CLng(1), UBound(GetUniqueItems(arr5), 1) ' zero index
+    Assert.AreEqual CLng(2), UBound(GetUniqueItems(Arr1))  ' zero index
+    Assert.AreEqual CLng(3), UBound(GetUniqueItems(Arr2), 1) ' zero index + case sensitive
+    Assert.AreEqual CLng(2), UBound(GetUniqueItems(Arr3, False), 1) ' zero index + case insensitive
+    Assert.AreEqual CLng(2), UBound(GetUniqueItems(Arr4), 1) ' zero index
+    Assert.AreEqual CLng(1), UBound(GetUniqueItems(Arr5), 1) ' zero index
 
 TestExit:
     Exit Sub
