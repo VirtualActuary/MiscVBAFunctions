@@ -75,7 +75,7 @@ Public Function TableToDicts( _
         
         If Columns Is Nothing Then
             For J = LBound(TableData, 2) To UBound(TableData, 2)
-                d.Add TableData(0, J), TableData(I, J)
+                d(TableData(0, J)) = TableData(I, J)
             Next J
         Else
             Dim ColumnName As Variant
@@ -84,7 +84,7 @@ Public Function TableToDicts( _
             For J = LBound(TableData, 2) To UBound(TableData, 2)
                 ColumnName = TableData(LBound(TableData, 2), J)
                 If IsValueInCollection(Columns, ColumnName) Then
-                    d.Add ColumnName, TableData(I, J)
+                    d(ColumnName) = TableData(I, J)
                 End If
             Next J
         End If
