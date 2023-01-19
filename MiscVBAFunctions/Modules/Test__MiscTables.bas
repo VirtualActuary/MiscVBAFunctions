@@ -14,7 +14,7 @@ Private Sub ModuleInitialize()
     'this method runs once per module.
     Set Assert = New Rubberduck.AssertClass
     Set Fakes = New Rubberduck.FakesProvider
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
 
 End Sub
 
@@ -392,7 +392,7 @@ Private Sub Test_GetTableRowRange()
     Dim R As Range
     
     'Act:
-    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
+    Set WB2 = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
     ' Test list object:
     Set R = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB2)
     Assert.AreEqual "$B$6:$D$6", R.Address

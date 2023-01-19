@@ -272,10 +272,10 @@ Private Sub Test_ArrayToRange_FunkyHeaders()
     Assert.AreEqual 8, CInt(RangeOutput.Count)
     Assert.AreEqual 4, CInt(RangeOutput.Columns.Count)
     Assert.AreEqual 2, CInt(RangeOutput.Rows.Count)
-    Assert.AreEqual "asdf", RangeOutput.Cells(1, 1).Text
-    Assert.AreEqual "1234", RangeOutput.Cells(1, 2).Text
-    Assert.AreEqual "2022/11/02", RangeOutput.Cells(1, 3).Text
-    Assert.AreEqual "FALSE", RangeOutput.Cells(1, 4).Text
+    Assert.AreEqual "asdf", RangeOutput.Cells(1, 1).text
+    Assert.AreEqual "1234", RangeOutput.Cells(1, 2).text
+    Assert.AreEqual "2022/11/02", RangeOutput.Cells(1, 3).text
+    Assert.AreEqual "FALSE", RangeOutput.Cells(1, 4).text
 
 TestExit:
     WB.Close False
@@ -349,10 +349,10 @@ Private Sub Test_ArrayToNewTable_FunkyHeaders()
     Assert.AreEqual 8, CInt(LO.Range.Count)
     Assert.AreEqual 4, CInt(LO.Range.Columns.Count)
     Assert.AreEqual 2, CInt(LO.Range.Rows.Count)
-    Assert.AreEqual "asdf", LO.Range.Cells(1, 1).Text
-    Assert.AreEqual "1234", LO.Range.Cells(1, 2).Text
-    Assert.AreEqual "2022/11/02", LO.Range.Cells(1, 3).Text
-    Assert.AreEqual "FALSE", LO.Range.Cells(1, 4).Text
+    Assert.AreEqual "asdf", LO.Range.Cells(1, 1).text
+    Assert.AreEqual "1234", LO.Range.Cells(1, 2).text
+    Assert.AreEqual "2022/11/02", LO.Range.Cells(1, 3).text
+    Assert.AreEqual "FALSE", LO.Range.Cells(1, 4).text
     Assert.AreEqual "asdf", LO.ListColumns(1).Name
     Assert.AreEqual "1234", LO.ListColumns(2).Name
     Assert.AreEqual "2022/11/02", LO.ListColumns(3).Name

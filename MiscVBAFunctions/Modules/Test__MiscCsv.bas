@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscFSO"
+Attribute VB_Name = "Test__MiscCsv"
 Option Explicit
 Option Private Module
 
@@ -32,22 +32,29 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscFSO")
-Private Sub Test_GetAllFilesRecursive()
+'@TestMethod("MiscCsv")
+Private Sub Test_CsvToLO()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim AllFiles As Collection
-    
+    Dim LO As ListObject
+    Dim WB As Workbook
+    Dim WS As Worksheet
+
     'Act:
-    Set AllFiles = GetAllFilesRecursive(Fso.GetFolder(Path(ThisWorkbook.Path, "tests\GetAllFiles")))
-
+    Set WB = ExcelBook("")
+    Set WS = WB.Worksheets(1)
+    Set LO = CsvToLO(WS.Cells(10, 10), Fso.BuildPath(ThisWorkbook.Path, ".\tests\Csv\MiscCsv.csv"), "MyTable")
+    
     'Assert:
-    Assert.AreEqual 5, CInt(AllFiles.Count)
-
+    Assert.AreEqual "MyTable", LO.Name
+    Assert.AreEqual "1", LO.Range(1, 1).Value
+   
 TestExit:
+    WB.Close False
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+

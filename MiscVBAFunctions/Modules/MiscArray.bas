@@ -59,6 +59,12 @@ Public Function ArrayToRange( _
                 If Not IsError(Data(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
                     If Left(Data(CountOuter, CountInner), 1) = "=" Then
                         Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+                        
+                    End If
+                    If IsNumeric(Data(CountOuter, CountInner)) Then
+                        If Application.WorksheetFunction.IsText(Data(CountOuter, CountInner)) Then
+                            Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+                        End If
                     End If
                 End If
             Next
@@ -238,8 +244,8 @@ End Function
 
 Public Function Is1D(Arr As Variant)
     On Error GoTo Err
-    Dim foo As Variant
-    foo = UBound(Arr, 2)
+    Dim Foo As Variant
+    Foo = UBound(Arr, 2)
     Exit Function
 Err:
     Is1D = True
@@ -449,7 +455,7 @@ Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
 End Function
 
 
-Function IsInArray(Arr As Variant, ValueToBeFound) As Boolean
+Function IsInArray(Arr() As Variant, ValueToBeFound) As Boolean
     ' Source: https://stackoverflow.com/questions/38267950/check-if-a-value-is-in-an-array-or-not-with-excel-vba
     ' Check if a value is in the array.
     ' Not limited to string only.
@@ -460,15 +466,37 @@ Function IsInArray(Arr As Variant, ValueToBeFound) As Boolean
     '
     ' Returns:
     '   True if value exists in the array, False otherwise.
+    Dim Dimensions As Long
+    Dimensions = ArrayGetDimension(Arr)
+    Dim I As Long
     
-    Dim I As Integer
-    For I = LBound(Arr) To UBound(Arr)
-        If Arr(I) = ValueToBeFound Then
-            IsInArray = True
-            Exit Function
-        End If
-    Next I
-    IsInArray = False
+    If Dimensions = 1 Then
+        
+        For I = LBound(Arr) To UBound(Arr)
+            If Arr(I) = ValueToBeFound Then
+                IsInArray = True
+                Exit Function
+            End If
+        Next I
+        IsInArray = False
+        
+    ElseIf Dimensions = 2 Then
+        Dim J As Long
+        
+        For I = LBound(Arr, 1) To UBound(Arr, 1)
+            For J = LBound(Arr, 2) To UBound(Arr, 2)
+                If Arr(I, J) = ValueToBeFound Then
+                    IsInArray = True
+                    Exit Function
+                End If
+
+            Next
+
+        Next I
+        IsInArray = False
+    Else
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Only supported for 1D and 2D arrays.")
+    End If
 End Function
 
 

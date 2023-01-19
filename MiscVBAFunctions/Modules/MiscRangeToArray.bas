@@ -110,3 +110,41 @@ Public Function RangeTo2DArray(R As Range) As Variant()
     RangeTo2DArray = Arr
     
 End Function
+
+
+Function RangeToFlatArray( _
+              R As Range _
+            , Optional IgnoreEmpty As Boolean = True _
+            ) As Variant()
+    
+    ' creates a 1-dimensional array of a range's values
+    ' by default empty cells are ignored
+    
+    Dim Arr() As Variant ' the output array
+    ReDim Arr(R.Cells.Count - 1)
+    
+    Dim Values() As Variant ' values of the whole range
+    If R.Cells.Count = 1 Then
+        Arr(0) = R.Value
+        RangeToFlatArray = Arr
+        Exit Function
+    End If
+    
+    Values = R.Value
+    Dim I As Long, J As Long, Counter As Long
+    Counter = 0
+    For I = LBound(Values, 1) To UBound(Values, 1) ' rows
+        For J = LBound(Values, 2) To UBound(Values, 2) ' columns
+            If IsEmpty(Values(I, J)) And IgnoreEmpty Then
+                ReDim Preserve Arr(UBound(Arr) - 1) ' when there is an empty cell, just reduce array size by 1
+            Else
+                Arr(Counter) = Values(I, J)
+                Counter = Counter + 1
+            End If
+        Next J
+    Next I
+    
+    RangeToFlatArray = Arr
+    
+End Function
+

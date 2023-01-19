@@ -41,8 +41,8 @@ Private Sub Test_ExcelBook()
     Dim WB2 As New Workbook
     
     'Act:
-    Set WB1 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), True, True)
-    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel_added.xlsx"), False, True)
+    Set WB1 = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), True, True)
+    Set WB2 = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel_added.xlsx"), False, True)
     WB1.Close False
     WB2.Close False
 
@@ -156,7 +156,7 @@ Private Sub Test_fail_ExcelBook()
     Dim WB As New Workbook
     
     'Act:
-    WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
+    WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
     
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -180,7 +180,7 @@ Private Sub Test_fail_ExcelBook_2()
     Dim WB As New Workbook
     
     'Act:
-    WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), False, True)
+    WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), False, True)
     
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -203,7 +203,7 @@ Private Sub Test_OpenWorkbook()
     'Arrange:
     Dim WB As Workbook
     'Act:
-    Set WB = OpenWorkbook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), False)
+    Set WB = OpenWorkbook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel.xlsx"), False)
     WB.Close False
     'Assert:
     Assert.Succeed
@@ -222,7 +222,7 @@ Private Sub Test_LastRow()
     
     'Arrange:
     Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
 
     'Act:
     Dim Rows As Integer
@@ -244,7 +244,7 @@ Private Sub Test_LastColumn()
     
     'Arrange:
     Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
 
     Dim Column As Integer
     
@@ -269,7 +269,7 @@ Private Sub Test_LastCell_1()
     Dim R1 As Range
     
     'Act:
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
     Set R1 = LastCell(WB.Sheets(1))
 
     'Assert:
@@ -296,7 +296,7 @@ Private Sub Test_LastCell_2()
     Dim R1 As Range
     
     'Act:
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges.xlsx"), True, False)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges.xlsx"), True, False)
     WB.Sheets(1).Cells(4, 14).Value = 4
     Set R1 = LastCell(WB.Sheets(1))
 
@@ -325,7 +325,7 @@ Private Sub Test_RelevantRange()
     Dim Arr As Variant
     
     'Act:
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges.xlsx"), True, True)
     Set R1 = RelevantRange(WB.Sheets(1))
     Arr = R1.Value
     
@@ -357,7 +357,7 @@ Private Sub Test_RelevantRange2()
     Dim Arr As Variant
     
     'Act:
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges2.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\ranges2.xlsx"), True, True)
     Set R1 = RelevantRange(WB.Sheets(1))
 
     'Assert:
@@ -500,6 +500,58 @@ Private Sub Test_AddWS()
     
     'Assert:
     Assert.Succeed
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscExcel")
+Private Sub Test_ContainsSheet()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim WS As Worksheet
+    
+    'Act:
+    Set WB = ExcelBook("")
+    
+    'Assert:
+    Assert.IsFalse ContainsSheet("NewSheet", WB)
+    Set WS = AddWS("NewSheet", WB:=WB)
+    Assert.IsTrue ContainsSheet("NewSheet", WB)
+    Assert.IsFalse ContainsSheet("Sheet2", WB)
+
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscExcel")
+Private Sub Test_DeleteSheet()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim WS As Worksheet
+    
+    'Act:
+    Set WB = ExcelBook("")
+    Set WS = AddWS("NewSheet", WB:=WB)
+    
+    'Assert:
+    Assert.IsTrue ContainsSheet("NewSheet", WB)
+    DeleteSheet "NewSheet", WB
+    Assert.IsFalse ContainsSheet("NewSheet", WB)
 
 TestExit:
     WB.Close False

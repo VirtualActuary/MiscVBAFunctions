@@ -1,4 +1,4 @@
-Attribute VB_Name = "MiscCreateTextFile"
+Attribute VB_Name = "MiscTextFile"
 Option Explicit
 
 Private Sub testCreateTextFile()
@@ -13,11 +13,21 @@ Public Sub CreateTextFile(ByVal Content As String, ByVal FilePath As String)
     '   Content: Content that must be inserted into the file.
     '   FilePath: Path where the file will be created. The filename and extension must be included here.
     
-    Dim oFile As Integer
-    oFile = FreeFile
+    Dim OFile As Integer
+    OFile = FreeFile
     
-    Open FilePath For Output As #oFile
-        Print #oFile, Content
-    Close #oFile
+    Open FilePath For Output As #OFile
+        Print #OFile, Content
+    Close #OFile
 
 End Sub
+
+
+Function readTextFile(Path As String) As String
+    Dim OFile As Object
+    Set OFile = Fso.OpenTextFile(Path, ForReading)
+    
+    readTextFile = OFile.ReadAll
+    
+End Function
+

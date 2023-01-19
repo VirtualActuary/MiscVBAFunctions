@@ -37,8 +37,8 @@ Private Sub Test_min()
     On Error GoTo TestFail
 
     'Assert:
-    Assert.AreEqual 4, min(Col(7, 4, 5, 6)), "min test succeeded"
-    Assert.AreEqual 5, min(Col(9, 5, 6)), "min test succeeded"
+    Assert.AreEqual 4, Min(Col(7, 4, 5, 6)), "min test succeeded"
+    Assert.AreEqual 5, Min(Col(9, 5, 6)), "min test succeeded"
 
 TestExit:
     Exit Sub
@@ -56,7 +56,7 @@ Private Sub Test_min_fail()
     Dim C As Collection
     'Act:
        
-    min C
+    Min C
     
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -78,8 +78,8 @@ Private Sub Test_max()
     On Error GoTo TestFail
     
     'Assert:
-    Assert.AreEqual 6, max(Col(4, 5, 6, 1, 2)), "max test succeeded"
-    Assert.AreEqual 6.1, max(Col(5.3, 6.1)), "max test succeeded"
+    Assert.AreEqual 6, Max(Col(4, 5, 6, 1, 2)), "max test succeeded"
+    Assert.AreEqual 6.1, Max(Col(5.3, 6.1)), "max test succeeded"
 
 TestExit:
     Exit Sub
@@ -97,7 +97,7 @@ Private Sub Test_max_fail()
     Dim C As Collection
 
     'Act:
-    max C
+    Max C
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -117,8 +117,8 @@ Private Sub Test_mean()
     On Error GoTo TestFail
 
     'Assert:
-    Assert.AreEqual 4#, mean(Col(4, 5, 6, 3, 2)), "mean test succeeded"
-    Assert.AreEqual 6#, mean(Col(5, 7)), "mean test succeeded"
+    Assert.AreEqual 4#, Mean(Col(4, 5, 6, 3, 2)), "mean test succeeded"
+    Assert.AreEqual 6#, Mean(Col(5, 7)), "mean test succeeded"
 
 TestExit:
     Exit Sub
@@ -136,7 +136,7 @@ Private Sub Test_mean_fail()
     Dim C As Collection
 
     'Act:
-    mean C
+    Mean C
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -398,14 +398,38 @@ Private Sub Test_indexOf()
     Set C2 = Col(12, 23, 34, 45, 56, 67)
     
     'Assert:
-    Assert.AreEqual 3, CInt(indexOf(C, "variables"))
-    Assert.AreEqual 2, CInt(indexOf(C, 0))
-    Assert.AreEqual 0, CInt(indexOf(C, "Foo"))
+    Assert.AreEqual 3, CInt(IndexOf(C, "variables"))
+    Assert.AreEqual 2, CInt(IndexOf(C, 0))
+    Assert.AreEqual 0, CInt(IndexOf(C, "Foo"))
 
-    Assert.AreEqual 5, CInt(indexOf(C2, 56))
-    Assert.AreEqual 0, CInt(indexOf(C2, "23"))
+    Assert.AreEqual 5, CInt(IndexOf(C2, 56))
+    Assert.AreEqual 0, CInt(IndexOf(C2, "23"))
 
     
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscCollection")
+Private Sub Test_uniqueCollection()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Col1 As Collection
+    Dim Col2 As Collection
+
+    'Act:
+    Set Col1 = Col("1", "3.4", 3.4, 1)
+    Set Col2 = Col(3.4, 3.4, "1", "asdf")
+
+    'Assert:
+    
+    Assert.AreEqual CLng(4), UniqueCollection(Col1).Count
+    Assert.AreEqual CLng(3), UniqueCollection(Col2).Count
+
 TestExit:
     Exit Sub
 TestFail:

@@ -69,7 +69,7 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
 End Function
 
 
-Private Function parentDir(ByVal folder)
+Public Function parentDir(ByVal folder)
     parentDir = Left$(folder, InStrRev(folder, "\") - 1)
 End Function
 
@@ -96,7 +96,7 @@ Public Sub CreateFolders(ByVal strPath As String, _
     Dim pathTemp As String ' for when the relative names becomes too long:
     pathTemp = EvalPath(strPath)
 
-    If fso.FolderExists(pathTemp) Then Exit Sub
+    If Fso.FolderExists(pathTemp) Then Exit Sub
         ' if the folder already exists, no need to create anything
 
     strCheckPath = ""
@@ -112,7 +112,7 @@ Public Sub CreateFolders(ByVal strPath As String, _
 
     For J = I To UBound(pathTempSplit)
         strCheckPath = strCheckPath & pathTempSplit(J) & "\"
-        If fso.FolderExists(strCheckPath) = False Then
+        If Fso.FolderExists(strCheckPath) = False Then
             If doShell Then
                 wsh.Run "cmd /c ""mkdir """ + strCheckPath + """"""
             Else
@@ -122,7 +122,7 @@ Public Sub CreateFolders(ByVal strPath As String, _
             End If
         End If
     Next J
-    If Not fso.FolderExists(pathTemp) Then
+    If Not Fso.FolderExists(pathTemp) Then
         Err.Raise 53, , "Could not create folder with path: " & pathTemp & ". Ensure you have write access to the required folder."
     End If
 End Sub

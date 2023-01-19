@@ -2,7 +2,7 @@ Attribute VB_Name = "MiscCollection"
 Option Explicit
 
 
-Public Function min(ByVal Col As Collection) As Variant
+Public Function Min(ByVal Col As Collection) As Variant
     ' Returns the minimum value from the input Collection.
     '
     ' Args:
@@ -17,11 +17,11 @@ Public Function min(ByVal Col As Collection) As Variant
     End If
     
     Dim Entry As Variant
-    min = Col(1)
+    Min = Col(1)
     
     For Each Entry In Col
-        If Entry < min Then
-            min = Entry
+        If Entry < Min Then
+            Min = Entry
         End If
     Next Entry
     
@@ -29,7 +29,7 @@ Public Function min(ByVal Col As Collection) As Variant
     
 End Function
 
-Public Function max(ByVal Col As Collection) As Variant
+Public Function Max(ByVal Col As Collection) As Variant
     ' Returns the maximum value from the input Collection.
     '
     ' Args:
@@ -43,18 +43,18 @@ Public Function max(ByVal Col As Collection) As Variant
               Description:="Collection input can't be empty"
     End If
     
-    max = Col(1)
+    Max = Col(1)
     Dim Entry As Variant
     
     For Each Entry In Col
-        If Entry > max Then
-            max = Entry
+        If Entry > Max Then
+            Max = Entry
         End If
     Next Entry
 
 End Function
 
-Public Function mean(ByVal Col As Collection) As Variant
+Public Function Mean(ByVal Col As Collection) As Variant
     ' Returns the mean value from the input Collection.
     '
     ' Args:
@@ -68,14 +68,14 @@ Public Function mean(ByVal Col As Collection) As Variant
               Description:="Collection input can't be empty"
     End If
 
-    mean = 0
+    Mean = 0
     Dim Entry As Variant
     
     For Each Entry In Col
-        mean = mean + Entry
+        Mean = Mean + Entry
     Next Entry
     
-    mean = mean / Col.Count
+    Mean = Mean / Col.Count
     
 End Function
 
@@ -107,7 +107,7 @@ Public Function IsValueInCollection(ColInput As Collection, Val As Variant, Opti
 End Function
 
 
-Public Function indexOf(ByVal Col1 As Collection, ByVal Item As Variant) As Long
+Public Function IndexOf(ByVal Col1 As Collection, ByVal Item As Variant) As Long
     'https://stackoverflow.com/questions/28985579/retrieve-the-index-of-an-object-stored-in-a-collection-using-its-key-vba
     'returns index of item if found, returns 0 if not found
     '
@@ -122,7 +122,7 @@ Public Function indexOf(ByVal Col1 As Collection, ByVal Item As Variant) As Long
     For I = 1 To Col1.Count
 
         If Col1(I) = Item Then
-            indexOf = I
+            IndexOf = I
             Exit Function
         End If
         
@@ -189,7 +189,7 @@ Public Function JoinCollections(ParamArray CollectionArr()) As Collection
 End Function
 
 
-Function CollectionToArray(C As Collection) As Variant
+Function CollectionToArray(C As Collection) As Variant()
     ' Create an Array from the content of a Collection.
     ' Ignore the Collection's keys.
     '
@@ -198,19 +198,45 @@ Function CollectionToArray(C As Collection) As Variant
     '
     ' Returns:
     '   An array with the same content as the input collection.
-    
+
     If C.Count < 1 Then
         CollectionToArray = Array()
         Exit Function
     End If
-    
+
     Dim Result As Variant
     Dim I As Long
     ReDim Result(C.Count - 1)
-    
+
     For I = 1 To C.Count
         Result(I - 1) = C(I)
     Next I
-    
+
     CollectionToArray = Result
 End Function
+
+
+Function UniqueCollection(C As Collection) As Collection
+    ' Create a collection with all duplicates from the input Collection removed.
+    '
+    ' Args:
+    '   C: Input Collection
+    '
+    ' Returns:
+    '   A Collection with no duplicate entries.
+    
+    Dim uniqueArray(), I As Long
+    
+    uniqueArray = ArrayUniqueValues(CollectionToArray(C))
+
+    Set UniqueCollection = New Collection
+    For I = LBound(uniqueArray) To UBound(uniqueArray)
+        UniqueCollection.Add uniqueArray(I)
+    Next I
+    
+End Function
+
+
+
+
+

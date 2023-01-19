@@ -14,7 +14,7 @@ Private Sub ModuleInitialize()
     'this method runs once per module.
     Set Assert = New Rubberduck.AssertClass
     Set Fakes = New Rubberduck.FakesProvider
-    Set WB = Workbooks.Open(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscRangeToArray\RangeToArray.xlsx"), ReadOnly:=False)
+    Set WB = Workbooks.Open(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscRangeToArray\RangeToArray.xlsx"), ReadOnly:=False)
 End Sub
 
 '@ModuleCleanup
@@ -144,6 +144,48 @@ Private Sub Test_RangeToArray_1D_column()
     Assert.AreEqual 3, CInt(UBound(y) - LBound(y) + 1)
 
 TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscRangeToArray")
+Private Sub Test_rangeToFlatArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim RangeStart As Range
+    Dim RangeTest As Range
+    Dim Arr(2, 2) As Variant
+    Dim ArrayOutput() As Variant
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = 11
+    Arr(0, 1) = 22
+    Arr(0, 2) = 33
+    Arr(1, 0) = 44
+    Arr(1, 1) = "111"
+    Arr(1, 2) = "222"
+    Arr(2, 0) = "333"
+    Arr(2, 1) = "444"
+    Arr(2, 2) = "555"
+    
+    Set RangeStart = WB.ActiveSheet.Range("B4")
+    Set RangeTest = ArrayToRange(Arr, RangeStart, True)
+    
+    ArrayOutput = RangeToFlatArray(RangeTest)
+    
+    'Assert:
+    Assert.AreEqual 11, CInt(ArrayOutput(0))
+    Assert.AreEqual 44, CInt(ArrayOutput(3))
+    Assert.AreEqual 222, CInt(ArrayOutput(5))
+    Assert.AreEqual 555, CInt(ArrayOutput(8))
+
+TestExit:
+    WB.Close False
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description

@@ -60,7 +60,7 @@ Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Noth
     End If
 
     ' Breaking example: fso.GetAbsolutePathName("\\hello\world\\..\2")
-    AbsolutePath = fso.GetAbsolutePathName(PathString)
+    AbsolutePath = Fso.GetAbsolutePathName(PathString)
     If IsNetwokDrive Then
         ' Remove the "x:\" prefix and replace it with "\\" if the PathString is a network drive.
         AbsolutePath = "\\" & Mid(AbsolutePath, 4)

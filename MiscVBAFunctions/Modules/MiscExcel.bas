@@ -3,7 +3,7 @@ Option Explicit
 
 Private Sub ModuleInitialize()
     Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel23763464453.xlsx"), True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel23763464453.xlsx"), True)
     
 End Sub
 
@@ -36,17 +36,17 @@ Public Function ExcelBook( _
         Exit Function
     End If
     
-    If fso.FileExists(Path) Then
+    If Fso.FileExists(Path) Then
         Set ExcelBook = OpenWorkbook(Path, ReadOnly)
         Exit Function
     End If
     
     If MustExist Then
-        Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+        Err.Raise -999, , "FileNotFoundError: File '" & Fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
     
     If ReadOnly Then
-        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & Fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
     
     Set ExcelBook = Workbooks.Add
@@ -69,18 +69,18 @@ Public Function OpenWorkbook( _
     ' Returns:
     '   The opened Workbook.
     
-    If hasKey(Workbooks, fso.GetFileName(Path)) Then
-        Set OpenWorkbook = Workbooks(fso.GetFileName(Path))
+    If hasKey(Workbooks, Fso.GetFileName(Path)) Then
+        Set OpenWorkbook = Workbooks(Fso.GetFileName(Path))
         
         ' check if the workbook is actually the one specified in path
         ' use AbsolutePathName to remove any relative path references  (\..\ / \.\)
-        If VBA.LCase(OpenWorkbook.FullName) <> VBA.LCase(fso.GetAbsolutePathName(Path)) Then
-            Debug.Print fso.GetAbsolutePathName(Path)
-            Err.Raise 457, , "Existing workbook with the same name is already open: '" & fso.GetFileName(Path) & "'"
+        If VBA.LCase(OpenWorkbook.FullName) <> VBA.LCase(Fso.GetAbsolutePathName(Path)) Then
+            Debug.Print Fso.GetAbsolutePathName(Path)
+            Err.Raise 457, , "Existing workbook with the same name is already open: '" & Fso.GetFileName(Path) & "'"
         End If
         
         If ReadOnly And OpenWorkbook.ReadOnly = False Then
-            Err.Raise -999, , "Workbook'" & fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
+            Err.Raise -999, , "Workbook'" & Fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
         End If
     Else
         If DisableUpdateLinksAndDisplayAlerts Then
@@ -312,3 +312,49 @@ Function AddWS(ByVal Name As String, _
 '    End If
 
 End Function
+
+
+Sub DeleteSheet(SheetName As String, Optional WB As Workbook = Nothing)
+    ' Delete a sheet from the selected WorkBook.
+    ' If the sheet doesn't exist, nothing happens.
+    '
+    ' Args:
+    '   WB: Selected WorkBook. If left empty, ThisWorkbook is selected
+    '   SheetName: Name of the sheet to search for.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim DA
+    DA = Application.DisplayAlerts
+    Application.DisplayAlerts = False
+    If ContainsSheet(SheetName, WB) Then
+        WB.Sheets(SheetName).Delete
+    End If
+    Application.DisplayAlerts = DA
+End Sub
+
+
+Function ContainsSheet(Key As Variant, Optional WB As Workbook = Nothing) As Boolean
+    ' whether a sheet exists in a Workbook
+    '
+    ' Args:
+    '   WB: Selected Workbook. If left empty, ThisWorkbook is selected
+    '   Key: Sheet to search for.
+    '
+    ' Returns:
+    '   True if the selected Workbook contains the sheet, False otherwise.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim obj As Variant
+    Dim Sheets As Variant
+
+    Set Sheets = WB.Sheets
+    On Error GoTo Err
+        ContainsSheet = True
+        Set obj = Sheets(Key)
+        Exit Function
+Err:
+        ContainsSheet = False
+End Function
+
