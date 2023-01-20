@@ -560,3 +560,76 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+
+'@TestMethod("MiscExcel")
+Private Sub Test_InsertColumns()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim RangeStart As Range
+    Dim RelevantR As Range
+  
+    'Act:
+    Set WB = ExcelBook("")
+    Set RangeStart = WB.ActiveSheet.Range("C4")
+    
+    WB.ActiveSheet.Range("D5") = "foo"
+    Set RelevantR = RelevantRange(WB.ActiveSheet)
+
+    'Assert:
+    Assert.AreEqual 20, CInt(RelevantR.Count)
+    Assert.AreEqual 5, CInt(RelevantR.Rows.Count)
+    Assert.AreEqual 4, CInt(RelevantR.Columns.Count)
+    
+    InsertColumns RangeStart
+    
+    
+    Assert.AreEqual 25, CInt(RelevantR.Count)
+    Assert.AreEqual 5, CInt(RelevantR.Rows.Count)
+    Assert.AreEqual 5, CInt(RelevantR.Columns.Count)
+    
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscExcel")
+Private Sub Test_InsertRows()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim RangeStart As Range
+    Dim RelevantR As Range
+  
+    'Act:
+    Set WB = ExcelBook("")
+    Set RangeStart = WB.ActiveSheet.Range("C4")
+    
+    WB.ActiveSheet.Range("D5") = "foo"
+    Set RelevantR = RelevantRange(WB.ActiveSheet)
+
+    'Assert:
+    Assert.AreEqual 20, CInt(RelevantR.Count)
+    Assert.AreEqual 5, CInt(RelevantR.Rows.Count)
+    Assert.AreEqual 4, CInt(RelevantR.Columns.Count)
+    
+    InsertRows RangeStart, 2
+    
+    Assert.AreEqual 28, CInt(RelevantR.Count)
+    Assert.AreEqual 7, CInt(RelevantR.Rows.Count)
+    Assert.AreEqual 4, CInt(RelevantR.Columns.Count)
+    
+TestExit:
+    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
