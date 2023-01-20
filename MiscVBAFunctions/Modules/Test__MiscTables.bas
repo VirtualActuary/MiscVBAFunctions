@@ -461,7 +461,7 @@ Private Sub Test_GetMatchingTables()
     On Error GoTo TestFail
     
     'Assert:
-    Assert.AreEqual CLng(5), GetMatchingTables("table", WB).Count
+    Assert.AreEqual CLng(6), GetMatchingTables("table", WB).Count
 
 TestExit:
     Exit Sub
@@ -481,12 +481,48 @@ Private Sub Test_getInputsTables()
     Set C = getInputsTables("Table", WB)
     
     'Assert:
-    Assert.AreEqual CLng(5), C.Count
+    Assert.AreEqual CLng(6), C.Count
     Assert.AreEqual "Table1", C(1)
     Assert.AreEqual "Table2", C(2)
     Assert.AreEqual "Table4", C(3)
-    Assert.AreEqual "Table8", C(4)
-    Assert.AreEqual "Table10", C(5)
+    Assert.AreEqual "Table7", C(4)
+    Assert.AreEqual "Table8", C(5)
+    Assert.AreEqual "Table10", C(6)
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscTables")
+Private Sub Test_TableToArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr() As Variant
+    Dim Arr2() As Variant
+    
+    'Act:
+    Arr = TableToArray("Table8", WB)
+    Arr2 = TableToArray("Table7", WB)
+    
+    'Assert:
+    Assert.AreEqual 2, CInt(UBound(Arr))
+    Assert.AreEqual 1, CInt(UBound(Arr, 2))
+    Assert.AreEqual "Column1", Arr(0, 0)
+    Assert.AreEqual "Column2", Arr(0, 1)
+    Assert.AreEqual 1, CInt(Arr(1, 0))
+    Assert.AreEqual "A", Arr(1, 1)
+    Assert.AreEqual 2, CInt(Arr(2, 0))
+    Assert.AreEqual "B", Arr(2, 1)
+
+    Assert.AreEqual 1, CInt(UBound(Arr2))
+    Assert.AreEqual 0, CInt(UBound(Arr2, 2))
+    Assert.AreEqual "Column1", Arr2(0, 0)
+    Assert.AreEqual "aaa", Arr2(1, 0)
     
 TestExit:
     Exit Sub

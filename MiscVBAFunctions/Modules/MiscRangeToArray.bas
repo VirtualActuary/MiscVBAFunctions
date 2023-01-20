@@ -15,14 +15,17 @@ Public Function RangeToArray(R As Range, _
     ' Returns:
     '   The normalized array.
     
+    ' Seperate functions (RangeTo1DArray, RangeTo2DArray) required
+    ' because of differences in indexing for 1D-, and 2D arrays
     If R.Cells.Count = 1 Then
-        RangeToArray = Array(R.Value)
+        RangeToArray = Array(R.Value)  ' zero index
     ElseIf R.Rows.Count = 1 Or R.Columns.Count = 1 Then
         RangeToArray = RangeTo1DArray(R, IgnoreEmptyInFlatArray)
     Else
         RangeToArray = RangeTo2DArray(R)
     End If
 End Function
+
 
 Public Function RangeTo1DArray( _
               R As Range _
@@ -38,17 +41,18 @@ Public Function RangeTo1DArray( _
     ' Returns:
     '   The normalized array.
     
-    Dim Arr() As Variant ' the output array
-    ReDim Arr(R.Cells.Count - 1)
     
-    Dim Values() As Variant ' values of the whole range
     If R.Cells.Count = 1 Then
-        Arr(0) = R.Value
-        RangeTo1DArray = Arr
+        RangeTo1DArray = Array(R.Value)
         Exit Function
     End If
     
-    Values = R.Value
+    Dim Arr() As Variant ' the output array
+    ReDim Arr(R.Cells.Count - 1)  ' Zero index
+    
+    Dim Values() As Variant ' values of the whole range
+    Values = R.Value  ' Not zero-index
+    
     Dim I As Long
     Dim J As Long
     Dim Counter As Long
@@ -84,10 +88,7 @@ Public Function RangeTo2DArray(R As Range) As Variant()
     '   2D array.
     
     If R.Cells.Count = 1 Then
-        Dim arr_single() As Variant
-        ReDim arr_single(1 To 1, 1 To 1) ' make it base 1, similar to what .value does for non-scalars
-        arr_single(1, 1) = R.Value
-        RangeTo2DArray = arr_single
+        RangeTo2DArray = Array(R.Value)
         Exit Function
     End If
     
@@ -95,7 +96,7 @@ Public Function RangeTo2DArray(R As Range) As Variant()
     Values = R.Value
 
     Dim Arr() As Variant ' the output array
-    ReDim Arr(UBound(Values, 1) - LBound(Values, 1), UBound(Values, 2) - LBound(Values, 2))
+    ReDim Arr(UBound(Values, 1) - LBound(Values, 1), UBound(Values, 2) - LBound(Values, 2))  ' Zero-indexed
     Dim I As Long
     Dim J As Long
     Dim I_start As Long
@@ -116,9 +117,16 @@ Function RangeToFlatArray( _
               R As Range _
             , Optional IgnoreEmpty As Boolean = True _
             ) As Variant()
-    
-    ' creates a 1-dimensional array of a range's values
-    ' by default empty cells are ignored
+    ' creates a 1-dimensional array of a range's values.
+    ' By default empty cells are ignored.
+    '
+    ' Args:
+    '   R: Input range object.
+    '   IgnoreEmpty: If True, entries in the Range object that contains
+    '                no value is ignore, If False: all entries are copied
+    '
+    ' Returns:
+    '   A 1D array that contains the values of the input Range object.
     
     Dim Arr() As Variant ' the output array
     ReDim Arr(R.Cells.Count - 1)
