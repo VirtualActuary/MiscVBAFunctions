@@ -383,7 +383,7 @@ Private Sub Test_ArrayToNewTable_1dArray()
     Arr(2) = "col3"
     
     Set RangeObj = WB.ActiveSheet.Range("K4")
-    Set LO = ArrayToNewTable("TestTable2", Ensure2dArray(Arr), RangeObj, True)
+    Set LO = ArrayToNewTable("TestTable2", Ensure2DArray(Arr), RangeObj, True)
     
     'Assert:
     Assert.AreEqual "TestTable2", LO.Name
@@ -481,14 +481,14 @@ Private Sub Test_Ensure2DArray()
     
     'Act:
     Arr1 = Array("a", "b", "c")
-    Arr1 = Ensure2dArray(Arr1)
+    Arr1 = Ensure2DArray(Arr1)
     Assert.AreEqual "a", Arr1(0, 0)
     Assert.AreEqual "b", Arr1(0, 1)
     Assert.AreEqual "c", Arr1(0, 2)
     
     ReDim Arr2(0 To 0, 0 To 2)
     Arr2(0, 0) = "a": Arr2(0, 1) = "b": Arr2(0, 2) = "c"
-    Arr2 = Ensure2dArray(Arr2)
+    Arr2 = Ensure2DArray(Arr2)
     Assert.AreEqual "a", Arr2(0, 0)
     Assert.AreEqual "b", Arr2(0, 1)
     Assert.AreEqual "c", Arr2(0, 2)
@@ -696,7 +696,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscArray")
-Private Sub Test_ArrayGetDimension()
+Private Sub Test_ArrayGetNumDimensions()
     On Error GoTo TestFail
     
     'Arrange:
@@ -707,11 +707,11 @@ Private Sub Test_ArrayGetDimension()
     Dim Arr5(1, 1, 1, 1) As Variant
 
     'Assert:
-    Assert.AreEqual CLng(0), ArrayGetDimension(Arr1)
-    Assert.AreEqual CLng(1), ArrayGetDimension(Arr2)
-    Assert.AreEqual CLng(2), ArrayGetDimension(Arr3)
-    Assert.AreEqual CLng(3), ArrayGetDimension(Arr4)
-    Assert.AreEqual CLng(4), ArrayGetDimension(Arr5)
+    Assert.AreEqual CLng(0), ArrayGetNumDimensions(Arr1)
+    Assert.AreEqual CLng(1), ArrayGetNumDimensions(Arr2)
+    Assert.AreEqual CLng(2), ArrayGetNumDimensions(Arr3)
+    Assert.AreEqual CLng(3), ArrayGetNumDimensions(Arr4)
+    Assert.AreEqual CLng(4), ArrayGetNumDimensions(Arr5)
 
 TestExit:
     Exit Sub
