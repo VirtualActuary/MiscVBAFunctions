@@ -17,25 +17,6 @@ Function ActiveRowsDown(Optional R As Range) As Long
 End Function
 
 
-Sub InsertColumns(R As Range, Optional NrCols As Integer = 1, Optional ShiftToLeft As Boolean = True)
-    ' Insert 1 or more column into a range.
-    '
-    ' Args:
-    '   R: Input Range. This Range will be altered.
-    '   NrCols: Number of columns to add
-    '   ShiftToLeft: Optional -
-
-    Dim I As Integer
-    For I = 1 To NrCols
-        If ShiftToLeft Then
-            R.EntireColumn.Insert xlShiftToLeft
-        Else
-            R.EntireColumn.Insert xlShiftToRight
-        End If
-    Next I
-End Sub
-
-
 Function RangeToLO(WS As Worksheet, Data As Range, TableName As String) As ListObject
     ' Create a Table containing the data from the input range.
     ' The Range determines the starting Cell of the table.
