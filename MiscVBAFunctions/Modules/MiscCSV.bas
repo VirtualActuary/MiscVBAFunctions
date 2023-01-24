@@ -9,7 +9,8 @@ Function CsvToLO( _
     ' loads a CSV file to an Excel list object
     ' this doesn't support sql_queries like loadTextToLO
     ' we import a query table, refresh and then delete it again
-    ' hence, we won't have a live connection to the underlying data
+    ' hence, we won't have a live connection to the underlying data.
+    ' The Column names are converted to strings.
     '
     ' Args:
     '   StartCell: Starting cell of the new Table
@@ -29,7 +30,6 @@ Function CsvToLO( _
     ' data from text query is imported as a QueryTable object, while all other external data is imported as a ListObject object.
     QT.Delete
     
-'    Set csvToLO = WS.ListObjects.Add(xlSrcRange, resultRange, , xlYes)
     Set CsvToLO = RangeToLO(StartCell.Worksheet, ResultRange, TableName)
 End Function
 

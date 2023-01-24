@@ -49,6 +49,7 @@ Private Sub Test_CsvToLO()
     'Assert:
     Assert.AreEqual "MyTable", LO.Name
     Assert.AreEqual "1", LO.Range(1, 1).Value
+    Assert.AreEqual 11, CInt(LO.Range(3, 1).Value)
    
 TestExit:
     WB.Close False
