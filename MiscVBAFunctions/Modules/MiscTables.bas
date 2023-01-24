@@ -478,6 +478,7 @@ Public Function IsTableMatch(Name As String, BaseName As String) As Boolean
     
     If LCase(Name) = LCase(BaseName) Then
         IsTableMatch = True
+    
     ElseIf StartsWith(LCase(Name), LCase(BaseName)) And _
                 IsNumeric(Mid(Name, Len(BaseName) + 1)) Then
         IsTableMatch = True
@@ -489,6 +490,16 @@ End Function
 
 
 Function getInputsTables(BaseName As String, Optional WB As Workbook) As Collection
+    ' Get all table names that start with the same base name followed by a number.
+    ' The list of table names are returned in numerical order in a Collection.
+    '
+    ' Args:
+    '   BaseName: Base string that every table name must contain at the start of their name.
+    '   WB: Selected WorkBook to look for the tables in.
+    '
+    ' Returns:
+    '   A Collection of Table names, sorted in numerical order.
+    
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     Dim ColInput As Collection
@@ -506,7 +517,7 @@ Function getInputsTables(BaseName As String, Optional WB As Workbook) As Collect
     ' Add all numeric values to a dict to be sorted.
     ' All non-numeric values get added to the output Collection first.
     For Count = 1 To ColInput.Count
-        Val = Split(ColInput(Count), BaseName)(1)
+        Val = Split(LCase(ColInput(Count)), LCase(BaseName))(1)
         If IsNumeric(Val) Then
             DictSorting.Add CLng(Val), ColInput(Count)
         Else

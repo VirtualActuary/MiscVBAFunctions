@@ -478,7 +478,7 @@ Private Sub Test_getInputsTables()
     Dim C As Collection
     
     'Act:
-    Set C = getInputsTables("Table", WB)
+    Set C = getInputsTables("table", WB)
     
     'Assert:
     Assert.AreEqual CLng(6), C.Count

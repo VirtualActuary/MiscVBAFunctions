@@ -58,11 +58,11 @@ End Function
 
 
 Public Function StartsWith(Str As String, Start As String) As Boolean
-    'Test if a string starts with an starting string
+    ' Test if a string starts with an starting string
     '
     ' Args:
-    '   StrComplete: Input string
-    '   Ending: Section look for in the input string
+    '   Str: Input string
+    '   Start: Section look for in the input string
     '
     ' Returns:
     '   True if the input string ends with the correct ending, False otherwise
