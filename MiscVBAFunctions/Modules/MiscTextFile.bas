@@ -24,6 +24,14 @@ End Sub
 
 
 Function readTextFile(Path As String) As String
+    ' Read the content of a text file and return it as a string
+    '
+    ' Args:
+    '   Path: Path to the text file.
+    '
+    ' Returns:
+    '   The content of the file in string format.
+    
     Dim OFile As Object
     Set OFile = Fso.OpenTextFile(Path, ForReading)
     
