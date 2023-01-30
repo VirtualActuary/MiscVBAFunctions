@@ -68,21 +68,21 @@ End Sub
 
 
 '@TestMethod("MiscOs")
-Private Sub Test_CreateFolders()
+Private Sub Test_MakeDirs()
     On Error GoTo TestFail
     
     'Arrange:
     Dim Dir As String
     
     'Act:
-    Dir = Path(ExpandEnvironmentalVariables("%temp%"), "folder1", "folder2", "folder3")
+    Dir = Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1", "folder2", "folder3")
     MakeDirs Dir
     
     'Assert:
     Assert.IsTrue fso.FolderExists(Dir)
     
 TestExit:
-    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "folder1")
+    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1")
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
@@ -104,7 +104,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_CreateFolders_fail()
+Private Sub Test_MakeDirs_fail()
     Const ExpectedError As Long = 53
     On Error GoTo TestFail
 
@@ -125,7 +125,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscOs")
-Private Sub Test_CreateFolders_fail_2()
+Private Sub Test_MakeDirs_fail_2()
     Const ExpectedError As Long = 58
     On Error GoTo TestFail
     
@@ -133,7 +133,7 @@ Private Sub Test_CreateFolders_fail_2()
     Dim Dir As String
     
     'Act:
-    Dir = Path(ExpandEnvironmentalVariables("%temp%"), "folder1", "folder2", "folder3")
+    Dir = Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1", "folder2", "folder3")
     MakeDirs Dir
     MakeDirs Dir, False
 
@@ -141,6 +141,7 @@ Assert:
     Assert.Fail "Expected error was not raised"
 
 TestExit:
+    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1")
     Exit Sub
 TestFail:
     If Err.Number = ExpectedError Then

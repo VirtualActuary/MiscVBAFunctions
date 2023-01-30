@@ -74,6 +74,20 @@ Private Function parentDir(ByVal folder)
 End Function
 
 
+Public Sub CreateFolders( _
+        ByVal StrPath As String, _
+        Optional DoShell As Boolean = False _
+    )
+    If DoShell = True Then
+        Err.Raise ErrNr.InternalError, , ErrorMessage(ErrNr.InternalError, "DoShell no longer supported.")
+    End If
+    
+    Debug.Print "DeprecationWarning: CreateFolders is deprecated. Use 'MakeDirs' in the future instead."
+    MakeDirs StrPath
+                  
+End Sub
+                  
+                  
 Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = True) As folder
     ' source: https://stackoverflow.com/questions/10803834/is-there-a-way-to-create-a-folder-and-sub-folders-in-excel-vba
     ' this code will make the folders recursively if required.
