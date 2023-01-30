@@ -274,7 +274,21 @@ Function AddWS(ByVal Name As String, _
                Optional RemoveGridLinesAndGreyFill As Boolean = True, _
                Optional ErrIfExists As Boolean = False, _
                Optional ForceNewIfExists As Boolean = False) As Worksheet
-    
+    ' Add a Worksheet to the selected Workbook.
+    ' First check if the name already exists.
+    '
+    ' Args:
+    '   Name: Name of the new Worksheet
+    '   After: An object that specifies the sheet after which the new sheet is added.
+    '   Before: An object that specifies the sheet before which the new sheet is added.
+    '   WB: Workbook to add the Worksheet in.
+    '   RemoveGridLinesAndGreyFill: If True, Remove gridlines and grey out the cells
+    '   ErrIfExists: If True, Raise an error if the WorkSheet name already exists.
+    '   ForceNewIfExists: If True, A unique key will be generated from the selected name
+    '                     and will be used as the new name (e.x. MyTable -> MyTable1)
+    '
+    ' Returns:
+    '   The new Worksheet object.
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
@@ -306,10 +320,10 @@ Function AddWS(ByVal Name As String, _
     
     AddWS.Name = Name
     
-'    If RemoveGridLinesAndGreyFill Then
-'        turnOffSheetGridLines AddWS
-'        makeDark -0.25, AddWS.Cells
-'    End If
+    If RemoveGridLinesAndGreyFill Then
+        turnOffSheetGridLines AddWS
+        makeDark -0.25, AddWS.Cells
+    End If
 
 End Function
 
