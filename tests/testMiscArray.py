@@ -188,8 +188,12 @@ class TestMin(unittest.TestCase):
 
             with self.subTest("Ensure2DArray"):
                 func_Ensure2dArray = book.macro("MiscArray.Ensure2dArray")
-                self.assertEqual((("a", "b", "c"),), func_Ensure2dArray(["a", "b", "c"]))
-                self.assertEqual((("a", "b", "c"),), func_Ensure2dArray([["a", "b", "c"]]))
+                self.assertEqual(
+                    (("a", "b", "c"),), func_Ensure2dArray(["a", "b", "c"])
+                )
+                self.assertEqual(
+                    (("a", "b", "c"),), func_Ensure2dArray([["a", "b", "c"]])
+                )
 
 
 if __name__ == "__main__":
