@@ -1,7 +1,14 @@
+import os
 import unittest
+
+import locate
 from xlwings import Book
-from .util import functions_book
 from pathlib import Path
+from locate import prepend_sys_path
+base_dir = locate.this_dir().joinpath("..")
+
+with prepend_sys_path():
+    from util import functions_book
 
 
 class TestDictsToTable(unittest.TestCase):
@@ -10,8 +17,9 @@ class TestDictsToTable(unittest.TestCase):
         with functions_book() as book:
             func_Glob = book.macro("MiscGlob.Glob")
             func_Col_to_arr = book.macro("MiscCollection.CollectionToArray")
-            base_path = str(Path(r".\test_data\GetAllFiles").resolve())
-            test_path = str(Path(r".\test_data\GetAllFiles").resolve())
+            base_path = str(Path(base_dir, r".\test_data\GetAllFiles").resolve())
+            test_path = str(Path(base_dir, r".\test_data\GetAllFiles").resolve())
+            Path(os.environ["temp"], "output.txt").write_text(base_path)
 
             with self.subTest("Glob_simple_1"):
                 arr = func_Col_to_arr(func_Glob(test_path, "folder1"))
@@ -143,8 +151,8 @@ class TestDictsToTable(unittest.TestCase):
         with functions_book() as book:
             func_RGlob = book.macro("MiscGlob.RGlob")
             func_Col_to_arr = book.macro("MiscCollection.CollectionToArray")
-            base_path = str(Path(r".\test_data\GetAllFiles").resolve())
-            test_path = str(Path(r".\test_data\GetAllFiles").resolve())
+            base_path = str(Path(base_dir, r".\test_data\GetAllFiles").resolve())
+            test_path = str(Path(base_dir, r".\test_data\GetAllFiles").resolve())
 
             with self.subTest("RGlob_simple_1"):
                 arr = func_Col_to_arr(func_RGlob(test_path, r"folder1"))
@@ -258,13 +266,9 @@ class TestDictsToTable(unittest.TestCase):
             with self.subTest("RGlob_recursive"):
                 arr = func_Col_to_arr(func_RGlob(test_path, r"folder2\**"))
                 self.assertEqual(3, len(arr))
-                self.assertEqual(
-                    base_path + r"\folder2", arr[0]
-                )
+                self.assertEqual(base_path + r"\folder2", arr[0])
                 self.assertEqual(base_path + r"\folder2\folder1", arr[1])
-                self.assertEqual(
-                    base_path + r"\folder2\folder1\folder1", arr[2]
-                )
+                self.assertEqual(base_path + r"\folder2\folder1\folder1", arr[2])
 
 
 if __name__ == "__main__":

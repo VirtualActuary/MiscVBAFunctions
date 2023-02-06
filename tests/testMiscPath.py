@@ -1,8 +1,9 @@
 import unittest
 from pathlib import Path
-from .util import functions_book
 import os
-
+from locate import prepend_sys_path
+with prepend_sys_path():
+    from util import functions_book
 
 class TestPath(unittest.TestCase):
     def test_1(self) -> None:
@@ -178,19 +179,19 @@ class TestPath(unittest.TestCase):
                 # Relative paths
                 self.assertEqual(Path.cwd().drive + r"\foo", func_AbsolutePath(r"\foo"))
                 self.assertEqual(
-                    str(Path.cwd()) + r"\foo\bar", func_AbsolutePath("foo/bar", book)
+                    str(Path.cwd().parent) + r"\foo\bar", func_AbsolutePath("foo/bar", book)
                 )
                 self.assertEqual(
-                    str(Path.cwd()) + r"\foo", func_AbsolutePath(r".\foo", book)
+                    str(Path.cwd().parent) + r"\foo", func_AbsolutePath(r".\foo", book)
                 )
                 self.assertEqual(
-                    str(Path.cwd().parent) + r"\foo", func_AbsolutePath(r"..\foo", book)
+                    str(Path.cwd().parent.parent) + r"\foo", func_AbsolutePath(r"..\foo", book)
                 )
                 self.assertEqual(
-                    str(Path.cwd().parent), func_AbsolutePath("foo\..\..", book)
+                    str(Path(str(Path.cwd()) + r"foo\..\..").resolve()), func_AbsolutePath(r"foo\..\..", book)
                 )
                 self.assertEqual(
-                    str(Path.cwd().parent), func_AbsolutePath("foo//..//..", book)
+                    str(Path(str(Path.cwd()) + r"foo//..//..").resolve()), func_AbsolutePath("foo//..//..", book)
                 )
 
                 # Network Paths
@@ -214,10 +215,10 @@ class TestPath(unittest.TestCase):
                     func_EvalPath(r"%HOMEDRIVE%\Users\%username%"),
                 )
                 self.assertEqual(
-                    str(Path(str(Path.cwd()), r"foo\bar")), func_EvalPath(r"foo/bar")
+                    str(Path(str(Path.cwd().parent), r"foo\bar")), func_EvalPath(r"foo/bar")
                 )
                 self.assertEqual(
-                    str(Path(str(Path.cwd()), "foo\\" + os.environ["username"])),
+                    str(Path(str(Path.cwd().parent), "foo\\" + os.environ["username"])),
                     func_EvalPath(r"foo/%UserName%"),
                 )
 

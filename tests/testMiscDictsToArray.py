@@ -1,6 +1,7 @@
 import unittest
-from .util import functions_book, vba_dict
-
+from locate import prepend_sys_path
+with prepend_sys_path():
+    from util import functions_book, vba_dict
 
 class TestMin(unittest.TestCase):
     def test_1(self) -> None:

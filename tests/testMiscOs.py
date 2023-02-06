@@ -3,9 +3,10 @@ import unittest
 from pathlib import Path
 
 from xlwings import Book
-from .util import functions_book
 import os
-
+from locate import prepend_sys_path
+with prepend_sys_path():
+    from util import functions_book
 
 class TestDictsToTable(unittest.TestCase):
     def test_1(self) -> None:

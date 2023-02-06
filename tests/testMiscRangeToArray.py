@@ -1,9 +1,10 @@
 import unittest
 from xlwings import Book
-from .util import functions_book
 from locate import this_dir
 from aa_py_xl import excel
-
+from locate import prepend_sys_path
+with prepend_sys_path():
+    from util import functions_book
 
 class TestDictsToTable(unittest.TestCase):
     def test_1(self) -> None:
