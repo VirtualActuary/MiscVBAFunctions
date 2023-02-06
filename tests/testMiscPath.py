@@ -1,6 +1,7 @@
 import unittest
-
+from pathlib import Path
 from .util import functions_book
+import os
 
 
 class TestPath(unittest.TestCase):
@@ -9,6 +10,12 @@ class TestPath(unittest.TestCase):
             func_Path = book.macro("MiscPath.Path")
             func_IsAbsolutePath = book.macro("MiscPath.IsAbsolutePath")
             func_col = book.macro("MiscCollectionCreate.Col")
+            func_PathGetDrive = book.macro("MiscPath.PathGetDrive")
+            func_PathHasDrive = book.macro("MiscPath.PathHasDrive")
+            func_PathGetServer = book.macro("MiscPath.PathGetServer")
+            func_PathHasServer = book.macro("MiscPath.PathHasServer")
+            func_AbsolutePath = book.macro("MiscPath.AbsolutePath")
+            func_EvalPath = book.macro("MiscPath.EvalPath")
 
             with self.subTest("Test_path_1"):
                 # Empty path should return empty path
@@ -88,8 +95,131 @@ class TestPath(unittest.TestCase):
                 self.assertFalse(func_IsAbsolutePath("asdf/foo"))
                 self.assertFalse(func_IsAbsolutePath(r"asdf\foo"))
 
-            with self.subTest("Test_PathHasDrive"):
-                self.assertFalse(True)
+            with self.subTest("Test_PathGetDrive"):
+                self.assertEqual("C:", func_PathGetDrive("C:"))
+                self.assertEqual("C:", func_PathGetDrive("C:\\"))
+                self.assertEqual("C:", func_PathGetDrive("C:/"))
+                self.assertEqual("C:", func_PathGetDrive(r"C:\asdf"))
+                self.assertEqual("C:", func_PathGetDrive("C:/asdf"))
+                self.assertEqual("", func_PathGetDrive(r"\asdf"))
+                self.assertEqual("", func_PathGetDrive("/asdf"))
+                self.assertEqual("", func_PathGetDrive("\\"))
+                self.assertEqual("", func_PathGetDrive("/"))
+                self.assertEqual("", func_PathGetDrive("asdf"))
+                self.assertEqual("", func_PathGetDrive("asdf/"))
+                self.assertEqual("", func_PathGetDrive("asdf\\"))
+                self.assertEqual("", func_PathGetDrive("asdf/foo"))
+                self.assertEqual("", func_PathGetDrive(r"asdf\foo"))
+                self.assertEqual("", func_PathGetDrive(r"\\server1\foo"))
+                self.assertEqual("", func_PathGetDrive("//server1/foo"))
+
+            with self.subTest("Test_PathGetDrive"):
+                self.assertTrue(func_PathHasDrive("C:"))
+                self.assertTrue(func_PathHasDrive("C:\\"))
+                self.assertTrue(func_PathHasDrive("C:/"))
+                self.assertTrue(func_PathHasDrive(r"C:\asdf"))
+                self.assertTrue(func_PathHasDrive("C:/asdf"))
+                self.assertFalse(func_PathHasDrive(r"\asdf"))
+                self.assertFalse(func_PathHasDrive("/asdf"))
+                self.assertFalse(func_PathHasDrive("\\"))
+                self.assertFalse(func_PathHasDrive("/"))
+                self.assertFalse(func_PathHasDrive("asdf"))
+                self.assertFalse(func_PathHasDrive("asdf/"))
+                self.assertFalse(func_PathHasDrive("asdf\\"))
+                self.assertFalse(func_PathHasDrive("asdf/foo"))
+                self.assertFalse(func_PathHasDrive(r"asdf\foo"))
+                self.assertFalse(func_PathHasDrive(r"\\server1\foo"))
+                self.assertFalse(func_PathHasDrive("//server1/foo"))
+
+            with self.subTest("Test_PathGetServer"):
+                self.assertEqual("", func_PathGetServer("C:"))
+                self.assertEqual("", func_PathGetServer("C:\\"))
+                self.assertEqual("", func_PathGetServer("C:/"))
+                self.assertEqual("", func_PathGetServer(r"C:\asdf"))
+                self.assertEqual("", func_PathGetServer("C:/asdf"))
+                self.assertEqual("", func_PathGetServer(r"\asdf"))
+                self.assertEqual("", func_PathGetServer("/asdf"))
+                self.assertEqual("", func_PathGetServer("\\"))
+                self.assertEqual("", func_PathGetServer("/"))
+                self.assertEqual("", func_PathGetServer("asdf"))
+                self.assertEqual("", func_PathGetServer("asdf/"))
+                self.assertEqual("", func_PathGetServer("asdf\\"))
+                self.assertEqual("", func_PathGetServer("asdf/foo"))
+                self.assertEqual("", func_PathGetServer(r"asdf\foo"))
+                self.assertEqual(r"\\server1", func_PathGetServer(r"\\server1\foo"))
+                self.assertEqual(r"//server1", func_PathGetServer(r"//server1/foo"))
+
+            with self.subTest("Test_PathHasServer"):
+                self.assertFalse(func_PathHasServer("C:"))
+                self.assertFalse(func_PathHasServer("C:\\"))
+                self.assertFalse(func_PathHasServer("C:/"))
+                self.assertFalse(func_PathHasServer("C:\\asdf"))
+                self.assertFalse(func_PathHasServer("C:/asdf"))
+                self.assertFalse(func_PathHasServer("\\asdf"))
+                self.assertFalse(func_PathHasServer("/asdf"))
+                self.assertFalse(func_PathHasServer("\\"))
+                self.assertFalse(func_PathHasServer("/"))
+                self.assertFalse(func_PathHasServer("asdf"))
+                self.assertFalse(func_PathHasServer("asdf/"))
+                self.assertFalse(func_PathHasServer("asdf\\"))
+                self.assertFalse(func_PathHasServer("asdf/foo"))
+                self.assertFalse(func_PathHasServer("asdf\\foo"))
+                self.assertTrue(func_PathHasServer(r"\\server1\foo"))
+                self.assertTrue(func_PathHasServer("//server1/foo"))
+
+            with self.subTest("Test_AbsolutePath"):
+                # Absolute paths
+                self.assertEqual("C:\\", func_AbsolutePath("C:\\"))
+                self.assertEqual(r"C:\test", func_AbsolutePath(r"C:\test"))
+                self.assertEqual(r"C:\foo\bar", func_AbsolutePath(r"C:\foo\bar"))
+                self.assertEqual(r"C:\bar", func_AbsolutePath(r"C:\foo\..\bar"))
+                self.assertEqual(r"C:\foo", func_AbsolutePath(r"C:\foo\\bar\\.."))
+
+                # Relative paths
+                self.assertEqual(Path.cwd().drive + r"\foo", func_AbsolutePath(r"\foo"))
+                self.assertEqual(
+                    str(Path.cwd()) + r"\foo\bar", func_AbsolutePath("foo/bar", book)
+                )
+                self.assertEqual(
+                    str(Path.cwd()) + r"\foo", func_AbsolutePath(r".\foo", book)
+                )
+                self.assertEqual(
+                    str(Path.cwd().parent) + r"\foo", func_AbsolutePath(r"..\foo", book)
+                )
+                self.assertEqual(
+                    str(Path.cwd().parent), func_AbsolutePath("foo\..\..", book)
+                )
+                self.assertEqual(
+                    str(Path.cwd().parent), func_AbsolutePath("foo//..//..", book)
+                )
+
+                # Network Paths
+                self.assertEqual(r"\\foo\bar", func_AbsolutePath(r"\\foo/bar"))
+                self.assertEqual(r"\\foo\bar", func_AbsolutePath(r"\\foo\\bar"))
+                self.assertEqual(
+                    r"\\foo\bar", func_AbsolutePath(r"\\foo\\.\bar\\..\\bar")
+                )
+                self.assertEqual(r"\\foo", func_AbsolutePath(r"//foo"))
+                self.assertEqual(r"\\foo\bar", func_AbsolutePath(r"//foo\\bar"))
+                self.assertEqual(
+                    r"\\hello\2", func_AbsolutePath(r"\\hello\world\\..\2")
+                )
+
+            with self.subTest("Test_AbsolutePath"):
+                self.assertEqual(r"C:\foo", func_EvalPath(r"C:\foo"))
+                self.assertEqual(r"C:\foo", func_EvalPath(r"C:/foo"))
+                self.assertEqual(r"C:\c", func_EvalPath(r"C:\a\..\b\..\c"))
+                self.assertEqual(
+                    os.environ["HOMEDRIVE"] + "\\Users\\" + os.environ["username"],
+                    func_EvalPath(r"%HOMEDRIVE%\Users\%username%"),
+                )
+                self.assertEqual(
+                    str(Path(str(Path.cwd()), r"foo\bar")), func_EvalPath(r"foo/bar")
+                )
+                self.assertEqual(
+                    str(Path(str(Path.cwd()), "foo\\" + os.environ["username"])),
+                    func_EvalPath(r"foo/%UserName%"),
+                )
 
 
 if __name__ == "__main__":
