@@ -5,6 +5,7 @@ import locate
 from xlwings import Book
 from pathlib import Path
 from locate import prepend_sys_path
+
 base_dir = locate.this_dir().joinpath("..")
 
 with prepend_sys_path():
