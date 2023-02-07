@@ -36,7 +36,7 @@ class TestDictsToTable(unittest.TestCase):
                 )
 
             with self.subTest("MakeDirs"):
-                func_MakeDirs = book.macro("MiscOs.MakeDirs")
+                func_CreateFolders = book.macro("MiscOs.CreateFolders")
                 func_ExpandEnvironmentalVariables = book.macro(
                     "MiscOs.ExpandEnvironmentalVariables"
                 )
@@ -51,7 +51,7 @@ class TestDictsToTable(unittest.TestCase):
                     .__str__()
                 )
                 try:
-                    func_MakeDirs(Dir)
+                    func_CreateFolders(Dir)
                     self.assertTrue(Path(Dir).is_dir())
                 finally:
                     Dir = (
