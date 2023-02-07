@@ -218,6 +218,31 @@ End Sub
 
 
 '@TestMethod("MiscTableToDicts")
+Private Sub TestGetTableRowRange()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Dicts As Collection
+    Dim Source As Dictionary
+    Dim r As Range
+    
+    'Act:
+    ' Test list object:
+    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$B$6:$D$6", r.Address
+    
+    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$G$6:$I$6", r.Address
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscTableToDicts")
 Private Sub Test_TableDictToArray()
     On Error GoTo TestFail
     
