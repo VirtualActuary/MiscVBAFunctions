@@ -51,6 +51,10 @@ class TestMin(unittest.TestCase):
                 self.assertEqual(2, func_dictget(d4, "2"))
                 self.assertEqual(4, func_dictget(d4, "4"))
 
+            with self.subTest("Test_dictget_fail"):
+                func = book.macro("Test__Helper_MiscDictionary.Test_dictget_fail")
+                self.assertTrue(func())
+
 
 if __name__ == "__main__":
     unittest.main(
