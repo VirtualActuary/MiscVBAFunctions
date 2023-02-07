@@ -21,6 +21,13 @@ class TestMin(unittest.TestCase):
                 x = func_assign(x, 1.4)
                 self.assertEqual(1.4, x)
 
+            with self.subTest("MiscAssign_object"):
+                func_col = book.macro("MiscCollectionCreate.Col")
+                func = book.macro(
+                    "Test__Helper_MiscAssign.Test_MiscAssign_object"
+                )
+                self.assertTrue(func(func_col(4, 5, 6)))
+
 
 if __name__ == "__main__":
     unittest.main(
