@@ -28,7 +28,6 @@ class TestDictsToTable(unittest.TestCase):
                 read_only=True,
             ) as book_temp:
                 with self.subTest("HasLO_and_GetLO"):
-                    pass
                     self.assertTrue(func_HasLO("Table1", book_temp))  # Correct case
                     self.assertTrue(
                         func_HasLO("taBLe1", book_temp)
@@ -87,7 +86,7 @@ class TestDictsToTable(unittest.TestCase):
                     self.assertEqual(22, arr[1])
                     self.assertEqual(23, arr[2])
 
-                with self.subTest("GetTableRowRange"):
+                with self.subTest("GetTableColumnDataRange_2"):
 
                     func_GetTableColumnDataRange = book.macro(
                         "MiscTables.GetTableColumnDataRange"
