@@ -198,6 +198,37 @@ class TestMin(unittest.TestCase):
                     (("a", "b", "c"),), func_Ensure2dArray([["a", "b", "c"]])
                 )
 
+            with self.subTest("ErrorToNullStringTransformation_1"):
+                func_Test_ErrorToNullStringTransformation = book.macro(
+                    "Test__Helper_MiscArray.Test_ErrorToNullStringTransformation_1"
+                )
+
+                self.assertTrue(func_Test_ErrorToNullStringTransformation())
+
+            with self.subTest("ErrorToNullStringTransformation_2"):
+                func_Test_ErrorToNullStringTransformation = book.macro(
+                    "Test__Helper_MiscArray.Test_ErrorToNullStringTransformation_2"
+                )
+
+                self.assertTrue(func_Test_ErrorToNullStringTransformation())
+
+            with self.subTest("Test_ArrayToRange_fail"):
+                func_Test_ArrayToRange_fail = book.macro(
+                    "Test__Helper_MiscArray.Test_ArrayToRange_fail"
+                )
+
+                arr = ["col1", "col2", "col3"]
+                range_obj = book.sheets.active.range("B4")
+                self.assertTrue(func_Test_ArrayToRange_fail(arr, range_obj))
+
+            with self.subTest("Test_ArrayToNewTable_fail"):
+                func = book.macro(
+                    "Test__Helper_MiscArray.Test_ArrayToNewTable_fail"
+                )
+                arr = [["col1", "col2", "col3"], ["-[d]", "=d", 1]]
+                range_obj = book.sheets.active.range("B4")
+                self.assertTrue(func(arr, range_obj))
+
 
 if __name__ == "__main__":
     unittest.main(
