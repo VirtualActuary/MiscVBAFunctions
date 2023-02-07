@@ -12,7 +12,7 @@ Public Sub CreateTextFile(ByVal Content As String, ByVal FilePath As String)
     ' Args:
     '   Content: Content that must be inserted into the file.
     '   FilePath: Path where the file will be created. The filename and extension must be included here.
-    
+    FilePath = EvalPath(FilePath)
     Dim oFile As Integer
     oFile = FreeFile
     
