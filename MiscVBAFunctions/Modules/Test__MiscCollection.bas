@@ -192,23 +192,23 @@ Private Sub Test_Join_Collections()
 
     'Arrange:
     Dim w As New Collection
-    Dim x As New Collection
-    Dim y As New Collection
-    Dim z As New Collection
+    Dim X As New Collection
+    Dim Y As New Collection
+    Dim Z As New Collection
     
     'Act:
     Set w = col(1, 2)
-    Set x = col(3, 4)
-    Set y = col(5, 6)
-    Set z = JoinCollections(x, y, w)
+    Set X = col(3, 4)
+    Set Y = col(5, 6)
+    Set Z = JoinCollections(X, Y, w)
     
     'Assert:
-    Assert.AreEqual 3, z(1)
-    Assert.AreEqual 4, z(2)
-    Assert.AreEqual 5, z(3)
-    Assert.AreEqual 6, z(4)
-    Assert.AreEqual 1, z(5)
-    Assert.AreEqual 2, z(6)
+    Assert.AreEqual 3, Z(1)
+    Assert.AreEqual 4, Z(2)
+    Assert.AreEqual 5, Z(3)
+    Assert.AreEqual 6, Z(4)
+    Assert.AreEqual 1, Z(5)
+    Assert.AreEqual 2, Z(6)
 
 TestExit:
     Exit Sub
@@ -223,19 +223,19 @@ Private Sub Test_Join_Collections_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim z As New Collection
-    Dim x As New Collection
-    Dim y As New Collection
+    Dim Z As New Collection
+    Dim X As New Collection
+    Dim Y As New Collection
     
     'Act:
-    Set x = col(1, 2, 3)
-    Set y = col(4, 5, 6)
-    Set z = JoinCollections(x, y)
+    Set X = col(1, 2, 3)
+    Set Y = col(4, 5, 6)
+    Set Z = JoinCollections(X, Y)
     
     'Assert:
-    Debug.Print x(4)
-    Debug.Print y(4)
-    Debug.Print z(7)
+    Debug.Print X(4)
+    Debug.Print Y(4)
+    Debug.Print Z(7)
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -284,24 +284,24 @@ End Sub
 Private Sub Test_Concat_Collections()
     On Error GoTo TestFail
 
-    Dim x As Collection
-    Dim y As Collection
-    Dim z As Collection
+    Dim X As Collection
+    Dim Y As Collection
+    Dim Z As Collection
 
     'Act:
-    Set x = col(1, 2)
-    Set y = col(3, 4)
-    Set z = col(5, 6)
-    ConcatCollections x, z, y
+    Set X = col(1, 2)
+    Set Y = col(3, 4)
+    Set Z = col(5, 6)
+    ConcatCollections X, Z, Y
     
     'Assert:
 
-    Assert.AreEqual 1, x(1)
-    Assert.AreEqual 2, x(2)
-    Assert.AreEqual 5, x(3)
-    Assert.AreEqual 6, x(4)
-    Assert.AreEqual 3, x(5)
-    Assert.AreEqual 4, x(6)
+    Assert.AreEqual 1, X(1)
+    Assert.AreEqual 2, X(2)
+    Assert.AreEqual 5, X(3)
+    Assert.AreEqual 6, X(4)
+    Assert.AreEqual 3, X(5)
+    Assert.AreEqual 4, X(6)
 
 TestExit:
     Exit Sub

@@ -250,11 +250,11 @@ Private Function dateToString(d As Date, fmt As String) As String
 End Function
 
 
-Private Function decStr(x As Variant) As String
-     decStr = CStr(x)
+Private Function decStr(X As Variant) As String
+     decStr = CStr(X)
 
      'Frikin ridiculous loops for VBA
-     If IsNumeric(x) Then
+     If IsNumeric(X) Then
         decStr = Replace(decStr, Format(0, "."), ".")
         ' Format(0, ".") gives the system decimal separator
      End If

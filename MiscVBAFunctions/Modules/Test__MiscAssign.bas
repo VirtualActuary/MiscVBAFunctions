@@ -61,15 +61,15 @@ Private Sub Test_MiscAssign_object()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim x As Variant
-    Dim y As Variant
+    Dim X As Variant
+    Dim Y As Variant
     Dim I As Variant
     Set I = col(4, 5, 6)
-    assign x, I
+    assign X, I
     
     'Assert:
-    Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, I)(2)
+    Assert.AreEqual 4, X(1)
+    Assert.AreEqual 5, assign(Y, I)(2)
 
 
 TestExit:

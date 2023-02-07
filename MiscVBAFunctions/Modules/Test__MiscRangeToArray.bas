@@ -42,24 +42,24 @@ Private Sub Test_RangeToArray_2D()
     'Arrange:
     'Dim WB As Workbook
     Dim WS As Worksheet
-    Dim x As Range
-    Dim y() As Variant
+    Dim X As Range
+    Dim Y() As Variant
     
     'Act:
     Set WS = WB.Sheets(1)
-    Set x = WS.Range("A1:C2")
-    y = RangeToArray(x)
+    Set X = WS.Range("A1:C2")
+    Y = RangeToArray(X)
 
     'Assert:
-    Assert.AreEqual 11, CInt(y(0, 0))
-    Assert.AreEqual 12, CInt(y(0, 1))
-    Assert.AreEqual 9, CInt(y(0, 2))
-    Assert.AreEqual 13, CInt(y(1, 0))
-    Assert.AreEqual 14, CInt(y(1, 1))
-    Assert.AreEqual 15, CInt(y(1, 2))
+    Assert.AreEqual 11, CInt(Y(0, 0))
+    Assert.AreEqual 12, CInt(Y(0, 1))
+    Assert.AreEqual 9, CInt(Y(0, 2))
+    Assert.AreEqual 13, CInt(Y(1, 0))
+    Assert.AreEqual 14, CInt(Y(1, 1))
+    Assert.AreEqual 15, CInt(Y(1, 2))
    
-    Assert.AreEqual 2, CInt(UBound(y) - LBound(y) + 1)
-    Assert.AreEqual 3, CInt(UBound(y, 2) - LBound(y, 2) + 1)
+    Assert.AreEqual 2, CInt(UBound(Y) - LBound(Y) + 1)
+    Assert.AreEqual 3, CInt(UBound(Y, 2) - LBound(Y, 2) + 1)
     
 
 TestExit:
@@ -76,18 +76,18 @@ Private Sub Test_RangeToArray_1_value()
     
     'Arrange:
     Dim WS As Worksheet
-    Dim x As Range
-    Dim y() As Variant
+    Dim X As Range
+    Dim Y() As Variant
     
     'Act:
     Set WS = WB.Sheets(2)
-    Set x = WS.Range("A1")
-    y = RangeToArray(x)
+    Set X = WS.Range("A1")
+    Y = RangeToArray(X)
 
 
     'Assert:
-    Assert.AreEqual 4, CInt(y(0))
-    Assert.AreEqual 1, CInt(UBound(y) - LBound(y) + 1)
+    Assert.AreEqual 4, CInt(Y(0))
+    Assert.AreEqual 1, CInt(UBound(Y) - LBound(Y) + 1)
 
 TestExit:
     Exit Sub
@@ -102,19 +102,19 @@ Private Sub Test_RangeToArray_1D_row()
     
     'Arrange:
     Dim WS As Worksheet
-    Dim x As Range
-    Dim y() As Variant
+    Dim X As Range
+    Dim Y() As Variant
     
     'Act:
     Set WS = WB.Sheets(3)
-    Set x = WS.Range("A1:C1")
-    y = RangeToArray(x)
+    Set X = WS.Range("A1:C1")
+    Y = RangeToArray(X)
 
     'Assert:
-    Assert.AreEqual 1, CInt(y(0))
-    Assert.AreEqual 2, CInt(y(1))
-    Assert.AreEqual 3, CInt(y(2))
-    Assert.AreEqual 3, CInt(UBound(y) - LBound(y) + 1)
+    Assert.AreEqual 1, CInt(Y(0))
+    Assert.AreEqual 2, CInt(Y(1))
+    Assert.AreEqual 3, CInt(Y(2))
+    Assert.AreEqual 3, CInt(UBound(Y) - LBound(Y) + 1)
 
 TestExit:
     Exit Sub
@@ -129,19 +129,19 @@ Private Sub Test_RangeToArray_1D_column()
     
     'Arrange:
     Dim WS As Worksheet
-    Dim x As Range
-    Dim y() As Variant
+    Dim X As Range
+    Dim Y() As Variant
     
     'Act:
     Set WS = WB.Sheets(4)
-    Set x = WS.Range("A1:A3")
-    y = RangeToArray(x)
+    Set X = WS.Range("A1:A3")
+    Y = RangeToArray(X)
 
     'Assert:
-    Assert.AreEqual 66, CInt(y(0))
-    Assert.AreEqual 77, CInt(y(1))
-    Assert.AreEqual 88, CInt(y(2))
-    Assert.AreEqual 3, CInt(UBound(y) - LBound(y) + 1)
+    Assert.AreEqual 66, CInt(Y(0))
+    Assert.AreEqual 77, CInt(Y(1))
+    Assert.AreEqual 88, CInt(Y(2))
+    Assert.AreEqual 3, CInt(UBound(Y) - LBound(Y) + 1)
 
 TestExit:
     Exit Sub
