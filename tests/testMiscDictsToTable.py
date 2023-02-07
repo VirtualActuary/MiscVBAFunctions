@@ -57,6 +57,30 @@ class TestDictsToTable(unittest.TestCase):
                     table.range.value,
                 )
 
+            with self.subTest("Test_DictsToTable_fail_1"):
+                func = book.macro(
+                    "Test__Helper_MiscDictsToTable.Test_DictsToTable_fail_1"
+                )
+                func_col = book.macro("MiscCollectionCreate.Col")
+                dict1 = vba_dict({"col1": 1, "col2": 2, "col3": 3, "col4": 30})
+                dict2 = vba_dict({"col1": 10, "col2": 20, "col3": 30})
+
+                table_dict = func_col(dict1, dict2)
+                range_obj = book.sheets.active.range("A10")
+                self.assertTrue((func(table_dict, range_obj)))
+
+            with self.subTest("Test_DictsToTable_fail_2"):
+                func = book.macro(
+                    "Test__Helper_MiscDictsToTable.Test_DictsToTable_fail_2"
+                )
+                func_col = book.macro("MiscCollectionCreate.Col")
+                dict1 = vba_dict({"col1": 1, "col2": 2, "col3": 3})
+                dict2 = vba_dict({"col1": 10, "col2": 20, "col4": 30})
+
+                table_dict = func_col(dict1, dict2)
+                range_obj = book.sheets.active.range("A10")
+                self.assertTrue((func(table_dict, range_obj)))
+
 
 if __name__ == "__main__":
     unittest.main(
