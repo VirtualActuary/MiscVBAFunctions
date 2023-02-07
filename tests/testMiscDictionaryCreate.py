@@ -19,9 +19,9 @@ class TestMin(unittest.TestCase):
 
             with self.subTest("dicti"):
                 func_dictget = book.macro("MiscDictionary.dictget")
-                func_dict = book.macro("MiscDictionaryCreate.dicti")
+                func_dicti = book.macro("MiscDictionaryCreate.dicti")
 
-                d = func_dict("a", 2, "b", None)
+                d = func_dicti("a", 2, "b", None)
 
                 self.assertEqual(2, func_dictget(d, "a"))
                 self.assertEqual(2, func_dictget(d, "A"))
