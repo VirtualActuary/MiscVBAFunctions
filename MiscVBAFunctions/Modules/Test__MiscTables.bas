@@ -397,7 +397,7 @@ Private Sub Test_GetTableRowRange()
     Assert.AreEqual "$B$6:$D$6", r.Address
 
     Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB2)
-    Assert.AreEqual "$G$6:$L$6", r.Address
+    Assert.AreEqual "$G$6:$I$6", r.Address
 
 TestExit:
     WB2.Close False
