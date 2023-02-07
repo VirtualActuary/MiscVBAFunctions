@@ -21,6 +21,10 @@ class TestMin(unittest.TestCase):
                 func = book.macro("Test__Helper_MiscCollCreate.Test_zip")
                 self.assertTrue(func(func_col(1, 2, 3), func_col(4, 5, 6, 7)))
 
+            with self.subTest("Test_dictget_fail"):
+                func = book.macro("Test__Helper_MiscDictionary.Test_dictget_fail")
+                self.assertTrue(func())
+
 
 if __name__ == "__main__":
     unittest.main(
