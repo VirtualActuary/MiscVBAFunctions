@@ -69,6 +69,10 @@ class MiscOs(unittest.TestCase):
                 func_RunShell = book.macro("MiscOs.RunShell")
                 self.assertEqual(0, func_RunShell("cmd /c echo hello", True))
 
+            with self.subTest("Test_is64BitXl"):
+                func = book.macro("Test__Helper_MiscOs.Test_is64BitXl")
+                self.assertTrue(func())
+
 
 if __name__ == "__main__":
     unittest.main(
