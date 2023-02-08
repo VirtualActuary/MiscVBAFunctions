@@ -2,11 +2,11 @@ import shutil
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Mapping, Any, Generator
+from typing import Mapping, Any, Generator, Union
 
-from aa_py_xl import excel
+from aa_py_xl import excel, excel_book
 from locate import this_dir
-from xlwings import Book
+from xlwings import Book, App
 
 repo_path = this_dir().parent
 functions_book_path = repo_path.joinpath("MiscVBAFunctions.xlsb")
@@ -14,9 +14,40 @@ template_book_path = repo_path.joinpath("MiscVBATemplate.xlsb")
 
 
 @contextmanager
-def functions_book() -> Generator[Book, None, None]:
+def functions_book(app: App = None) -> Generator[Book, None, None]:
+    if not app:
+        with excel(
+            path=functions_book_path,
+            save=False,
+            quiet=True,
+            close_book=True,
+            close_excel=True,
+            must_exist=True,
+            read_only=True,
+        ) as book:
+            try:
+                yield book
+            finally:
+                pass
+    else:
+        with excel_book(
+            app,
+            path=functions_book_path,
+            save=False,
+            close=True,
+            must_exist=True,
+            read_only=True,
+        ) as book:
+            try:
+                yield book
+            finally:
+                pass
+
+
+@contextmanager
+def template_book() -> Generator[Book, None, None]:
     with excel(
-        path=functions_book_path,
+        path=template_book_path,
         save=False,
         quiet=True,
         close_book=True,
@@ -31,13 +62,12 @@ def functions_book() -> Generator[Book, None, None]:
 
 
 @contextmanager
-def template_book() -> Generator[Book, None, None]:
-    with excel(
-        path=template_book_path,
+def extra_book(app: App, path: Union[str, Path]) -> Generator[Book, None, None]:
+    with excel_book(
+        app,
+        path=path,
         save=False,
-        quiet=True,
-        close_book=True,
-        close_excel=True,
+        close=True,
         must_exist=True,
         read_only=True,
     ) as book:
