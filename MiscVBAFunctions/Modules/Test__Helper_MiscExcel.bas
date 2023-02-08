@@ -2,7 +2,7 @@ Attribute VB_Name = "Test__Helper_MiscExcel"
 Option Explicit
 
 Function Test_ExcelBook()
-    On Error GoTo TestFail
+    On Error GoTo TestFail1
     
     Dim WB1 As New Workbook
     Dim WB2 As New Workbook
@@ -15,7 +15,7 @@ Function Test_ExcelBook()
     Test_ExcelBook = True
     Exit Function
     
-TestFail:
+TestFail1:
     WB1.Close False
     WB2.Close False
     Test_ExcelBook = False
@@ -24,7 +24,7 @@ End Function
 
 
 Function Test_ExcelBook_tempFile()
-    On Error GoTo Fail
+    On Error GoTo TestFail2
     
     Dim WB As New Workbook
     Set WB = ExcelBook()
@@ -33,14 +33,14 @@ Function Test_ExcelBook_tempFile()
     Test_ExcelBook_tempFile = True
     Exit Function
 
-Fail:
+TestFail2:
     Test_ExcelBook_tempFile = False
     Exit Function
 End Function
 
 
 Function Test_ExcelBook_tempFile_2()
-    On Error GoTo TestFail
+    On Error GoTo TestFail3
     
     Dim WB As New Workbook
     Set WB = ExcelBook("", False, False)
@@ -49,7 +49,7 @@ Function Test_ExcelBook_tempFile_2()
     Test_ExcelBook_tempFile_2 = True
     Exit Function
 
-TestFail:
+TestFail3:
     Test_ExcelBook_tempFile_2 = False
     Exit Function
 End Function
@@ -57,7 +57,7 @@ End Function
 
 Function Test_ExcelBook_tempFile_fail()
     Const ExpectedError As Long = -997
-    On Error GoTo TestFail
+    On Error GoTo TestFail4
     
     Dim WB As New Workbook
     Set WB = ExcelBook("", True, False)
@@ -65,7 +65,7 @@ Function Test_ExcelBook_tempFile_fail()
     Test_ExcelBook_tempFile_fail = False
     Exit Function
 
-TestFail:
+TestFail4:
     If Err.Number = ExpectedError Then
         Test_ExcelBook_tempFile_fail = True
         Exit Function
@@ -78,7 +78,7 @@ End Function
 
 Function Test_ExcelBook_tempFile_fail_2()
     Const ExpectedError As Long = -996
-    On Error GoTo TestFail
+    On Error GoTo TestFail5
     
     Dim WB As New Workbook
     Set WB = ExcelBook("", False, True)
@@ -86,7 +86,7 @@ Function Test_ExcelBook_tempFile_fail_2()
     Test_ExcelBook_tempFile_fail_2 = False
     Exit Function
         
-TestFail:
+TestFail5:
     If Err.Number = ExpectedError Then
         Test_ExcelBook_tempFile_fail_2 = True
         Exit Function
@@ -99,14 +99,14 @@ End Function
 
 Function Test_fail_ExcelBook()
     Const ExpectedError As Long = -999
-    On Error GoTo TestFail
+    On Error GoTo TestFail6
     
     Dim WB As New Workbook
     WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
     
     Test_fail_ExcelBook = False
     Exit Function
-TestFail:
+TestFail6:
     If Err.Number = ExpectedError Then
         Test_fail_ExcelBook = True
         Exit Function
@@ -119,14 +119,14 @@ End Function
 
 Function Test_fail_ExcelBook_2()
     Const ExpectedError As Long = -998
-    On Error GoTo TestFail
+    On Error GoTo TestFail7
     
     Dim WB As New Workbook
     WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), False, True)
     Test_fail_ExcelBook_2 = False
     Exit Function
 
-TestFail:
+TestFail7:
     If Err.Number = ExpectedError Then
         Test_fail_ExcelBook_2 = True
         Exit Function
@@ -138,7 +138,7 @@ End Function
 
 
 Function Test_OpenWorkbook()
-    On Error GoTo TestFail
+    On Error GoTo TestFail8
     
     Dim WB As Workbook
     Dim Asd As String
@@ -150,7 +150,7 @@ Function Test_OpenWorkbook()
     Test_OpenWorkbook = True
     Exit Function
     
-TestFail:
+TestFail8:
     Test_OpenWorkbook = False
     Exit Function
 End Function
