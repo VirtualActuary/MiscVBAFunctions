@@ -7,8 +7,8 @@ Function Test_ExcelBook()
     Dim WB1 As New Workbook
     Dim WB2 As New Workbook
 
-    Set WB1 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\MiscExcel.xlsx"), True, True)
-    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\test_data\MiscExcel\MiscExcel_added.xlsx"), False, True)
+    Set WB1 = ExcelBook(Path(ThisWorkbook.Path, "test_data\MiscExcel\MiscExcel.xlsx"), True, True)
+    Set WB2 = ExcelBook(Path(ThisWorkbook.Path, ".\test_data\MiscExcel\MiscExcel_added.xlsx"), False, True)
     WB1.Close False
     WB2.Close False
 
@@ -24,6 +24,8 @@ End Function
 
 
 Function Test_ExcelBook_tempFile()
+    On Error GoTo Fail
+    
     Dim WB As New Workbook
     Set WB = ExcelBook()
     WB.Close False
@@ -31,13 +33,15 @@ Function Test_ExcelBook_tempFile()
     Test_ExcelBook_tempFile = True
     Exit Function
 
-TestFail:
+Fail:
     Test_ExcelBook_tempFile = False
     Exit Function
 End Function
 
 
 Function Test_ExcelBook_tempFile_2()
+    On Error GoTo TestFail
+    
     Dim WB As New Workbook
     Set WB = ExcelBook("", False, False)
     WB.Close False
