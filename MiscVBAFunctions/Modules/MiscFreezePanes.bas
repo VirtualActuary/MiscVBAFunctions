@@ -3,7 +3,7 @@ Attribute VB_Name = "MiscFreezePanes"
 Option Explicit
 
 
-Private Sub test()
+Private Sub Test()
     Dim WS As Worksheet
     Set WS = ThisWorkbook.Worksheets(1)
     FreezePanes WS.Range("D6")

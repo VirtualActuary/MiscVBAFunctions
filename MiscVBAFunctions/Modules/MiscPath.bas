@@ -209,7 +209,7 @@ End Function
 Public Function PathHasServer(P As String) As Boolean
     ' Check if the path has a server name at the start, e.g. `server1` in `\\server1\foo`.
     ' Note that Windows does not see `//server1/foo` as a network path, but we will allow it.
-    PathHasServer = PathServerRegex().test(P)
+    PathHasServer = PathServerRegex().Test(P)
 End Function
 
 
@@ -242,7 +242,7 @@ End Function
 
 
 Public Function PathHasDrive(P As String) As Boolean
-    PathHasDrive = PathDriveRegex().test(P)
+    PathHasDrive = PathDriveRegex().Test(P)
 End Function
 
 
