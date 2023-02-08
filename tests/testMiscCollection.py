@@ -4,7 +4,7 @@ with prepend_sys_path():
     from util import functions_book, vba_dict
 
 
-class TestMin(unittest.TestCase):
+class MiscCollection(unittest.TestCase):
     def test_1(self) -> None:
         with functions_book() as book:
             func_col = book.macro("MiscCollectionCreate.Col")

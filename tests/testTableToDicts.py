@@ -7,7 +7,7 @@ with prepend_sys_path():
     from util import functions_book, vba_dict
 
 
-class TestDictsToTable(unittest.TestCase):
+class MiscTableToDicts(unittest.TestCase):
     def test_1(self) -> None:
         book: Book
         with functions_book() as book:

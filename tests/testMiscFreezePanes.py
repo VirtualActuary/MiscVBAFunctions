@@ -7,7 +7,7 @@ with prepend_sys_path():
     from util import functions_book, extra_book
 
 
-class TestDictsToTable(unittest.TestCase):
+class MiscFreezePanes(unittest.TestCase):
     def test_1(self) -> None:
         with excel_app(True, True) as app:
             book: Book

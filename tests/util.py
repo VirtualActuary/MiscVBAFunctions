@@ -15,7 +15,7 @@ template_book_path = repo_path.joinpath("MiscVBATemplate.xlsb")
 
 @contextmanager
 def functions_book(app: App = None) -> Generator[Book, None, None]:
-    if not app:
+    if app is None:
         with excel(
             path=functions_book_path,
             save=False,

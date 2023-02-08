@@ -5,10 +5,11 @@ with prepend_sys_path():
     from util import functions_book
 
 
-class TestDictsToTable(unittest.TestCase):
+class MiscExcel(unittest.TestCase):
     def test_1(self) -> None:
         book: Book
         with functions_book() as book:
+
             with self.subTest("Test_ExcelBook"):
                 func = book.macro("Test__Helper_MiscExcel.Test_ExcelBook")
                 self.assertTrue(func())

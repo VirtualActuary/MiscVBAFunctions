@@ -7,7 +7,7 @@ with prepend_sys_path():
     from util import functions_book
 
 
-class TestPath(unittest.TestCase):
+class MiscPath(unittest.TestCase):
     def test_1(self) -> None:
         with functions_book() as book:
             func_Path = book.macro("MiscPath.Path")

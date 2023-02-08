@@ -6,7 +6,7 @@ with prepend_sys_path():
     from util import functions_book
 
 
-class TestMin(unittest.TestCase):
+class MiscString(unittest.TestCase):
     def test_1(self) -> None:
         book: Book
         with functions_book() as book:

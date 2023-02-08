@@ -12,7 +12,7 @@ with prepend_sys_path():
     from util import functions_book
 
 
-class TestDictsToTable(unittest.TestCase):
+class MiscGlob(unittest.TestCase):
     def test_glob(self) -> None:
         book: Book
         with functions_book() as book:

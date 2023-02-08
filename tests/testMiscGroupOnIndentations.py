@@ -7,7 +7,7 @@ with prepend_sys_path():
     from util import functions_book, extra_book
 
 
-class TestDictsToTable(unittest.TestCase):
+class MiscGroupOnIndentations(unittest.TestCase):
     def test_1(self) -> None:
         with excel_app(True, True) as app:
             book: Book
@@ -30,13 +30,13 @@ class TestDictsToTable(unittest.TestCase):
                         )
                         self.assertTrue(func(book_extra))
 
-                    with self.subTest("TestGroupOnIndentationsColumns"):
+                    with self.subTest("TestUnGroupOnIndentationsRow"):
                         func = book.macro(
                             "Test__Helper_MiscGroupOnIndent.TestUnGroupOnIndentationsRow"
                         )
                         self.assertTrue(func(book_extra))
 
-                    with self.subTest("TestGroupOnIndentationsColumns"):
+                    with self.subTest("TestUnGroupOnIndentationsCol"):
                         func = book.macro(
                             "Test__Helper_MiscGroupOnIndent.TestUnGroupOnIndentationsCol"
                         )
