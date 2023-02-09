@@ -37,14 +37,14 @@ Private Sub Test_dict()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     
     'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
+    Set D = dict("a", 2, "b", ThisWorkbook)
 
     'Assert:
-    Assert.AreEqual 2, d.Item("a")
-    Assert.AreEqual ThisWorkbook.Name, d.Item("b").Name
+    Assert.AreEqual 2, D.Item("a")
+    Assert.AreEqual ThisWorkbook.Name, D.Item("b").Name
 
 TestExit:
     Exit Sub
@@ -58,16 +58,16 @@ Private Sub Test_dicti()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     
     'Act:
-    Set d = dicti("a", 2, "b", ThisWorkbook)
+    Set D = dicti("a", 2, "b", ThisWorkbook)
 
     'Assert:
-    Assert.AreEqual 2, d.Item("a")
-    Assert.AreEqual 2, d.Item("A")
-    Assert.AreEqual ThisWorkbook.Name, d.Item("b").Name
-    Assert.AreEqual ThisWorkbook.Name, d.Item("B").Name
+    Assert.AreEqual 2, D.Item("a")
+    Assert.AreEqual 2, D.Item("A")
+    Assert.AreEqual ThisWorkbook.Name, D.Item("b").Name
+    Assert.AreEqual ThisWorkbook.Name, D.Item("B").Name
 
 TestExit:
     Exit Sub

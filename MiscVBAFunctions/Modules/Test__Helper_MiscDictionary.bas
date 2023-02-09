@@ -5,9 +5,9 @@ Function Test_dictget_fail()
     Const ExpectedError As Long = 9
     On Error GoTo TestFail
 
-    Dim d As Dictionary
-    Set d = dict("a", 2, "b", ThisWorkbook)
-    dictget d, "c"
+    Dim D As Dictionary
+    Set D = dict("a", 2, "b", ThisWorkbook)
+    dictget D, "c"
     
     Test_dictget_fail = False
     Exit Function

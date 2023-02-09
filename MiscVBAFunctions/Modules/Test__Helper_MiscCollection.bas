@@ -68,8 +68,8 @@ Function Test_Join_Collections_fail_2(D1 As Dictionary, C As Collection)
     Const ExpectedError As Long = 5
     On Error GoTo TestFail
     
-    Dim d As Dictionary
-    Set d = JoinCollections(D1, C)
+    Dim D As Dictionary
+    Set D = JoinCollections(D1, C)
     
     Test_Join_Collections_fail_2 = False
     Exit Function

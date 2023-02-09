@@ -30,19 +30,19 @@ Public Function EnsureDictI(Container As Variant) As Object
         Set EnsureDictI = C
         
     ElseIf TypeOf Container Is Dictionary Then
-        Dim d As Dictionary
-        Set d = New Dictionary
-        d.CompareMode = TextCompare
+        Dim D As Dictionary
+        Set D = New Dictionary
+        D.CompareMode = TextCompare
         
         For Each key In Container.Keys
             If TypeOf Container.Item(key) Is Collection Or TypeOf Container.Item(key) Is Dictionary Then
-                d.Add key, EnsureDictI(Container.Item(key))
+                D.Add key, EnsureDictI(Container.Item(key))
             Else
-                d.Add key, Container.Item(key)
+                D.Add key, Container.Item(key)
             End If
         Next key
         
-        Set EnsureDictI = d
+        Set EnsureDictI = D
     Else
     
         Dim errmsg As String

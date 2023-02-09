@@ -8,24 +8,24 @@ Option Explicit
 
 Private Sub testDictget()
 
-    Dim d As Dictionary
-    Set d = dict("a", 2, "b", ThisWorkbook)
+    Dim D As Dictionary
+    Set D = dict("a", 2, "b", ThisWorkbook)
     
     
-    Debug.Print dictget(d, "a"), 2 ' returns 2
-    Debug.Print dictget(d, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
+    Debug.Print dictget(D, "a"), 2 ' returns 2
+    Debug.Print dictget(D, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
     
-    Debug.Print dictget(d, "c", vbNullString), vbNullString ' returns default value if key not found
+    Debug.Print dictget(D, "c", vbNullString), vbNullString ' returns default value if key not found
     
     On Error Resume Next
-        Debug.Print dictget(d, "c")
+        Debug.Print dictget(D, "c")
         Debug.Print Err.Number, 9 ' give error nr 9 if key not found
     On Error GoTo 0
 
 End Sub
 
 
-Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
+Public Function dictget(D As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
     ' Return the entry in the input Dictionary at the given key. If the given key doesn't exist,
     ' the default value is returned if it's not empty. Else an error is raised.
     '
@@ -37,8 +37,8 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
     ' Returns:
     '   The Dictionary's entry or the default value.
     
-    If d.Exists(key) Then
-        assign dictget, d.Item(key)
+    If D.Exists(key) Then
+        assign dictget, D.Item(key)
         
     ElseIf Not IsEmpty(default) Then
         assign dictget, default
@@ -126,18 +126,18 @@ Public Function JoinDicts(ParamArray Dicts()) As Dictionary
         End If
     Next dict
    
-    Dim d As New Dictionary
-    d.CompareMode = dictCompareMode
+    Dim D As New Dictionary
+    D.CompareMode = dictCompareMode
     Dim key As Variant
 
     For Each dict In Dicts
         For Each key In dict.Keys
-            d(key) = dict.Item(key)
+            D(key) = dict.Item(key)
         Next key
 
     Next dict
 
-    Set JoinDicts = d
+    Set JoinDicts = D
 
 End Function
 

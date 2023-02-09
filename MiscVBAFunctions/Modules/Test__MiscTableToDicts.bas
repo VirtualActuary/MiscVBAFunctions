@@ -40,7 +40,7 @@ Private Sub TestListObjectsToDicts()
     On Error GoTo TestFail
     
     'Arrange:
-    
+
     'Act + Assert:
     Dim Dicts As Collection
     

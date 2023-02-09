@@ -17,13 +17,13 @@ Private Sub TestHasKey()
 
     Debug.Print True, hasKey(Workbooks, ThisWorkbook.Name) ' True for non-collection type collections
     
-    Dim d As New Dictionary
-    d.Add "a", "a"
-    d.Add "b", col("x", "y", "z")
+    Dim D As New Dictionary
+    D.Add "a", "a"
+    D.Add "b", col("x", "y", "z")
     
-    Debug.Print True, hasKey(d, "a") ' True for scalar
-    Debug.Print True, hasKey(d, "b") ' True for object
-    Debug.Print False, hasKey(d, "A") ' False - case sensitive by default
+    Debug.Print True, hasKey(D, "a") ' True for scalar
+    Debug.Print True, hasKey(D, "b") ' True for object
+    Debug.Print False, hasKey(D, "A") ' False - case sensitive by default
     
     Dim dObj As Object
     Set dObj = CreateObject("Scripting.Dictionary")

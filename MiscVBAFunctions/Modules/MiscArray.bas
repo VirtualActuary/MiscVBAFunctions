@@ -245,8 +245,8 @@ Err:
     is1D = True
 End Function
 
-Private Function dateToString(d As Date, fmt As String) As String
-    dateToString = Format(d, fmt)
+Private Function dateToString(D As Date, fmt As String) As String
+    dateToString = Format(D, fmt)
 End Function
 
 

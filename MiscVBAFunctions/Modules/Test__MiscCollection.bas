@@ -256,7 +256,7 @@ Private Sub Test_Join_Collections_fail_2()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     Dim D1 As Dictionary
     Dim C As New Collection
     'Act:
@@ -264,7 +264,7 @@ Private Sub Test_Join_Collections_fail_2()
     Set D1 = dict("a", 1, "b", 2)
     Set C = col(1, 2, 3)
     
-    Set d = JoinCollections(D1, C)
+    Set D = JoinCollections(D1, C)
     
 
 Assert:
@@ -316,7 +316,7 @@ Private Sub Test_Concat_Collections_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     Dim D1 As Dictionary
     Dim C As New Collection
     'Act:

@@ -38,7 +38,7 @@ Private Sub Test_GetNewKey()
     
     'Arrange:
     Dim C As New Collection
-    Dim d As New Collection
+    Dim D As New Collection
     Dim I As Long
 
     'Act:
@@ -47,15 +47,15 @@ Private Sub Test_GetNewKey()
         C.Add "bla", "name" & I
     Next I
     
-    d.Add "bla", "does"
-    d.Add "bla", "not"
-    d.Add "bla", "matter"
+    D.Add "bla", "does"
+    D.Add "bla", "not"
+    D.Add "bla", "matter"
 
     'Assert:
     Assert.AreEqual "name101", GetNewKey("name", C)
     Assert.AreEqual "NewName", GetNewKey("NewName", C)
-    Assert.AreEqual "not1", GetNewKey("not", d)
-    Assert.AreEqual "foo", GetNewKey("foo", d)
+    Assert.AreEqual "not1", GetNewKey("not", D)
+    Assert.AreEqual "foo", GetNewKey("foo", D)
 
 TestExit:
     Exit Sub

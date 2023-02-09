@@ -37,15 +37,15 @@ Private Sub Test_dictget()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     
     'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
+    Set D = dict("a", 2, "b", ThisWorkbook)
 
     'Assert:
-    Assert.AreEqual 2, dictget(d, "a")
-    Assert.AreEqual ThisWorkbook.Name, dictget(d, "b").Name
-    Assert.AreEqual vbNullString, dictget(d, "c", vbNullString)
+    Assert.AreEqual 2, dictget(D, "a")
+    Assert.AreEqual ThisWorkbook.Name, dictget(D, "b").Name
+    Assert.AreEqual vbNullString, dictget(D, "c", vbNullString)
 
 TestExit:
     Exit Sub
@@ -60,12 +60,12 @@ Private Sub Test_dictget_fail()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
 
     'Act:
-    Set d = dict("a", 2, "b", ThisWorkbook)
+    Set D = dict("a", 2, "b", ThisWorkbook)
 
-    dictget d, "c"
+    dictget D, "c"
     
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -114,7 +114,7 @@ Private Sub Test_Join_Dicts()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim d As Dictionary
+    Dim D As Dictionary
     Dim D1 As Dictionary
     Dim D2 As Dictionary
     Dim d3 As Dictionary
@@ -123,15 +123,15 @@ Private Sub Test_Join_Dicts()
     Set D1 = dict("a", 1, "b", 2)
     Set D2 = dict("c", 10, "d", 20)
     Set d3 = dict(1, 10, 2, 20)
-    Set d = JoinDicts(D1, D2, d3)
+    Set D = JoinDicts(D1, D2, d3)
     
     'Assert:
-    Assert.AreEqual 1, d("a")
-    Assert.AreEqual 2, d("b")
-    Assert.AreEqual 10, d("c")
-    Assert.AreEqual 20, d("d")
-    Assert.AreEqual 10, d(1)
-    Assert.AreEqual 20, d(2)
+    Assert.AreEqual 1, D("a")
+    Assert.AreEqual 2, D("b")
+    Assert.AreEqual 10, D("c")
+    Assert.AreEqual 20, D("d")
+    Assert.AreEqual 10, D(1)
+    Assert.AreEqual 20, D(2)
 
 TestExit:
     Exit Sub
