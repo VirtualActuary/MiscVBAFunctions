@@ -40,7 +40,7 @@ Private Sub Test_dictget()
     Dim D As Dictionary
     
     'Act:
-    Set D = dict("a", 2, "b", ThisWorkbook)
+    Set D = Dict("a", 2, "b", ThisWorkbook)
 
     'Assert:
     Assert.AreEqual 2, dictget(D, "a")
@@ -63,7 +63,7 @@ Private Sub Test_dictget_fail()
     Dim D As Dictionary
 
     'Act:
-    Set D = dict("a", 2, "b", ThisWorkbook)
+    Set D = Dict("a", 2, "b", ThisWorkbook)
 
     dictget D, "c"
     
@@ -90,9 +90,9 @@ Private Sub Test_Concat_Dicts()
     Dim d3 As Dictionary
 
     'Act:
-    Set D1 = dict("a", 1, "b", 2)
-    Set D2 = dict("c", 10, "d", 20)
-    Set d3 = dict(2, 10, "a", 20)
+    Set D1 = Dict("a", 1, "b", 2)
+    Set D2 = Dict("c", 10, "d", 20)
+    Set d3 = Dict(2, 10, "a", 20)
     ConcatDicts D1, d3, D2
     
     'Assert:
@@ -120,9 +120,9 @@ Private Sub Test_Join_Dicts()
     Dim d3 As Dictionary
     
     'Act:
-    Set D1 = dict("a", 1, "b", 2)
-    Set D2 = dict("c", 10, "d", 20)
-    Set d3 = dict(1, 10, 2, 20)
+    Set D1 = Dict("a", 1, "b", 2)
+    Set D2 = Dict("c", 10, "d", 20)
+    Set d3 = Dict(1, 10, 2, 20)
     Set D = JoinDicts(D1, D2, d3)
     
     'Assert:

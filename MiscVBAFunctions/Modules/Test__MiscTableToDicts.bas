@@ -224,15 +224,15 @@ Private Sub TestGetTableRowRange()
     'Arrange:
     Dim Dicts As Collection
     Dim Source As Dictionary
-    Dim r As Range
+    Dim R As Range
     
     'Act:
     ' Test list object:
-    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
-    Assert.AreEqual "$B$6:$D$6", r.Address
+    Set R = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$B$6:$D$6", R.Address
     
-    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
-    Assert.AreEqual "$G$6:$I$6", r.Address
+    Set R = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
+    Assert.AreEqual "$G$6:$I$6", R.Address
 
 TestExit:
     Exit Sub
@@ -251,7 +251,7 @@ Private Sub Test_TableDictToArray()
     Dim Arr() As Variant
     
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12))
+    Set col1 = col(Dict("a", 1, "b", 2), Dict("b", 11, "a", 12))
     Arr = TableDictToArray(col1)
 
     'Assert:
@@ -279,7 +279,7 @@ Private Sub Test_TableDictToArray_fail_1()
     Dim Arr() As Variant
     
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12, "c", 3))
+    Set col1 = col(Dict("a", 1, "b", 2), Dict("b", 11, "a", 12, "c", 3))
     Arr = TableDictToArray(col1)
 
 
@@ -306,7 +306,7 @@ Private Sub Test_TableDictToArray_fail_2()
     Dim Arr() As Variant
     
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "c", 3))
+    Set col1 = col(Dict("a", 1, "b", 2), Dict("b", 11, "c", 3))
     Arr = TableDictToArray(col1)
 
 Assert:

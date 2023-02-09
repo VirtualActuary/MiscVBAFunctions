@@ -11,7 +11,7 @@ Private Sub Test()
     
 End Sub
 
-Public Sub FreezePanes(r As Range)
+Public Sub FreezePanes(R As Range)
     ' FreezePanes on the current active sheet. Removes FreezedPanes if it already exists.
     '
     ' Args:
@@ -22,7 +22,7 @@ Public Sub FreezePanes(r As Range)
     Set CurrentActiveSheet = ActiveSheet
     
     Dim WS As Worksheet
-    Set WS = r.Parent
+    Set WS = R.Parent
     
     Dim currentScreenUpdating As Boolean
     currentScreenUpdating = Application.ScreenUpdating
@@ -34,7 +34,7 @@ Public Sub FreezePanes(r As Range)
         End If
         Application.GoTo WS.Cells(1, 1) ' <- to ensure we don't hide the top/ left side of sheet
         ' Unfortunately, we have to do this :/
-        Application.GoTo r
+        Application.GoTo R
         .FreezePanes = True
     End With
     

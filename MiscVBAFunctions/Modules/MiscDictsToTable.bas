@@ -23,7 +23,7 @@ Public Function DictsToTable( _
 
     Dim NumberOfRows, NumberOfColumns, I, J As Integer
     Dim CurrentTable As ListObject
-    Dim dict As Dictionary
+    Dim Dict As Dictionary
     Dim ColumnNames() As Variant
     Dim ColumnNamesAsString As String
     Dim DictEntry As Variant
@@ -34,18 +34,18 @@ Public Function DictsToTable( _
     ColumnNames = TableDicts(1).Keys()
     ColumnNamesAsString = Join(ColumnNames, ",")
 
-    For Each dict In TableDicts
-        If dict.Count <> NumberOfColumns Then
+    For Each Dict In TableDicts
+        If Dict.Count <> NumberOfColumns Then
             Err.Raise -997, , "Mismatch lengths for the dictionary entries. "
         End If
         
-        For Each DictEntry In dict.Keys()
+        For Each DictEntry In Dict.Keys()
         
             If (InStr(ColumnNamesAsString, DictEntry) = 0) Then
                 Err.Raise -996, , "Mismatching dictionaries found. "
             End If
         Next DictEntry
-    Next dict
+    Next Dict
     
     Dim Arr() As Variant
     Arr = DictsToArray(TableDicts)

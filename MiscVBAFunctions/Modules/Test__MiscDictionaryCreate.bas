@@ -40,7 +40,7 @@ Private Sub Test_dict()
     Dim D As Dictionary
     
     'Act:
-    Set D = dict("a", 2, "b", ThisWorkbook)
+    Set D = Dict("a", 2, "b", ThisWorkbook)
 
     'Assert:
     Assert.AreEqual 2, D.Item("a")

@@ -42,19 +42,19 @@ Private Sub Test_DictsToTable_1()
     Set WB = ExcelBook("")
 
     Dim TableDict As Collection
-    Dim dict As Dictionary
-    Set dict = New Dictionary
+    Dim Dict As Dictionary
+    Set Dict = New Dictionary
     Dim Table As ListObject
     
 
     'Act:
-    With dict
+    With Dict
         .Add "col1", 1
         .Add "col2", 2
         .Add "col3", 3
     End With
     
-    Set TableDict = col(dict, dict)
+    Set TableDict = col(Dict, Dict)
     
     Set Table = DictsToTable(TableDict, WB.Worksheets(1).Range("A1"), "someName")
     

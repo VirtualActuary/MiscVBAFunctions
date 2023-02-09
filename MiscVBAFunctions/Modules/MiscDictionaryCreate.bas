@@ -1,7 +1,7 @@
 Attribute VB_Name = "MiscDictionaryCreate"
 Option Explicit
 
-Public Function dict(ParamArray Args() As Variant) As Dictionary
+Public Function Dict(ParamArray Args() As Variant) As Dictionary
     ' Case sensitive dictionary
     '
     ' Args:
@@ -12,7 +12,7 @@ Public Function dict(ParamArray Args() As Variant) As Dictionary
     '   The Dictionary
     
     Dim errmsg As String
-    Set dict = New Dictionary
+    Set Dict = New Dictionary
     
     Dim I As Long
     Dim Cnt As Long
@@ -27,7 +27,7 @@ Public Function dict(ParamArray Args() As Variant) As Dictionary
             Err.Raise 9, , errmsg
         End If
         
-        dict.Add Args(I), Args(I + 1)
+        Dict.Add Args(I), Args(I + 1)
 Cont:
     Next I
 

@@ -45,8 +45,8 @@ Private Sub Test_DictsToArray()
     Dim DictCounter As Long
     
     'Act:
-    Set D1 = dict("a", 1, "b", 2, "c", 3)
-    Set D2 = dict("a", 11, "b", 22, "c", 33)
+    Set D1 = Dict("a", 1, "b", 2, "c", 3)
+    Set D2 = Dict("a", 11, "b", 22, "c", 33)
     Set C1 = col(D1, D2)
     Arr = DictsToArray(C1)
 

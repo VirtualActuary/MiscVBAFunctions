@@ -181,12 +181,12 @@ Public Function TableColumnToArray(TableDicts As Collection, ColumnName As Strin
     
     Dim Arr() As Variant
     ReDim Arr(TableDicts.Count - 1) ' zero indexed
-    Dim dict As Dictionary
+    Dim Dict As Dictionary
     Dim Counter As Long
-    For Each dict In TableDicts
-        Arr(Counter) = dictget(dict, ColumnName)
+    For Each Dict In TableDicts
+        Arr(Counter) = dictget(Dict, ColumnName)
         Counter = Counter + 1 ' zero indexing
-    Next dict
+    Next Dict
     
     TableColumnToArray = Arr
 End Function
@@ -243,12 +243,12 @@ Function TableColumnToCollection(TableDicts As Collection, ColumnName As String)
     '   Collection of the selected column.
     
     Dim col1 As Collection
-    Dim dict As Dictionary
+    Dim Dict As Dictionary
     
     Set col1 = New Collection
-    For Each dict In TableDicts
-        col1.Add dictget(dict, ColumnName)
-    Next dict
+    For Each Dict In TableDicts
+        col1.Add dictget(Dict, ColumnName)
+    Next Dict
     
     Set TableColumnToCollection = col1
 End Function

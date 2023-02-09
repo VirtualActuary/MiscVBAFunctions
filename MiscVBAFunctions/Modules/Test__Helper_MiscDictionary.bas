@@ -6,7 +6,7 @@ Function Test_dictget_fail()
     On Error GoTo TestFail
 
     Dim D As Dictionary
-    Set D = dict("a", 2, "b", ThisWorkbook)
+    Set D = Dict("a", 2, "b", ThisWorkbook)
     dictget D, "c"
     
     Test_dictget_fail = False

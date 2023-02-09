@@ -261,7 +261,7 @@ Private Sub Test_Join_Collections_fail_2()
     Dim C As New Collection
     'Act:
 
-    Set D1 = dict("a", 1, "b", 2)
+    Set D1 = Dict("a", 1, "b", 2)
     Set C = col(1, 2, 3)
     
     Set D = JoinCollections(D1, C)
@@ -321,7 +321,7 @@ Private Sub Test_Concat_Collections_fail()
     Dim C As New Collection
     'Act:
 
-    Set D1 = dict("a", 1, "b", 2)
+    Set D1 = Dict("a", 1, "b", 2)
     Set C = col(1, 2, 3)
     
     ConcatCollections D1, C

@@ -9,7 +9,7 @@ Option Explicit
 Private Sub testDictget()
 
     Dim D As Dictionary
-    Set D = dict("a", 2, "b", ThisWorkbook)
+    Set D = Dict("a", 2, "b", ThisWorkbook)
     
     
     Debug.Print dictget(D, "a"), 2 ' returns 2
@@ -67,21 +67,21 @@ Public Sub ConcatDicts(ParamArray Dicts())
     
     Dim dictCompareMode As Long
     dictCompareMode = -999  ' This is a placeholder value
-    Dim dict As Variant
-    For Each dict In Dicts
-        If Not TypeOf dict Is Dictionary Then
+    Dim Dict As Variant
+    For Each Dict In Dicts
+        If Not TypeOf Dict Is Dictionary Then
             Dim errmsg As String
             errmsg = "All inputs need to be Dictionaries"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(dict) & "'": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Dict) & "'": On Error GoTo 0
             Err.Raise 5, , errmsg
         Else
-            If dictCompareMode <> -999 And dictCompareMode <> dict.CompareMode Then
+            If dictCompareMode <> -999 And dictCompareMode <> Dict.CompareMode Then
                 Err.Raise -987, , "CompareMode of all Dictionaries aren't the same."
             End If
-            dictCompareMode = dict.CompareMode
+            dictCompareMode = Dict.CompareMode
         
         End If
-    Next dict
+    Next Dict
 
     Dim J As Long
 
@@ -110,32 +110,32 @@ Public Function JoinDicts(ParamArray Dicts()) As Dictionary
     
     Dim dictCompareMode As Long
     dictCompareMode = -999  ' This is a placeholder value
-    Dim dict As Variant
-    For Each dict In Dicts
-        If Not TypeOf dict Is Dictionary Then
+    Dim Dict As Variant
+    For Each Dict In Dicts
+        If Not TypeOf Dict Is Dictionary Then
             Dim errmsg As String
             errmsg = "All inputs need to be Dictionaries"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(dict) & "'": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Dict) & "'": On Error GoTo 0
             Err.Raise 5, , errmsg
         Else
-            If dictCompareMode <> -999 And dictCompareMode <> dict.CompareMode Then
+            If dictCompareMode <> -999 And dictCompareMode <> Dict.CompareMode Then
                 Err.Raise -987, , "CompareMode of all Dictionaries aren't the same."
             End If
-            dictCompareMode = dict.CompareMode
+            dictCompareMode = Dict.CompareMode
         
         End If
-    Next dict
+    Next Dict
    
     Dim D As New Dictionary
     D.CompareMode = dictCompareMode
     Dim key As Variant
 
-    For Each dict In Dicts
-        For Each key In dict.Keys
-            D(key) = dict.Item(key)
+    For Each Dict In Dicts
+        For Each key In Dict.Keys
+            D(key) = Dict.Item(key)
         Next key
 
-    Next dict
+    Next Dict
 
     Set JoinDicts = D
 
