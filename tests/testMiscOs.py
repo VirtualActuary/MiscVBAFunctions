@@ -35,7 +35,7 @@ class MiscOs(unittest.TestCase):
                     ),
                 )
 
-            with self.subTest("MakeDirs"):
+            with self.subTest("CreateFolders"):
                 func_CreateFolders = book.macro("MiscOs.CreateFolders")
                 func_ExpandEnvironmentalVariables = book.macro(
                     "MiscOs.ExpandEnvironmentalVariables"
