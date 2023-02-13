@@ -419,7 +419,7 @@ Private Sub Test_RenameSheet()
     'Act:
     Set WB = ExcelBook("")
     
-    RenameSheet "foo", WB.Worksheets(1)
+    RenameSheet WB.Worksheets(1), "foo"
 
     'Assert:
     Assert.AreEqual "foo", WB.Worksheets(1).Name
@@ -443,14 +443,65 @@ Private Sub Test_RenameSheet_2()
     Set WB = ExcelBook("")
     
     WB.Worksheets.Add , WB.Worksheets(1)
-    RenameSheet "foo", WB.Worksheets(1)
-    RenameSheet "foo", WB.Worksheets(2)
+    RenameSheet WB.Worksheets(1), "foo"
+    RenameSheet WB.Worksheets(2), "foo"
 
     'Assert:
     Assert.AreEqual "foo", WB.Worksheets(1).Name
 
 TestExit:
     WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_RenameSheet_string_1()
+    On Error GoTo TestFail
+    
+'    'Arrange:
+'    Dim WB As Workbook
+'
+'    'Act:
+'    Set WB = ExcelBook("")
+'    WB.Work
+'
+'    RenameSheet "Sheet1", "foo"
+'
+'    'Assert:
+'    Assert.AreEqual "foo", ThisWorkbook.Worksheets(1).Name
+    Assert.Fail
+
+TestExit:
+'    RenameSheet "foo", "Sheet1"
+'    WB.Close False
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscExcel")
+Private Sub Test_RenameSheet_string_2()
+    On Error GoTo TestFail
+    
+    'Arrange:
+'    Dim WB As Workbook
+'
+'    'Act:
+'    Set WB = ExcelBook("")
+'
+'    WB.Worksheets.Add , WB.Worksheets(1)
+'    RenameSheet "sheet1", "foo"
+'    RenameSheet "sheet2", "foo"
+'
+'    'Assert:
+'    Assert.AreEqual "foo", WB.Worksheets(1).Name
+    Assert.Fail
+TestExit:
+'    WB.Close False
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
@@ -469,8 +520,8 @@ Private Sub Test_RenameSheet_fail()
     Set WB = ExcelBook("")
     
     WB.Worksheets.Add , WB.Worksheets(1)
-    RenameSheet "foo", WB.Worksheets(1)
-    RenameSheet "foo", WB.Worksheets(2), True
+    RenameSheet WB.Worksheets(1), "foo"
+    RenameSheet WB.Worksheets(2), "foo", True
 
 Assert:
     Assert.Fail "Expected error was not raised"

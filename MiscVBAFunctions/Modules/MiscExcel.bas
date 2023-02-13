@@ -233,16 +233,28 @@ VbProjectFlag_Keep:
 End Function
 
 
-Sub RenameSheet(NewSheetName As String, WS As Worksheet, Optional RaiseErrorIfSheetNameExists = False)
+Sub RenameSheet(SourceWS As Variant, NewSheetName As String, Optional RaiseErrorIfSheetNameExists = False)
     ' name a sheet given the proposed name (check first if it exists).
     ' Add "(NextAvailableNumber)" to the new sheet name if RaiseErrorIfSheetNameExists = False
     '
     ' Args:
+    '   SourceWS: Worksheet whose name must be changed. This argument's Variable type can be String or Worksheet
     '   NewSheetName: Desired new worksheet name
-    '   WS: Worksheet whose name must be changed.
     '   RaiseErrorIfSheetNameExists: Optional argument - If True, raise an error if the NewSheetName
     '       already exists in the WorkBook.
-
+    
+    If Not (VarType(SourceWS) = vbString Or VarType(SourceWS) = vbObject) Then
+        Err.Raise ErrNr.TypeMismatch, , "Source Worksheet must be of type: Worksheet or String."
+    End If
+    
+    Dim WS As Worksheet
+    If VarType(SourceWS) = vbObject Then
+        Set WS = SourceWS
+    Else
+        Set WS = GetLO(CStr(SourceWS))
+    End If
+        
+    
     Dim SheetNames As New Collection
     Dim S As Worksheet
     For Each S In WS.Parent.Sheets
