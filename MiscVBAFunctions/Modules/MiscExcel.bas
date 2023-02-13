@@ -378,7 +378,7 @@ End Function
 
 
 Sub InsertColumns(Reference As Range, Optional NrCols As Integer = 1)
-    ' Insert 1 or more Columns to a Range.
+    ' Insert 1 or more Columns to a Worksheet.
     ' If the input Range object contains more than 1 cell, the first
     ' cell's location will be used to add the new column.
     '
