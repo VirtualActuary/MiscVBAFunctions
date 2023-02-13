@@ -2,7 +2,7 @@ Attribute VB_Name = "MiscDataStructures"
 Option Explicit
 
 
-Function EnsureUniqueKey(C As Variant, Key As String, Optional Depth As Integer)
+Function EnsureUniqueKey(C As Variant, Key As String, Optional Depth As Long)
     ' Check if the key input exists in the input collection\Dict.
     ' Generate key unique to the keys in the collection\Dict.
     '
