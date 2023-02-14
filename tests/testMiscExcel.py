@@ -123,6 +123,12 @@ class MiscExcel(unittest.TestCase):
                 func_DeleteSheet("NewSheet")
                 self.assertFalse((func_ContainsSheet("NewSheet")))
 
+            with self.subTest("Test_ContainsSheet"):
+                func_ContainsSheet = book.macro("MiscExcel.ContainsSheet")
+                self.assertFalse((func_ContainsSheet("NewSheet")))
+                book.sheets.add("NewSheet")
+                self.assertTrue((func_ContainsSheet("NewSheet")))
+
 
 if __name__ == "__main__":
     unittest.main(
