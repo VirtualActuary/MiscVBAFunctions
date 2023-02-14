@@ -2,15 +2,15 @@ Attribute VB_Name = "Test__Helper_MiscAssign"
 Option Explicit
 
 Function Test_MiscAssign_object(I)
-    Dim X As Variant
-    Dim Y As Variant
+    Dim Obj1 As Variant
+    Dim Obj2 As Variant
     Dim Pass As Boolean
     Pass = True
     
-    assign X, I
+    assign Obj1, I
     
-    Pass = 4 = X(1) = Pass
-    Pass = 5 = assign(Y, I)(2) = Pass
+    Pass = 4 = Obj1(1) = Pass
+    Pass = 5 = assign(Obj2, I)(2) = Pass
 
     Test_MiscAssign_object = Pass
 End Function

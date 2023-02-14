@@ -102,7 +102,7 @@ Function Test_fail_ExcelBook()
     On Error GoTo TestFail6
     
     Dim WB As New Workbook
-    WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
+    WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), True, True)
     
     Test_fail_ExcelBook = False
     Exit Function
@@ -122,7 +122,7 @@ Function Test_fail_ExcelBook_2()
     On Error GoTo TestFail7
     
     Dim WB As New Workbook
-    WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), False, True)
+    WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\nonExistingFile.xlsx"), False, True)
     Test_fail_ExcelBook_2 = False
     Exit Function
 
@@ -142,9 +142,9 @@ Function Test_OpenWorkbook()
     
     Dim WB As Workbook
     Dim Asd As String
-    Asd = fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\MiscExcel.xlsx")
+    Asd = Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\MiscExcel.xlsx")
     
-    Set WB = OpenWorkbook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\MiscExcel.xlsx"), False)
+    Set WB = OpenWorkbook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\MiscExcel.xlsx"), False)
     WB.Close False
     
     Test_OpenWorkbook = True
@@ -158,7 +158,7 @@ End Function
 
 Function Test_LastRow()
     Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscTables\MiscTablesTests.xlsx"), True, True)
 
     Dim Rows As Integer
     Rows = LastRow(WB.Sheets(1))
@@ -170,7 +170,7 @@ End Function
 
 Function Test_LastColumn()
     Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscTables\MiscTablesTests.xlsx"), True, True)
 
     Dim Column As Integer
     Column = LastColumn(WB.Sheets(1))
@@ -186,7 +186,7 @@ Function Test_LastCell_1()
     Dim Pass As Boolean
     Pass = True
 
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscTables\MiscTablesTests.xlsx"), True, True)
     Set R1 = LastCell(WB.Sheets(1))
 
     Pass = 1 = CInt(R1.Count) = Pass
@@ -205,7 +205,7 @@ Function Test_LastCell_2()
     Dim Pass As Boolean
     Pass = True
     
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\ranges.xlsx"), True, False)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\ranges.xlsx"), True, False)
     WB.Sheets(1).Cells(4, 14).Value = 4
     Set R1 = LastCell(WB.Sheets(1))
 
@@ -227,7 +227,7 @@ Function Test_RelevantRange()
     Dim Pass As Boolean
     Pass = True
     
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\ranges.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\ranges.xlsx"), True, True)
     Set R1 = RelevantRange(WB.Sheets(1))
     Arr = R1.Value
     
@@ -250,7 +250,7 @@ Function Test_RelevantRange2()
     Dim R1 As Range
     Dim Arr As Variant
     
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\ranges2.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "test_data\MiscExcel\ranges2.xlsx"), True, True)
     Set R1 = RelevantRange(WB.Sheets(1))
 
     If R1 Is Nothing Then

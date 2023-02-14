@@ -83,7 +83,7 @@ Private Sub Test_MakeDirs()
     
 TestExit:
 
-    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1")
+    Fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1")
 
     Exit Sub
 TestFail:
@@ -143,7 +143,7 @@ Assert:
     Assert.Fail "Expected error was not raised"
 
 TestExit:
-    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1")
+    Fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "MakeDirs_folder1")
     Exit Sub
 TestFail:
     If Err.Number = ExpectedError Then

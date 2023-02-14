@@ -104,17 +104,12 @@ Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = 
     Dim PathTemp As String ' for when the relative names becomes too long:
     PathTemp = EvalPath(StrPath)
 
-
-    Dim pathTemp As String ' for when the relative names becomes too long:
-    pathTemp = EvalPath(strPath)
-
-    If Fso.FolderExists(pathTemp) Then Exit Sub
-
+    If Fso.FolderExists(PathTemp) Then
         ' if the folder already exists, no need to create anything
         If ExistOk = False Then
             Err.Raise ErrNr.FileAlreadyExists, , ErrorMessage(ErrNr.FileAlreadyExists, "Could not create folder with path: " & PathTemp & ". Folder already exists.")
         Else
-            Set MakeDirs = fso.GetFolder(PathTemp)
+            Set MakeDirs = Fso.GetFolder(PathTemp)
             Exit Function
         End If
     End If
@@ -132,17 +127,17 @@ Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = 
 
     For J = I To UBound(PathTempSplit)
         StrCheckPath = StrCheckPath & PathTempSplit(J) & "\"
-        If fso.FolderExists(StrCheckPath) = False Then
+        If Fso.FolderExists(StrCheckPath) = False Then
             On Error Resume Next
             MkDir StrCheckPath
             On Error GoTo 0
         End If
     Next J
-    If Not fso.FolderExists(PathTemp) Then
+    If Not Fso.FolderExists(PathTemp) Then
         Err.Raise ErrNr.FileNotFound, , ErrorMessage(ErrNr.FileNotFound, "Could not create folder with path: " & PathTemp & ". Ensure you have write access to the required folder.")
 
     End If
-    Set MakeDirs = fso.GetFolder(PathTemp)
+    Set MakeDirs = Fso.GetFolder(PathTemp)
 End Function
 
 

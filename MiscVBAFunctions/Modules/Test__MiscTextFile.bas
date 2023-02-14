@@ -72,7 +72,7 @@ Private Sub Test_readTextFile()
     Dim text As String
     
     'Act:
-    text = readTextFile(ThisWorkbook.Path & "\tests\MiscCreateTextFile\test.txt")
+    text = ReadTextFile(ThisWorkbook.Path & "\tests\MiscCreateTextFile\test.txt")
     
     'Assert:
     Assert.AreEqual "my test text." & vbNewLine, text

@@ -6,7 +6,7 @@ Function Test_zip(C1, C2)
     Pass = True
 
     Dim Cout As Collection
-    Set Cout = zip(C1, C2)
+    Set Cout = Zip(C1, C2)
 
     Pass = 1 = Cout(1)(1) = Pass
     Pass = 4 = Cout(1)(2) = Pass

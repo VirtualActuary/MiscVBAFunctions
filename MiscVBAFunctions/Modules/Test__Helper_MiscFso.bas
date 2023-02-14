@@ -6,7 +6,7 @@ Function Test_GetAllFilesRecursive(InputPath As String)
     Dim Pass As Boolean
     Pass = True
     
-    Set AllFiles = GetAllFilesRecursive(fso.GetFolder(InputPath))
+    Set AllFiles = GetAllFilesRecursive(Fso.GetFolder(InputPath))
 
     Pass = 5 = CInt(AllFiles.Count) = Pass
     Pass = "E:\AA\MiscVBAFunctions\test_data\GetAllFiles\empty file.txt" = AllFiles(1) = Pass

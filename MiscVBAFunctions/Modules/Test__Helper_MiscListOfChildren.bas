@@ -6,7 +6,7 @@ Function Test_GetListOfChildren()
     Pass = True
     
     Dim Depths As Collection
-    Set Depths = col( _
+    Set Depths = Col( _
     1, _
       2, _
       2, _

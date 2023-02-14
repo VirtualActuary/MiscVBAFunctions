@@ -26,3 +26,5 @@ Option Explicit
 'Dim Arr
 'Dim Err
 'Dim Fso
+'Dim PathTemp
+

@@ -7,7 +7,7 @@ Function Test_HasKey_Collection()
     Pass = True
     
     C.Add "foo", "a"
-    C.Add col("x", "y", "z"), "b"
+    C.Add Col("x", "y", "z"), "b"
     
     Pass = True = hasKey(C, "a") = Pass ' True for scalar
     Pass = True = hasKey(C, "b") = Pass ' True for scalar
@@ -30,7 +30,7 @@ Function Test_HasKey_Dictionary_object()
     Set dObj = CreateObject("Scripting.Dictionary")
     
     dObj.Add "a", "foo"
-    dObj.Add "b", col("x", "y", "z")
+    dObj.Add "b", Col("x", "y", "z")
     
     Pass = hasKey(dObj, "a") = Pass ' True for scalar
     Pass = hasKey(dObj, "b") = Pass ' True for scalar

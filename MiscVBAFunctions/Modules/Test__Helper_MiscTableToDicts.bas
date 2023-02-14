@@ -77,11 +77,11 @@ Function TestGetTableRowIndex1()
     Dim Pass As Boolean
     Pass = True
     Dim Table As Collection
-    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"), dicti("a", "Baz", "b", "Bla"))
+    Set Table = Col(DictI("a", 1, "b", 2), DictI("a", 3, "b", 4), DictI("a", "foo", "b", "bar"), DictI("a", "Baz", "b", "Bla"))
 
-    Pass = CLng(2) = GetTableRowIndex(Table, col("a", "b"), col(3, 4)) = Pass
-    Pass = CLng(3) = GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")) = Pass
-    Pass = CLng(3) = GetTableRowIndex(Table, col("a", "b"), col("FoO", "BAr")) = Pass
+    Pass = CLng(2) = GetTableRowIndex(Table, Col("a", "b"), Col(3, 4)) = Pass
+    Pass = CLng(3) = GetTableRowIndex(Table, Col("a", "b"), Col("foo", "bar")) = Pass
+    Pass = CLng(3) = GetTableRowIndex(Table, Col("a", "b"), Col("FoO", "BAr")) = Pass
     
     TestGetTableRowIndex1 = Pass
 End Function
@@ -89,13 +89,13 @@ End Function
 
 Function TestGetTableRowIndex2()
     Dim Table As Collection
-    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"), dicti("a", "Baz", "b", "Bla"))
+    Set Table = Col(DictI("a", 1, "b", 2), DictI("a", 3, "b", 4), DictI("a", "foo", "b", "bar"), DictI("a", "Baz", "b", "Bla"))
 
     Dim IndexTest As Variant
     IndexTest = 999
     On Error GoTo NoFind
     ' this should throw an error as no match of the same index should be found
-    IndexTest = GetTableRowIndex(Table, col("a", "b"), col("baz", "bla"), IgnoreCaseValues:=False)
+    IndexTest = GetTableRowIndex(Table, Col("a", "b"), Col("baz", "bla"), IgnoreCaseValues:=False)
     
     TestGetTableRowIndex2 = False
     Exit Function
@@ -124,14 +124,14 @@ End Function
 
 Function TestGetTableRowRange1(WB As Workbook)
     Dim R As Range
-    Set R = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
+    Set R = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB)
     TestGetTableRowRange1 = "$B$6:$D$6" = R.Address
 End Function
 
 
 Function TestGetTableRowRange2(WB As Workbook)
     Dim R As Range
-    Set R = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
+    Set R = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB)
     TestGetTableRowRange2 = "$G$6:$L$6" = R.Address
 End Function
 
@@ -140,11 +140,11 @@ Function Test_TableDictToArray_fail_1()
     Const ExpectedError As Long = -997
     On Error GoTo TestFail1
     
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     
-    Set col1 = col(Dict("a", 1, "b", 2), Dict("b", 11, "a", 12, "c", 3))
-    Arr = TableDictToArray(col1)
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("b", 11, "a", 12, "c", 3))
+    Arr = TableDictToArray(Col1)
 
     Test_TableDictToArray_fail_1 = False
     Exit Function
@@ -164,11 +164,11 @@ Function Test_TableDictToArray_fail_2()
     Const ExpectedError As Long = -996
     On Error GoTo TestFail2
     
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     
-    Set col1 = col(Dict("a", 1, "b", 2), Dict("b", 11, "c", 3))
-    Arr = TableDictToArray(col1)
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("b", 11, "c", 3))
+    Arr = TableDictToArray(Col1)
     
     Test_TableDictToArray_fail_2 = False
     Exit Function

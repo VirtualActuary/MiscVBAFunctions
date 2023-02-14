@@ -23,7 +23,7 @@ Public Sub CreateTextFile(ByVal Content As String, ByVal FilePath As String)
 End Sub
 
 
-Function readTextFile(Path As String) As String
+Function ReadTextFile(Path As String) As String
     ' Read the content of a text file and return it as a string
     '
     ' Args:
@@ -35,7 +35,7 @@ Function readTextFile(Path As String) As String
     Dim OFile As Object
     Set OFile = Fso.OpenTextFile(Path, ForReading)
     
-    readTextFile = OFile.ReadAll
+    ReadTextFile = OFile.ReadAll
     
     OFile.Close
 End Function

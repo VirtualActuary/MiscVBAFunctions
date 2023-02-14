@@ -70,14 +70,14 @@ Function Test_TableColumnToCollection()
     Dim Pass As Boolean
     Pass = True
 
-    Dim col1 As Collection
-    Dim col2 As Collection
+    Dim Col1 As Collection
+    Dim Col2 As Collection
 
-    Set col1 = col(Dict("a", 1, "b", 2), Dict("a", 10, "b", 20))
-    Set col2 = TableColumnToCollection(col1, "b")
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("a", 10, "b", 20))
+    Set Col2 = TableColumnToCollection(Col1, "b")
 
-    Pass = 2 = col2(1) = Pass
-    Pass = 20 = col2(2) = Pass
+    Pass = 2 = Col2(1) = Pass
+    Pass = 20 = Col2(2) = Pass
 
     Test_TableColumnToCollection = Pass
 End Function
