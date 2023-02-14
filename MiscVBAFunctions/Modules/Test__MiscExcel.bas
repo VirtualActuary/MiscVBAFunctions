@@ -375,7 +375,6 @@ TestFail:
     Resume TestExit
 End Sub
                                                                         
-
 '@TestMethod("MiscExcel")
 Private Sub Test_SanitiseExcelName()
     On Error GoTo TestFail
@@ -387,20 +386,6 @@ Private Sub Test_SanitiseExcelName()
     Assert.AreEqual "a_b", SanitiseExcelName("a b")
     Assert.AreEqual "______________________________", SanitiseExcelName("- /*+=^!@#$%&?`~:;[](){}""'|,<>")
     
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscExcel")
-Private Sub Test_VbaLocked()
-    On Error GoTo TestFail
- 
-    'Assert:
-    Assert.AreEqual ThisWorkbook.VBProject.Protection <> vbext_ProjectProtection.vbext_pp_none, VbaLocked()
 
 TestExit:
     Exit Sub

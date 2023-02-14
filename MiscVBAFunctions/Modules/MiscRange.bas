@@ -1,22 +1,6 @@
 Attribute VB_Name = "MiscRange"
 Option Explicit
 
-Function ActiveRowsDown(Optional R As Range) As Long
-    ' number of active rows down from the starting range
-    ' it's capped at a minimum of 1
-    '
-    ' Args:
-    '   R: Input range
-    '
-    ' Returns:
-    '   Number of rows down from the starting range.
-    
-    If R Is Nothing Then Set R = Selection
-    ActiveRowsDown = R.Worksheet.Cells(R.Worksheet.Cells.Rows.Count, R.Column).End(xlUp).Row - R.Row + 1
-    ActiveRowsDown = Application.WorksheetFunction.Max(1, ActiveRowsDown)
-End Function
-
-
 Function RangeToLO(WS As Worksheet, Data As Range, TableName As String) As ListObject
     ' Create a Table containing the data from the input range.
     ' The Range determines the starting Cell of the table.

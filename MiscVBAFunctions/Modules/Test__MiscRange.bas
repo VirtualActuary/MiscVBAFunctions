@@ -33,46 +33,6 @@ Private Sub TestCleanup()
 End Sub
 
 '@TestMethod("MiscRange")
-Private Sub Test_ActiveRowsDown()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim WB As Workbook
-    Dim RangeStart As Range
-    Dim RangeTest As Range
-    Dim Arr(2, 2) As Variant
-
-    'Act:
-    Set WB = ExcelBook("", False, False)
-    Arr(0, 0) = "1"
-    Arr(0, 1) = "1"
-    Arr(0, 2) = "1"
-    Arr(1, 0) = "1"
-    Arr(1, 1) = "1"
-    Arr(1, 2) = "1"
-    Arr(2, 0) = "1"
-    Arr(2, 1) = "1"
-    Arr(2, 2) = "1"
-    
-    
-    Set RangeStart = WB.ActiveSheet.Range("B4")
-    Set RangeTest = ArrayToRange(Arr, RangeStart, True)
-    
-    'Assert:
-    Assert.AreEqual CLng(3), ActiveRowsDown(WB.ActiveSheet.Range("B4"))
-    Assert.AreEqual CLng(2), ActiveRowsDown(WB.ActiveSheet.Range("D5"))
-    Assert.AreEqual CLng(1), ActiveRowsDown(WB.ActiveSheet.Range("C6"))
-
-TestExit:
-    WB.Close False
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-
-'@TestMethod("MiscRange")
 Private Sub Test_RangeToLO()
     On Error GoTo TestFail
     

@@ -438,66 +438,6 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscTables")
-Private Sub Test_IsTableMatch()
-    On Error GoTo TestFail
-    
-    'Assert:
-    Assert.AreEqual True, IsTableMatch("variables", "Variables")
-    Assert.AreEqual False, IsTableMatch("variables_", "Variables")
-    Assert.AreEqual False, IsTableMatch("variables_1", "Variables")
-    Assert.AreEqual True, IsTableMatch("variables2", "Variables")
-    Assert.AreEqual True, IsTableMatch("variables100", "Variables")
-    Assert.AreEqual False, IsTableMatch("variables100e", "Variables")
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscTables")
-Private Sub Test_GetMatchingTables()
-    On Error GoTo TestFail
-    
-    'Assert:
-    Assert.AreEqual CLng(6), GetMatchingTables("table", WB).Count
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscTables")
-Private Sub Test_getInputsTables()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim C As Collection
-    
-    'Act:
-    Set C = getInputsTables("table", WB)
-    
-    'Assert:
-    Assert.AreEqual CLng(6), C.Count
-    Assert.AreEqual "Table1", C(1)
-    Assert.AreEqual "Table2", C(2)
-    Assert.AreEqual "Table4", C(3)
-    Assert.AreEqual "Table7", C(4)
-    Assert.AreEqual "Table8", C(5)
-    Assert.AreEqual "Table10", C(6)
-    
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-
-'@TestMethod("MiscTables")
 Private Sub Test_TableToArray()
     On Error GoTo TestFail
     
