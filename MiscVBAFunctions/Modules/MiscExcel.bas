@@ -377,34 +377,34 @@ Err:
 End Function
 
 
-Sub InsertColumns(Reference As Range, Optional NrCols As Integer = 1)
+Sub InsertColumns(ReferenceR As Range, Optional NrCols As Integer = 1)
     ' Insert 1 or more Columns to a Worksheet.
     ' If the input Range object contains more than 1 cell, the first
     ' cell's location will be used to add the new column.
     '
     ' Args:
-    '   Reference: Range object, used to place the new Column. This Range object will be altered
+    '   ReferenceR: Range object, used to place the new Column. This Range object will be altered
     '   NrCols: Number of columns to add.
     
     Dim I As Long
     For I = 1 To NrCols
-        Reference.Cells(1, 1).EntireColumn.Insert
+        ReferenceR.Cells(1, 1).EntireColumn.Insert
     Next I
 End Sub
 
 
-Sub InsertRows(R As Range, Optional NrRows As Integer = 1)
+Sub InsertRows(ReferenceR As Range, Optional NrRows As Integer = 1)
     ' Insert 1 or more rows to a Worksheet.
     ' If the input Range object contains more than 1 cell, the first
     ' cell's location will be used to add the new row.
     '
     ' Args:
-    '   R: Range object, used to place the new row.
+    '   ReferenceR: Range object, used to place the new row.
     '   NrCols: Number of rows to add.
     
     Dim I As Long
     For I = 1 To NrRows
-        R.Cells(1, 1).EntireRow.Insert
+        ReferenceR.Cells(1, 1).EntireRow.Insert
     Next I
 End Sub
 
