@@ -107,7 +107,7 @@ class MiscExcel(unittest.TestCase):
                 func_RenameSheet("Bar", "Baz")
                 self.assertEqual("Baz", book.sheets[1].name)
 
-            with self.subTest("renameSheet_string_2"):
+            with self.subTest("renameSheet_string_fail"):
                 func = book.macro("Test__Helper_MiscExcel.Test_RenameSheet_fail")
                 self.assertTrue(func())
 
