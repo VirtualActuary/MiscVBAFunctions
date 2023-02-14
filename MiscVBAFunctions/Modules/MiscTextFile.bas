@@ -37,5 +37,6 @@ Function readTextFile(Path As String) As String
     
     readTextFile = OFile.ReadAll
     
+    OFile.Close
 End Function
 
