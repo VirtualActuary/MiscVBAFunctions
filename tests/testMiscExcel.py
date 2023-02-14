@@ -1,6 +1,7 @@
 import unittest
 from xlwings import Book
 from locate import prepend_sys_path
+
 with prepend_sys_path():
     from util import functions_book
 
@@ -77,6 +78,38 @@ class MiscExcel(unittest.TestCase):
                     "_____________________________",
                     func("- /*+=^!@#$%&?`~:;[](){}" "'|,<>"),
                 )
+
+            with self.subTest("RenameSheet"):
+
+                func_RenameSheet = book.macro("MiscExcel.RenameSheet")
+                func_RenameSheet(book.sheets[0], "foo")
+                self.assertEqual("foo", book.sheets[0].name)
+                func_RenameSheet(book.sheets[0], "Sheet1")
+
+            with self.subTest("renameSheet_2"):
+                func_RenameSheet = book.macro("MiscExcel.RenameSheet")
+                book.sheets.add()
+                func_RenameSheet(book.sheets[0], "foo")
+                func_RenameSheet(book.sheets[1], "foo")
+                self.assertEqual("foo", book.sheets[0].name)
+                self.assertEqual("foo (1)", book.sheets[1].name)
+                func_RenameSheet(book.sheets[0], "Sheet1")
+                func_RenameSheet(book.sheets[1], "Sheet2")
+
+            with self.subTest("renameSheet_string_1"):
+                func_RenameSheet(book.sheets[1], "temp")
+                func_RenameSheet("temp", "Bar")
+                self.assertEqual("Bar", book.sheets[1].name)
+
+            with self.subTest("renameSheet_string_2"):
+                func_RenameSheet(book.sheets[1], "temp")
+                func_RenameSheet("temp", "Bar")
+                func_RenameSheet("Bar", "Baz")
+                self.assertEqual("Baz", book.sheets[1].name)
+
+            with self.subTest("renameSheet_string_2"):
+                func = book.macro("Test__Helper_MiscExcel.Test_RenameSheet_fail")
+                self.assertTrue(func())
 
 
 if __name__ == "__main__":

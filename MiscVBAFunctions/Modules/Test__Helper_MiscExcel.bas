@@ -261,3 +261,28 @@ Function Test_RelevantRange2()
 
     WB.Close False
 End Function
+
+
+Function Test_RenameSheet_fail()
+    Const ExpectedError As Long = 58
+    On Error GoTo TestFail
+    
+    Dim WB As Workbook
+    Set WB = ExcelBook("")
+    
+    WB.Worksheets.Add , WB.Worksheets(1)
+    RenameSheet WB.Worksheets(1), "foo"
+    RenameSheet WB.Worksheets(2), "foo", True
+
+    Test_RenameSheet_fail = False
+    WB.Close False
+    Exit Function
+TestFail:
+    If Err.Number = ExpectedError Then
+        Test_RenameSheet_fail = True
+    Else
+        Test_RenameSheet_fail = False
+    End If
+    
+    WB.Close False
+End Function
