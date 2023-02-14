@@ -108,7 +108,7 @@ class MiscCollection(unittest.TestCase):
                 arr = func_Col_to_arr(func_col())
                 self.assertTrue(func(arr))
 
-            with self.subTest():
+            with self.subTest("Test_IndexInCOllection"):
                 func_IndexInCollection = book.macro("MiscCollection.IndexInCollection")
                 C = func_col(
                     "variables10",
@@ -129,6 +129,15 @@ class MiscCollection(unittest.TestCase):
                 self.assertEqual(0, func_IndexInCollection(C, "Foo"))
                 self.assertEqual(5, func_IndexInCollection(C2, 56))
                 self.assertEqual(0, func_IndexInCollection(C2, "23"))
+
+            with self.subTest("Test_uniqueCollection"):
+                func_UniqueCollection = book.macro("MiscCollection.UniqueCollection")
+                func_Col_to_arr = book.macro("MiscCollection.CollectionToArray")
+                Col1 = func_col("1", "3.4", 3.4, 1)
+                Col2 = func_col(3.4, 3.4, "1", "asdf")
+
+                self.assertEqual(4, len(func_Col_to_arr(func_UniqueCollection(Col1))))
+                self.assertEqual(3, len(func_Col_to_arr(func_UniqueCollection(Col2))))
 
 
 if __name__ == "__main__":
