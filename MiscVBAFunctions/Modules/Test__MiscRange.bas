@@ -113,6 +113,48 @@ End Sub
 
 
 '@TestMethod("MiscRange")
+Private Sub Test_RangeToLO_fail()
+    Const ExpectedError As Long = 58
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim WB As Workbook
+    Dim RangeStart As Range
+    Dim RangeTest As Range
+    Dim Arr(1, 2) As Variant
+    Dim LO As ListObject
+
+    'Act:
+    Set WB = ExcelBook("", False, False)
+    Arr(0, 0) = "col1"
+    Arr(0, 1) = "col2"
+    Arr(0, 2) = "col3"
+    Arr(1, 0) = "=[d]"
+    Arr(1, 1) = "=d"
+    Arr(1, 2) = 1
+    
+    
+    Set RangeStart = WB.ActiveSheet.Range("B4")
+    Set RangeTest = ArrayToRange(Arr, RangeStart, True)
+    
+    Set LO = RangeToLO(WB.ActiveSheet, RangeTest, "myTable")
+    Set LO = RangeToLO(WB.ActiveSheet, RangeTest, "myTable")
+
+Assert:
+    Assert.Fail "Expected error was not raised"
+
+TestExit:
+    Exit Sub
+TestFail:
+    If Err.Number = ExpectedError Then
+        Resume TestExit
+    Else
+        Resume Assert
+    End If
+End Sub
+
+
+'@TestMethod("MiscRange")
 Private Sub Test_IsInRange()
     On Error GoTo TestFail
     

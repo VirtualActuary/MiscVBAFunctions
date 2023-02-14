@@ -28,7 +28,11 @@ Function RangeToLO(WS As Worksheet, Data As Range, TableName As String) As ListO
     '
     ' Returns:
     '   The Table as a ListObject
-    
+    If HasLO(TableName, WS.Parent) = True Then
+        Err.Raise FileAlreadyExists, , "Table already exists. "
+        Exit Function
+    End If
+
     Set RangeToLO = WS.ListObjects.Add( _
         SourceType:=xlSrcRange, _
         Source:=Data, _
