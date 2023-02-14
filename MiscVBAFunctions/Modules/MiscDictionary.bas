@@ -8,24 +8,24 @@ Option Explicit
 
 Private Sub testDictget()
 
-    Dim d As Dictionary
-    Set d = dict("a", 2, "b", ThisWorkbook)
+    Dim D As Dictionary
+    Set D = Dict("a", 2, "b", ThisWorkbook)
     
     
-    Debug.Print dictget(d, "a"), 2 ' returns 2
-    Debug.Print dictget(d, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
+    Debug.Print dictget(D, "a"), 2 ' returns 2
+    Debug.Print dictget(D, "b").Name, ThisWorkbook.Name ' returns the name of thisworkbook
     
-    Debug.Print dictget(d, "c", vbNullString), vbNullString ' returns default value if key not found
+    Debug.Print dictget(D, "c", vbNullString), vbNullString ' returns default value if key not found
     
     On Error Resume Next
-        Debug.Print dictget(d, "c")
+        Debug.Print dictget(D, "c")
         Debug.Print Err.Number, 9 ' give error nr 9 if key not found
     On Error GoTo 0
 
 End Sub
 
 
-Public Function dictget(d As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
+Public Function dictget(D As Dictionary, Key As Variant, Optional default As Variant = Empty) As Variant
     ' Return the entry in the input Dictionary at the given key. If the given key doesn't exist,
     ' the default value is returned if it's not empty. Else an error is raised.
     '
@@ -37,8 +37,8 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
     ' Returns:
     '   The Dictionary's entry or the default value.
     
-    If d.Exists(key) Then
-        assign dictget, d.Item(key)
+    If D.Exists(Key) Then
+        assign dictget, D.Item(Key)
         
     ElseIf Not IsEmpty(default) Then
         assign dictget, default
@@ -47,7 +47,7 @@ Public Function dictget(d As Dictionary, key As Variant, Optional default As Var
         Dim errmsg As String
         On Error Resume Next
             errmsg = "Key "
-            errmsg = errmsg & "`" & key & "` "
+            errmsg = errmsg & "`" & Key & "` "
             errmsg = errmsg & "not in dictionary"
         On Error GoTo 0
         
@@ -67,29 +67,29 @@ Public Sub ConcatDicts(ParamArray Dicts())
     
     Dim dictCompareMode As Long
     dictCompareMode = -999  ' This is a placeholder value
-    Dim dict As Variant
-    For Each dict In Dicts
-        If Not TypeOf dict Is Dictionary Then
+    Dim Dict As Variant
+    For Each Dict In Dicts
+        If Not TypeOf Dict Is Dictionary Then
             Dim errmsg As String
             errmsg = "All inputs need to be Dictionaries"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(dict) & "'": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Dict) & "'": On Error GoTo 0
             Err.Raise 5, , errmsg
         Else
-            If dictCompareMode <> -999 And dictCompareMode <> dict.CompareMode Then
+            If dictCompareMode <> -999 And dictCompareMode <> Dict.CompareMode Then
                 Err.Raise -987, , "CompareMode of all Dictionaries aren't the same."
             End If
-            dictCompareMode = dict.CompareMode
+            dictCompareMode = Dict.CompareMode
         
         End If
-    Next dict
+    Next Dict
 
     Dim J As Long
 
-    Dim key As Variant
+    Dim Key As Variant
     For J = 1 To UBound(Dicts)
-        For Each key In Dicts(J).Keys
-            Dicts(0)(key) = Dicts(J).Item(key)
-        Next key
+        For Each Key In Dicts(J).Keys
+            Dicts(0)(Key) = Dicts(J).Item(Key)
+        Next Key
 
     Next
 
@@ -110,34 +110,34 @@ Public Function JoinDicts(ParamArray Dicts()) As Dictionary
     
     Dim dictCompareMode As Long
     dictCompareMode = -999  ' This is a placeholder value
-    Dim dict As Variant
-    For Each dict In Dicts
-        If Not TypeOf dict Is Dictionary Then
+    Dim Dict As Variant
+    For Each Dict In Dicts
+        If Not TypeOf Dict Is Dictionary Then
             Dim errmsg As String
             errmsg = "All inputs need to be Dictionaries"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(dict) & "'": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Dict) & "'": On Error GoTo 0
             Err.Raise 5, , errmsg
         Else
-            If dictCompareMode <> -999 And dictCompareMode <> dict.CompareMode Then
+            If dictCompareMode <> -999 And dictCompareMode <> Dict.CompareMode Then
                 Err.Raise -987, , "CompareMode of all Dictionaries aren't the same."
             End If
-            dictCompareMode = dict.CompareMode
+            dictCompareMode = Dict.CompareMode
         
         End If
-    Next dict
+    Next Dict
    
-    Dim d As New Dictionary
-    d.CompareMode = dictCompareMode
-    Dim key As Variant
+    Dim D As New Dictionary
+    D.CompareMode = dictCompareMode
+    Dim Key As Variant
 
-    For Each dict In Dicts
-        For Each key In dict.Keys
-            d(key) = dict.Item(key)
-        Next key
+    For Each Dict In Dicts
+        For Each Key In Dict.Keys
+            D(Key) = Dict.Item(Key)
+        Next Key
 
-    Next dict
+    Next Dict
 
-    Set JoinDicts = d
+    Set JoinDicts = D
 
 End Function
 

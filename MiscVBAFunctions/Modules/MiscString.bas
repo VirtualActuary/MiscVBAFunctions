@@ -12,15 +12,15 @@ Public Function randomString(length As Variant)
     ' Returns:
     '   The Random string.
     
-    Dim s As String
-    While Len(s) < length
-        s = s & Hex(Rnd * 16777216)
+    Dim S As String
+    While Len(S) < length
+        S = S & Hex(Rnd * 16777216)
     Wend
-    randomString = Mid(s, 1, length)
+    randomString = Mid(S, 1, length)
 End Function
 
 
-Public Function IsString(ByVal v As Variant) As Boolean
+Public Function IsString(ByVal V As Variant) As Boolean
     ' Test is a Variant is of type String
     '
     ' Args:
@@ -30,12 +30,44 @@ Public Function IsString(ByVal v As Variant) As Boolean
     '   Boolean indication if the input is a String
     IsString = False
     
-    Dim s As String
+    Dim S As String
     
     ' If not an object (s=v error test) then test if not numeric
     On Error Resume Next
-        s = v
+        S = V
         If Err.Number = 0 Then
-            If Not IsNumeric(v) Then IsString = True
+            If Not IsNumeric(V) Then IsString = True
         End If
+End Function
+
+
+Public Function EndsWith(StrComplete As String, Ending As String) As Boolean
+    'Test if a string ends with an ending string
+    '
+    ' Args:
+    '   StrComplete: Input string
+    '   Ending: Section look for in the input string
+    '
+    ' Returns:
+    '   True if the input string ends with the correct ending, False otherwise
+    
+     Dim endingLen As Integer
+     endingLen = Len(Ending)
+     EndsWith = (Right(Trim(UCase(StrComplete)), endingLen) = UCase(Ending))
+End Function
+
+
+Public Function StartsWith(Str As String, Start As String) As Boolean
+    ' Test if a string starts with an starting string
+    '
+    ' Args:
+    '   Str: Input string
+    '   Start: Section look for in the input string
+    '
+    ' Returns:
+    '   True if the input string ends with the correct ending, False otherwise
+    
+     Dim startLen As Integer
+     startLen = Len(Start)
+     StartsWith = (Left(Trim(UCase(Str)), startLen) = UCase(Start))
 End Function

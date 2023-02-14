@@ -17,7 +17,7 @@ Private Sub ModuleInitialize()
     Set Fakes = New Rubberduck.FakesProvider
     'Dim WS As Worksheet
     'Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscFreezePanes\MiscFreezePanes.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscFreezePanes\MiscFreezePanes.xlsx"), True, True)
     Set WS = WB.Worksheets(1)
 End Sub
 

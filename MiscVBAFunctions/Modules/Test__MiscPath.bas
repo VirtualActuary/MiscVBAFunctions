@@ -44,7 +44,7 @@ Private Sub Test_Path()
     ' Empty path should return empty path
     Assert.AreEqual vbNullString, Path("")
     Assert.AreEqual vbNullString, Path(Array(""))
-    Assert.AreEqual vbNullString, Path(col(""))
+    Assert.AreEqual vbNullString, Path(Col(""))
     
     ' Normalize slashes to '\'.
     Assert.AreEqual "C:\foo\bar", Path("C:", "foo", "bar")
@@ -71,7 +71,7 @@ Private Sub Test_Path()
     Assert.AreEqual "C:\folder1\folder2\folder3", Path("C:/folder1/folder2/folder3")
     
     ' Collection is allowed in stead of multiple arguments
-    Assert.AreEqual "foo\bar\baz", Path(col("foo", "bar", "baz"))
+    Assert.AreEqual "foo\bar\baz", Path(Col("foo", "bar", "baz"))
     
     ' Array is allowed in stead of multiple arguments
     Assert.AreEqual "foo\bar\baz", Path(Array("foo", "bar", "baz"))
@@ -252,9 +252,9 @@ Private Sub Test_AbsolutePath()
     ' Relative paths
     Assert.AreEqual ThisWorkbook.Path & "\foo\bar", AbsolutePath("foo/bar", ThisWorkbook)
     Assert.AreEqual ThisWorkbook.Path & "\foo", AbsolutePath(".\foo", ThisWorkbook)
-    Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path) & "\foo", AbsolutePath("..\foo", ThisWorkbook)
-    Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo\..\..", ThisWorkbook)
-    Assert.AreEqual fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo//..//..", ThisWorkbook)
+    Assert.AreEqual Fso.GetParentFolderName(ThisWorkbook.Path) & "\foo", AbsolutePath("..\foo", ThisWorkbook)
+    Assert.AreEqual Fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo\..\..", ThisWorkbook)
+    Assert.AreEqual Fso.GetParentFolderName(ThisWorkbook.Path), AbsolutePath("foo//..//..", ThisWorkbook)
     
     ' Network Paths
     Assert.AreEqual "\\foo\bar", AbsolutePath("\\foo/bar")

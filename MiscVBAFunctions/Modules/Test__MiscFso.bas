@@ -40,7 +40,7 @@ Private Sub Test_GetAllFilesRecursive()
     Dim AllFiles As Collection
     
     'Act:
-    Set AllFiles = GetAllFilesRecursive(fso.GetFolder(Path(ThisWorkbook.Path, "tests\GetAllFiles")))
+    Set AllFiles = GetAllFilesRecursive(Fso.GetFolder(Path(ThisWorkbook.Path, "tests\GetAllFiles")))
 
     'Assert:
     Assert.AreEqual 5, CInt(AllFiles.Count)

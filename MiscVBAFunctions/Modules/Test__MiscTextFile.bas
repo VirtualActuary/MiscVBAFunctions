@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscCreateTextFile"
+Attribute VB_Name = "Test__MiscTextFile"
 Option Explicit
 Option Private Module
 
@@ -32,7 +32,7 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("CreateTextFile")
+'@TestMethod("MiscTestFile")
 Private Sub Test_CreateTextFile()
     On Error GoTo TestFail
     
@@ -54,6 +54,29 @@ Private Sub Test_CreateTextFile()
         Line Input #iFile, textline
         Assert.AreEqual inputText, textline
     Close #iFile
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+
+'@TestMethod("MiscTestFile")
+Private Sub Test_readTextFile()
+    On Error GoTo TestFail
+    
+    
+    'Arrange:
+    Dim text As String
+    
+    'Act:
+    text = readTextFile(ThisWorkbook.Path & "\tests\MiscCreateTextFile\test.txt")
+    
+    'Assert:
+    Assert.AreEqual "my test text." & vbNewLine, text
+    
 
 TestExit:
     Exit Sub

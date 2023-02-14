@@ -39,7 +39,7 @@ Private Sub Test_Col()
     'Arrange:
     Dim C As Collection
     'Act:
-    Set C = col(1, 3, 5)
+    Set C = Col(1, 3, 5)
     'Assert:
     'Assert.Succeed
     
@@ -60,24 +60,24 @@ Private Sub Test_zip()
     
     'Arrange:
     Dim C1 As Collection
-    Dim c2 As Collection
-    Dim cOut As Collection
+    Dim C2 As Collection
+    Dim Cout As Collection
 
     'Act:
-    Set C1 = col(1, 2, 3)
-    Set c2 = col(4, 5, 6, 7)
+    Set C1 = Col(1, 2, 3)
+    Set C2 = Col(4, 5, 6, 7)
     
-    Set cOut = zip(C1, c2)
+    Set Cout = Zip(C1, C2)
 
     'Assert:
-    Assert.AreEqual 1, cOut(1)(1), "zip test succeeded"
-    Assert.AreEqual 4, cOut(1)(2), "zip test succeeded"
+    Assert.AreEqual 1, Cout(1)(1), "zip test succeeded"
+    Assert.AreEqual 4, Cout(1)(2), "zip test succeeded"
     
-    Assert.AreEqual 2, cOut(2)(1), "zip test succeeded"
-    Assert.AreEqual 5, cOut(2)(2), "zip test succeeded"
+    Assert.AreEqual 2, Cout(2)(1), "zip test succeeded"
+    Assert.AreEqual 5, Cout(2)(2), "zip test succeeded"
     
-    Assert.AreEqual 3, cOut(3)(1), "zip test succeeded"
-    Assert.AreEqual 6, cOut(3)(2), "zip test succeeded"
+    Assert.AreEqual 3, Cout(3)(1), "zip test succeeded"
+    Assert.AreEqual 6, Cout(3)(2), "zip test succeeded"
 
 TestExit:
     Exit Sub

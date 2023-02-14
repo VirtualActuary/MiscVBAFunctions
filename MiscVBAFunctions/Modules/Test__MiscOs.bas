@@ -79,12 +79,12 @@ Private Sub Test_CreateFolders()
     CreateFolders (Dir)
     
     'Assert:
-    Assert.IsTrue fso.FolderExists(Dir)
+    Assert.IsTrue Fso.FolderExists(Dir)
     
     
     
 TestExit:
-    fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "folder1")
+    Fso.DeleteFolder Path(ExpandEnvironmentalVariables("%temp%"), "folder1")
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description

@@ -42,19 +42,19 @@ Private Sub Test_DictsToTable_1()
     Set WB = ExcelBook("")
 
     Dim TableDict As Collection
-    Dim dict As Dictionary
-    Set dict = New Dictionary
+    Dim Dict As Dictionary
+    Set Dict = New Dictionary
     Dim Table As ListObject
     
 
     'Act:
-    With dict
+    With Dict
         .Add "col1", 1
         .Add "col2", 2
         .Add "col3", 3
     End With
     
-    Set TableDict = col(dict, dict)
+    Set TableDict = Col(Dict, Dict)
     
     Set Table = DictsToTable(TableDict, WB.Worksheets(1).Range("A1"), "someName")
     
@@ -104,7 +104,7 @@ Private Sub Test_DictsToTable_2()
         .Add "col2", 30
     End With
     
-    Set TableDict = col(dict1, dict2)
+    Set TableDict = Col(dict1, dict2)
     
     Set Table = DictsToTable(TableDict, WB.Worksheets(1).Range("A5"), "someName")
     
@@ -159,7 +159,7 @@ Private Sub Test_DictsToTable_fail_1()
         
     End With
     
-    Set TableDict = col(dict1, dict2)
+    Set TableDict = Col(dict1, dict2)
     
     DictsToTable TableDict, WB.Worksheets(1).Range("A10"), "someName"
 
@@ -206,7 +206,7 @@ Private Sub Test_DictsToTable_fail_2()
         
     End With
     
-    Set TableDict = col(dict1, dict2)
+    Set TableDict = Col(dict1, dict2)
     
     DictsToTable TableDict, WB.Worksheets(1).Range("A15"), "someName"
 

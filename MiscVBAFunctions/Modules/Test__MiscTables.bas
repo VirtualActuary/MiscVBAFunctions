@@ -14,7 +14,7 @@ Private Sub ModuleInitialize()
     'this method runs once per module.
     Set Assert = New Rubberduck.AssertClass
     Set Fakes = New Rubberduck.FakesProvider
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscTables\MiscTablesTests.xlsx"), True, True)
 
 End Sub
 
@@ -152,11 +152,11 @@ Private Sub Test_TableColumnToArray()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
-    Arr = TableColumnToArray(col1, "b")
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("a", 10, "b", 20))
+    Arr = TableColumnToArray(Col1, "b")
 
     'Assert:
     Assert.AreEqual 2, Arr(0)
@@ -174,15 +174,15 @@ Private Sub Test_TableColumnToCollection()
     On Error GoTo TestFail
 
     'Arrange:
-    Dim col1 As Collection
-    Dim col2 As Collection
+    Dim Col1 As Collection
+    Dim Col2 As Collection
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("a", 10, "b", 20))
-    Set col2 = TableColumnToCollection(col1, "b")
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("a", 10, "b", 20))
+    Set Col2 = TableColumnToCollection(Col1, "b")
 
     'Assert:
-    Assert.AreEqual 2, col2(1)
-    Assert.AreEqual 20, col2(2)
+    Assert.AreEqual 2, Col2(1)
+    Assert.AreEqual 20, Col2(2)
 
 
 TestExit:
@@ -284,13 +284,13 @@ Private Sub Test_GetTableColumnDataRange()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
     Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableColumnDataRange(SelectedTable, "Column2")
-    Arr = r.Value
+    Set R = GetTableColumnDataRange(SelectedTable, "Column2")
+    Arr = R.Value
     'Assert:
     Assert.AreEqual 12, CInt(Arr(1, 1))
     Assert.AreEqual 22, CInt(Arr(2, 1))
@@ -310,11 +310,11 @@ Private Sub Test_GetTableColumnDataRange_fail()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableColumnDataRange(SelectedTable, "NonExistingColumn")
+    Set R = GetTableColumnDataRange(SelectedTable, "NonExistingColumn")
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -335,13 +335,13 @@ Private Sub Test_GetTableRowNumberDataRange()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
     Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableRowNumberDataRange(SelectedTable, 2)
-    Arr = r.Value
+    Set R = GetTableRowNumberDataRange(SelectedTable, 2)
+    Arr = R.Value
     'Assert:
     Assert.AreEqual 21, CInt(Arr(1, 1))
     Assert.AreEqual 22, CInt(Arr(1, 2))
@@ -361,11 +361,11 @@ Private Sub Test_GetTableRowNumberDataRange_fail()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
 
     'Act:
     Set SelectedTable = GetLO("table2", WB)
-    Set r = GetTableRowNumberDataRange(SelectedTable, 20)
+    Set R = GetTableRowNumberDataRange(SelectedTable, 20)
 
 Assert:
     Assert.Fail "Expected error was not raised"
@@ -386,18 +386,19 @@ Private Sub Test_GetTableRowRange()
     On Error GoTo TestFail
 
     'Arrange:
-    'Act:
     Dim Dicts As Collection
     Dim Source As Dictionary
     Dim WB2 As Workbook
-    Set WB2 = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
+    Dim R As Range
+    
+    'Act:
+    Set WB2 = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
     ' Test list object:
-    Dim r As Range
-    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB2)
-    Assert.AreEqual "$B$6:$D$6", r.Address
+    Set R = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB2)
+    Assert.AreEqual "$B$6:$D$6", R.Address
 
-    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB2)
-    Assert.AreEqual "$G$6:$L$6", r.Address
+    Set R = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB2)
+    Assert.AreEqual "$G$6:$I$6", R.Address
 
 TestExit:
     WB2.Close False
@@ -414,21 +415,55 @@ Private Sub Test_GetTableColumnDataRange_2()
 
     'Arrange:
     Dim SelectedTable As ListObject
-    Dim r As Range
+    Dim R As Range
     Dim Arr() As Variant
 
     'Act:
     Set SelectedTable = GetLO("table4", WB)
     ResizeLO SelectedTable, 0
-    Set r = GetTableColumnDataRange(SelectedTable, "Column2")
+    Set R = GetTableColumnDataRange(SelectedTable, "Column2")
 
 '    'Assert:
-    If r Is Nothing Then
+    If R Is Nothing Then
         Assert.Succeed
     Else
         Assert.Fail
     End If
 
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscTables")
+Private Sub Test_TableToArray()
+    On Error GoTo TestFail
+    
+    'Arrange:
+    Dim Arr() As Variant
+    Dim Arr2() As Variant
+    
+    'Act:
+    Arr = TableToArray("Table8", WB)
+    Arr2 = TableToArray("Table7", WB)
+    
+    'Assert:
+    Assert.AreEqual 2, CInt(UBound(Arr))
+    Assert.AreEqual 1, CInt(UBound(Arr, 2))
+    Assert.AreEqual "Column1", Arr(0, 0)
+    Assert.AreEqual "Column2", Arr(0, 1)
+    Assert.AreEqual 1, CInt(Arr(1, 0))
+    Assert.AreEqual "A", Arr(1, 1)
+    Assert.AreEqual 2, CInt(Arr(2, 0))
+    Assert.AreEqual "B", Arr(2, 1)
+
+    Assert.AreEqual 1, CInt(UBound(Arr2))
+    Assert.AreEqual 0, CInt(UBound(Arr2, 2))
+    Assert.AreEqual "Column1", Arr2(0, 0)
+    Assert.AreEqual "aaa", Arr2(1, 0)
+    
 TestExit:
     Exit Sub
 TestFail:

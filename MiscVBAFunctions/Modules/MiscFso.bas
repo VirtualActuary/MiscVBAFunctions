@@ -7,7 +7,7 @@ Option Explicit
 ' Additional FSO-related functions are added here, as well as wrapper functions of the FSO class
 ' where we want different/additional functionality.
 
-Public fso As New FileSystemObject
+Public Fso As New FileSystemObject
 
 
 Public Function GetAllFilesRecursive(Directory As folder) As Collection
