@@ -12,7 +12,7 @@ Public Function EnsureDictI(Container As Variant) As Object
     ' Returns:
     '   A dict or Collection that potentially contains Dicts and/or Collections.
     
-    Dim key As Variant
+    Dim Key As Variant
     Dim Item As Variant
     
     If TypeOf Container Is Collection Then
@@ -34,13 +34,13 @@ Public Function EnsureDictI(Container As Variant) As Object
         Set D = New Dictionary
         D.CompareMode = TextCompare
         
-        For Each key In Container.Keys
-            If TypeOf Container.Item(key) Is Collection Or TypeOf Container.Item(key) Is Dictionary Then
-                D.Add key, EnsureDictI(Container.Item(key))
+        For Each Key In Container.Keys
+            If TypeOf Container.Item(Key) Is Collection Or TypeOf Container.Item(Key) Is Dictionary Then
+                D.Add Key, EnsureDictI(Container.Item(Key))
             Else
-                D.Add key, Container.Item(key)
+                D.Add Key, Container.Item(Key)
             End If
-        Next key
+        Next Key
         
         Set EnsureDictI = D
     Else

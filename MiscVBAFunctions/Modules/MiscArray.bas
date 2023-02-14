@@ -29,6 +29,13 @@ Public Function ArrayToRange( _
     '
     ' Returns:
     '     The Range to which the data was written.
+    If ArrayGetNumDimensions(Data) <> 2 Then
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage( _
+                                                   ErrNr.SubscriptOutOfRange, _
+                                                   "ArrayToRange can only function on 2D arrays. " _
+                                                   & "Use 'Ensure2dArray' if the data is 1D before calling this function." _
+                                               )
+    End If
     
     Dim StartRow As Long
     Dim EndRow As Long
@@ -59,6 +66,12 @@ Public Function ArrayToRange( _
                 If Not IsError(Data(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
                     If Left(Data(CountOuter, CountInner), 1) = "=" Then
                         Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+                        
+                    End If
+                    If IsNumeric(Data(CountOuter, CountInner)) Then
+                        If Application.WorksheetFunction.IsText(Data(CountOuter, CountInner)) Then
+                            Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+                        End If
                     End If
                 End If
             Next
@@ -120,7 +133,7 @@ Public Function ArrayToNewTable( _
 End Function
 
 
-Public Function Ensure2dArray(Arr() As Variant) As Variant()
+Public Function Ensure2DArray(Arr() As Variant) As Variant()
     ' Ensures an array is two-dimensional.
     '
     ' If the array is 1-dimensional, it will be used as the first row of the resulting 2-dimensional array.
@@ -132,7 +145,7 @@ Public Function Ensure2dArray(Arr() As Variant) As Variant()
     '     The input array if it was already 2D, or a new 2D array if the original was 1D.
     
     Dim ArrOut() As Variant
-    If is1D(Arr) Then
+    If ArrayGetNumDimensions(Arr) = 1 Then
         Dim I As Long
         ReDim ArrOut(0 To 0, 0 To UBound(Arr))
         For I = LBound(Arr) To UBound(Arr)
@@ -142,7 +155,7 @@ Public Function Ensure2dArray(Arr() As Variant) As Variant()
         ArrOut = Arr
     End If
     
-    Ensure2dArray = ArrOut
+    Ensure2DArray = ArrOut
 End Function
 
 
@@ -156,16 +169,16 @@ Public Function ArrayToCollection(Arr() As Variant) As Collection
     '   Collection containing the values of the input array.
     
     Dim CurrVal As Variant
-    Dim col1 As Collection
-    Set col1 = New Collection
+    Dim Col1 As Collection
+    Set Col1 = New Collection
     For Each CurrVal In Arr
-        col1.Add CurrVal
+        Col1.Add CurrVal
     Next
-    Set ArrayToCollection = col1
+    Set ArrayToCollection = Col1
 End Function
 
 
-Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Variant
+Public Function ErrorToNullStringTransformation(TableArr() As Variant) As Variant
     ' Replaces all Errors in the input array with vbNullString.
     ' The input array is modified (pass by referance) and the function returns the array
     ' Functions for 1D and 2D arrays only.
@@ -176,15 +189,19 @@ Public Function ErrorToNullStringTransformation(tableArr() As Variant) As Varian
     ' Returns:
     '   Array with the changed values.
     
-    If is2D(tableArr) Then
-        ErrorToNullStringTransformation = ErrorToNull2D(tableArr)
-    Else
-        ErrorToNullStringTransformation = ErrorToNull1D(tableArr)
-    End If
+    Select Case ArrayGetNumDimensions(TableArr)
+        Case 1
+            ErrorToNullStringTransformation = ErrorToNull1D(TableArr)
+        Case 2
+            ErrorToNullStringTransformation = ErrorToNull2D(TableArr)
+        Case Else
+            Err.Raise ErrNr.SubscriptOutOfRange, , "Function only supports 1D and 2D arrays"
+    End Select
+    
 End Function
 
 
-Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Variant
+Public Function EnsureDotSeparatorTransformation(TableArr() As Variant) As Variant
     ' Converts the decimal seperator in the float input to a "." for each entry in the input array
     ' and returns the result as an array of strings.
     ' Only works when converting from the system's decimal seperator.
@@ -198,15 +215,19 @@ Public Function EnsureDotSeparatorTransformation(tableArr() As Variant) As Varia
     ' Returns:
     '   Array with the changed string values.
     
-    If is2D(tableArr) Then
-        EnsureDotSeparatorTransformation = EnsureDotSeparator2D(tableArr)
-    Else
-        EnsureDotSeparatorTransformation = EnsureDotSeparator1D(tableArr)
-    End If
+    Select Case ArrayGetNumDimensions(TableArr)
+        Case 1
+            EnsureDotSeparatorTransformation = EnsureDotSeparator1D(TableArr)
+        Case 2
+            EnsureDotSeparatorTransformation = EnsureDotSeparator2D(TableArr)
+        Case Else
+            Err.Raise ErrNr.SubscriptOutOfRange, , "Function only supports 1D and 2D arrays"
+    End Select
+    
 End Function
 
 
-Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt As String = "yyyy-mm-dd") As Variant
+Public Function DateToStringTransformation(TableArr() As Variant, Optional Fmt As String = "yyyy-mm-dd") As Variant
     ' Converts all Date/DateTime entries in the input array to string.
     ' The input array is modified (pass by referance) and the function returns the array.
     ' Functions for 1D and 2D arrays only.
@@ -218,117 +239,260 @@ Public Function DateToStringTransformation(tableArr() As Variant, Optional fmt A
     ' Returns:
     '   Array where the Date/DateTime entries have been converted.
 
-    If is2D(tableArr) Then
-        DateToStringTransformation = DateToString2D(tableArr, fmt)
-    Else
-        DateToStringTransformation = DateToString1D(tableArr, fmt)
-    End If
+    Select Case ArrayGetNumDimensions(TableArr)
+        Case 1
+            DateToStringTransformation = DateToString1D(TableArr, Fmt)
+        Case 2
+            DateToStringTransformation = DateToString2D(TableArr, Fmt)
+        Case Else
+            Err.Raise ErrNr.SubscriptOutOfRange, , "Function only supports 1D and 2D arrays"
+    End Select
 End Function
 
 
-Private Function is2D(Arr As Variant)
+Private Function Is2D(Arr As Variant)
     ' Check if a collection is 1D or 2D.
     ' 3D is not supported
     On Error GoTo Err
-    is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
+    Is2D = (UBound(Arr, 2) >= LBound(Arr, 2))
     Exit Function
 Err:
-    is2D = False
+    Is2D = False
 End Function
 
-Public Function is1D(Arr As Variant)
+Public Function Is1D(Arr As Variant)
     On Error GoTo Err
-    Dim foo As Variant
-    foo = UBound(Arr, 2)
+    Dim Foo As Variant
+    Foo = UBound(Arr, 2)
     Exit Function
 Err:
-    is1D = True
-End Function
-
-Private Function dateToString(D As Date, fmt As String) As String
-    dateToString = Format(D, fmt)
+    Is1D = True
 End Function
 
 
-Private Function decStr(X As Variant) As String
-     decStr = CStr(X)
+Function ArrayGetNumDimensions(Arr() As Variant) As Long
+    ' Get the number of dimensions of an array.
+    '
+    ' Args:
+    '   Arr: Array to get the dimensions of
+    '
+    ' Returns:
+    '   Number of dimensions of the input array
+    
+    On Error GoTo Err
+    Dim I As Long
+    Dim Tmp As Long
+    I = 0
+    Do While True
+        I = I + 1
+        Tmp = UBound(Arr, I)
+    Loop
+Err:
+    ArrayGetNumDimensions = I - 1
+End Function
+
+
+Private Function DateToString(D As Date, Fmt As String) As String
+    DateToString = Format(D, Fmt)
+End Function
+
+
+Private Function DecStr(x As Variant) As String
+     DecStr = CStr(x)
 
      'Frikin ridiculous loops for VBA
-     If IsNumeric(X) Then
-        decStr = Replace(decStr, Format(0, "."), ".")
+     If IsNumeric(x) Then
+        DecStr = Replace(DecStr, Format(0, "."), ".")
         ' Format(0, ".") gives the system decimal separator
      End If
 
 End Function
 
 
-Private Function ErrorToNull2D(tableArr As Variant) As Variant
+Private Function ErrorToNull2D(TableArr As Variant) As Variant
     Dim I As Long, J As Long
-    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
-        For J = LBound(tableArr, 2) To UBound(tableArr, 2)
-            If IsError(tableArr(I, J)) Then ' set all error values to an empty string
-                tableArr(I, J) = vbNullString
+    For I = LBound(TableArr, 1) To UBound(TableArr, 1)
+        For J = LBound(TableArr, 2) To UBound(TableArr, 2)
+            If IsError(TableArr(I, J)) Then ' set all error values to an empty string
+                TableArr(I, J) = vbNullString
             End If
         Next J
     Next I
-    ErrorToNull2D = tableArr
+    ErrorToNull2D = TableArr
 End Function
 
 
-Private Function ErrorToNull1D(tableArr As Variant) As Variant
+Private Function ErrorToNull1D(TableArr As Variant) As Variant
     Dim I As Long
-    For I = LBound(tableArr) To UBound(tableArr)
-        If IsError(tableArr(I)) Then ' set all error values to an empty string
-            tableArr(I) = vbNullString
+    For I = LBound(TableArr) To UBound(TableArr)
+        If IsError(TableArr(I)) Then ' set all error values to an empty string
+            TableArr(I) = vbNullString
         End If
     Next I
-    ErrorToNull1D = tableArr
+    ErrorToNull1D = TableArr
 End Function
 
 
-Private Function EnsureDotSeparator2D(tableArr As Variant) As Variant
+Private Function EnsureDotSeparator2D(TableArr As Variant) As Variant
     Dim I As Long, J As Long
-    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
-        For J = LBound(tableArr, 2) To UBound(tableArr, 2)
-            If IsNumeric(tableArr(I, J)) Then ' force numeric values to use . as decimal separator
-                tableArr(I, J) = decStr(tableArr(I, J))
+    For I = LBound(TableArr, 1) To UBound(TableArr, 1)
+        For J = LBound(TableArr, 2) To UBound(TableArr, 2)
+            If IsNumeric(TableArr(I, J)) Then ' force numeric values to use . as decimal separator
+                TableArr(I, J) = DecStr(TableArr(I, J))
             End If
         Next J
     Next I
-    EnsureDotSeparator2D = tableArr
+    EnsureDotSeparator2D = TableArr
 End Function
 
 
-Private Function EnsureDotSeparator1D(tableArr As Variant) As Variant
+Private Function EnsureDotSeparator1D(TableArr As Variant) As Variant
     Dim I As Long
-    For I = LBound(tableArr) To UBound(tableArr)
-        If IsNumeric(tableArr(I)) Then ' force numeric values to use . as decimal separator
-            tableArr(I) = decStr(tableArr(I))
+    For I = LBound(TableArr) To UBound(TableArr)
+        If IsNumeric(TableArr(I)) Then ' force numeric values to use . as decimal separator
+            TableArr(I) = DecStr(TableArr(I))
         End If
     Next I
-    EnsureDotSeparator1D = tableArr
+    EnsureDotSeparator1D = TableArr
 End Function
 
 
-Private Function DateToString2D(tableArr As Variant, fmt As String) As Variant
+Private Function DateToString2D(TableArr As Variant, Fmt As String) As Variant
     Dim I As Long, J As Long
-    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
-        For J = LBound(tableArr, 2) To UBound(tableArr, 2)
-            If IsDate(tableArr(I, J)) Then ' format dates as strings to avoid some user's stupid default date settings
-                tableArr(I, J) = dateToString(CDate(tableArr(I, J)), fmt)
+    For I = LBound(TableArr, 1) To UBound(TableArr, 1)
+        For J = LBound(TableArr, 2) To UBound(TableArr, 2)
+            If IsDate(TableArr(I, J)) Then ' format dates as strings to avoid some user's stupid default date settings
+                TableArr(I, J) = DateToString(CDate(TableArr(I, J)), Fmt)
             End If
         Next J
     Next I
-    DateToString2D = tableArr
+    DateToString2D = TableArr
 End Function
 
 
-Private Function DateToString1D(tableArr As Variant, fmt As String) As Variant
+Private Function DateToString1D(TableArr As Variant, Fmt As String) As Variant
     Dim I As Long
-    For I = LBound(tableArr, 1) To UBound(tableArr, 1)
-        If IsDate(tableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
-            tableArr(I) = dateToString(CDate(tableArr(I)), fmt)
+    For I = LBound(TableArr, 1) To UBound(TableArr, 1)
+        If IsDate(TableArr(I)) Then ' format dates as strings to avoid some user's stupid default date settings
+            TableArr(I) = DateToString(CDate(TableArr(I)), Fmt)
         End If
     Next I
-    DateToString1D = tableArr
+    DateToString1D = TableArr
 End Function
+
+
+Function IsInArray(Arr() As Variant, ValueToBeFound) As Boolean
+    ' Source: https://stackoverflow.com/questions/38267950/check-if-a-value-is-in-an-array-or-not-with-excel-vba
+    ' Check if a value is in the array.
+    ' Not limited to string only.
+    '
+    ' Args:
+    '   Arr: Input array
+    '   ValueToBeFound: Value to look for in the array
+    '
+    ' Returns:
+    '   True if value exists in the array, False otherwise.
+    Dim Dimensions As Long
+    Dimensions = ArrayGetNumDimensions(Arr)
+    Dim I As Long
+    
+    If Dimensions = 1 Then
+        
+        For I = LBound(Arr) To UBound(Arr)
+            If Arr(I) = ValueToBeFound Then
+                IsInArray = True
+                Exit Function
+            End If
+        Next I
+        IsInArray = False
+        
+    ElseIf Dimensions = 2 Then
+        Dim J As Long
+        
+        For I = LBound(Arr, 1) To UBound(Arr, 1)
+            For J = LBound(Arr, 2) To UBound(Arr, 2)
+                If Arr(I, J) = ValueToBeFound Then
+                    IsInArray = True
+                    Exit Function
+                End If
+
+            Next
+
+        Next I
+        IsInArray = False
+    Else
+        Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Only supported for 1D and 2D arrays.")
+    End If
+End Function
+
+
+Function IsArrayUnique(Arr()) As Boolean
+    ' Check if the array contains unique entries only
+    '
+    ' Args:
+    '   Arr: Input array
+    '
+    ' Returns:
+    '   True if all entries in the array is unique.
+    
+    IsArrayUnique = UBound(Arr) = UBound(ArrayUniqueValues(Arr))
+End Function
+
+
+Function ArrayUniqueValues(Arr() As Variant)  ' , Optional Dimension As Integer = 1
+    ' Finds all unique entries in the input array and returns a new array with only these values.
+    ' If no duplicates exist, a copy of the input array is returned.
+    ' Works on 1D and 2D arrays
+    '
+    ' Args:
+    '   Arr: Input array with potential duplicates.
+    '   Dimension: 1 or 2. The dimension of the input array.
+    '
+    ' Returns:
+    '   The array with unique entries only, or an empty array if there are no unique entries.
+    
+    Dim TmpArray() As Variant
+    Dim M As Integer, N As Integer
+    Dim Dimension As Long
+    
+    Dimension = ArrayGetNumDimensions(Arr)
+    If Dimension = 2 Then
+        ReDim TmpArray((UBound(Arr, 1) - LBound(Arr, 1) + 1) * (UBound(Arr, 2) - LBound(Arr, 2) + 1) - 1)
+        
+        For N = LBound(Arr, 1) To UBound(Arr, 1)
+            For M = LBound(Arr, 2) To UBound(Arr, 2)
+                TmpArray(N * (UBound(Arr, 2) - LBound(Arr, 2) + 1) + M) = Arr(N, M)
+            Next M
+        Next N
+    Else
+        ReDim TmpArray(UBound(Arr))
+        For M = LBound(Arr) To UBound(Arr)
+            TmpArray(M) = Arr(M)
+        Next M
+    End If
+    
+    Dim D As Object
+    Set D = CreateObject("Scripting.Dictionary")
+    
+    Dim I As Long
+    For I = LBound(TmpArray) To UBound(TmpArray)
+        D(TmpArray(I)) = 1
+    Next I
+    
+    Dim UniqueValues() As Variant
+    ReDim UniqueValues(D.Count - 1)
+    
+    Dim J As Long
+    J = 0
+    Dim V As Variant
+    For Each V In D.Keys()
+        UniqueValues(J) = V
+        J = J + 1
+        'd.Keys() is a Variant array of the unique values in myArray.
+        'v will iterate through each of them.
+    Next V
+    
+    ArrayUniqueValues = UniqueValues
+
+End Function
+

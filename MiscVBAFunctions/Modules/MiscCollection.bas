@@ -2,7 +2,7 @@ Attribute VB_Name = "MiscCollection"
 Option Explicit
 
 
-Public Function min(ByVal col As Collection) As Variant
+Public Function Min(ByVal Col As Collection) As Variant
     ' Returns the minimum value from the input Collection.
     '
     ' Args:
@@ -11,17 +11,17 @@ Public Function min(ByVal col As Collection) As Variant
     ' Returns:
     '   The minimum value in the collection.
     
-    If col Is Nothing Then
+    If Col Is Nothing Then
         Err.Raise Number:=91, _
               Description:="Collection input can't be empty"
     End If
     
     Dim Entry As Variant
-    min = col(1)
+    Min = Col(1)
     
-    For Each Entry In col
-        If Entry < min Then
-            min = Entry
+    For Each Entry In Col
+        If Entry < Min Then
+            Min = Entry
         End If
     Next Entry
     
@@ -29,7 +29,7 @@ Public Function min(ByVal col As Collection) As Variant
     
 End Function
 
-Public Function max(ByVal col As Collection) As Variant
+Public Function Max(ByVal Col As Collection) As Variant
     ' Returns the maximum value from the input Collection.
     '
     ' Args:
@@ -38,23 +38,23 @@ Public Function max(ByVal col As Collection) As Variant
     ' Returns:
     '   The maximum value in the collection.
     
-    If col Is Nothing Then
+    If Col Is Nothing Then
         Err.Raise Number:=91, _
               Description:="Collection input can't be empty"
     End If
     
-    max = col(1)
+    Max = Col(1)
     Dim Entry As Variant
     
-    For Each Entry In col
-        If Entry > max Then
-            max = Entry
+    For Each Entry In Col
+        If Entry > Max Then
+            Max = Entry
         End If
     Next Entry
 
 End Function
 
-Public Function mean(ByVal col As Collection) As Variant
+Public Function Mean(ByVal Col As Collection) As Variant
     ' Returns the mean value from the input Collection.
     '
     ' Args:
@@ -63,28 +63,28 @@ Public Function mean(ByVal col As Collection) As Variant
     ' Returns:
     '   The mean value of the collection.
     
-    If col Is Nothing Then
+    If Col Is Nothing Then
         Err.Raise Number:=91, _
               Description:="Collection input can't be empty"
     End If
 
-    mean = 0
+    Mean = 0
     Dim Entry As Variant
     
-    For Each Entry In col
-        mean = mean + Entry
+    For Each Entry In Col
+        Mean = Mean + Entry
     Next Entry
     
-    mean = mean / col.Count
+    Mean = Mean / Col.Count
     
 End Function
 
 
-Public Function IsValueInCollection(col As Collection, val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
+Public Function IsValueInCollection(ColInput As Collection, Val As Variant, Optional CaseSensitive As Boolean = False) As Boolean
     ' Check if a value exists in the input Collection.
     '
     ' Args:
-    '   col: Collection that potentially contains val
+    '   ColInput: Collection that potentially contains val
     '   val: The value to check for.
     '   CaseSensitive: Boolean entry to indicate if the comparison must be case sensitive.
     '
@@ -92,13 +92,13 @@ Public Function IsValueInCollection(col As Collection, val As Variant, Optional 
     '   True if val exists in the input Collection.
     
     Dim ValI As Variant
-    For Each ValI In col
+    For Each ValI In ColInput
         ' only check if not an object:
         If Not IsObject(ValI) Then
             If CaseSensitive Then
-                IsValueInCollection = ValI = val
+                IsValueInCollection = ValI = Val
             Else
-                IsValueInCollection = VBA.LCase(ValI) = VBA.LCase(val)
+                IsValueInCollection = VBA.LCase(ValI) = VBA.LCase(Val)
             End If
             ' exit if found
             If IsValueInCollection Then Exit Function
@@ -107,20 +107,43 @@ Public Function IsValueInCollection(col As Collection, val As Variant, Optional 
 End Function
 
 
+Public Function IndexOf(ByVal Col1 As Collection, ByVal Item As Variant) As Long
+    'https://stackoverflow.com/questions/28985579/retrieve-the-index-of-an-object-stored-in-a-collection-using-its-key-vba
+    'returns index of item if found, returns 0 if not found
+    '
+    ' Args:
+    '   Col1: Collection that potentially contains the item.
+    '   item: Item to find the index of.
+    '
+    ' Returns:
+    '   The index of the item in the Collection.
+    
+    Dim I As Long
+    For I = 1 To Col1.Count
+
+        If Col1(I) = Item Then
+            IndexOf = I
+            Exit Function
+        End If
+        
+    Next
+End Function
+
+
 Public Sub ConcatCollections(ParamArray CollectionArr() As Variant)
     ' Concatenate multiple Collections, thereby manipulating the first Collection.
     ' Args:
     '   CollectionArr: Array of the input collections.
     
-    Dim col As Variant
-    For Each col In CollectionArr
-        If Not TypeOf col Is Collection Then
+    Dim Col As Variant
+    For Each Col In CollectionArr
+        If Not TypeOf Col Is Collection Then
             Dim errmsg As String
             errmsg = "All inputs need to be Collections"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(col) & "'": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Col) & "'": On Error GoTo 0
             Err.Raise 5, , errmsg
         End If
-    Next col
+    Next Col
     
     Dim I As Long
     Dim J As Long
@@ -143,43 +166,77 @@ Public Function JoinCollections(ParamArray CollectionArr()) As Collection
     ' Returns:
     '   Returns a new Collection of the joined Collections.
 
-    Dim col As Variant
-    For Each col In CollectionArr
-        If Not TypeOf col Is Collection Then
+    Dim Col As Variant
+    For Each Col In CollectionArr
+        If Not TypeOf Col Is Collection Then
             Dim errmsg As String
             errmsg = "All inputs need to be Collections"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(col) & "'": On Error GoTo 0
+            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Col) & "'": On Error GoTo 0
             Err.Raise 5, , errmsg
         End If
-    Next col
+    Next Col
     
     Dim I As Long
     Dim ColResult As New Collection
 
-    For Each col In CollectionArr
-        For I = 1 To col.Count
-            ColResult.Add col.Item(I)
+    For Each Col In CollectionArr
+        For I = 1 To Col.Count
+            ColResult.Add Col.Item(I)
         Next
-    Next col
+    Next Col
 
     Set JoinCollections = ColResult
 End Function
 
 
-Function CollectionToArray(Coll As Collection) As Variant
-    ' Create an Array from a Collection.
-    If Coll.Count < 1 Then
+Function CollectionToArray(C As Collection) As Variant()
+    ' Create an Array from the content of a Collection.
+    ' Ignore the Collection's keys.
+    '
+    ' Args:
+    '   C: Input Collection
+    '
+    ' Returns:
+    '   An array with the same content as the input collection.
+
+    If C.Count < 1 Then
         CollectionToArray = Array()
         Exit Function
     End If
-    
+
     Dim Result As Variant
     Dim I As Long
-    ReDim Result(Coll.Count - 1)
-    
-    For I = 1 To Coll.Count
-        Result(I - 1) = Coll(I)
+    ReDim Result(C.Count - 1)
+
+    For I = 1 To C.Count
+        Result(I - 1) = C(I)
     Next I
-    
+
     CollectionToArray = Result
 End Function
+
+
+Function UniqueCollection(C As Collection) As Collection
+    ' Create a collection with all duplicates from the input Collection removed.
+    '
+    ' Args:
+    '   C: Input Collection
+    '
+    ' Returns:
+    '   A Collection with no duplicate entries.
+    
+    Dim uniqueArray(), I As Long
+    
+    uniqueArray = ArrayUniqueValues(CollectionToArray(C))
+
+    Set UniqueCollection = New Collection
+    For I = LBound(uniqueArray) To UBound(uniqueArray)
+        UniqueCollection.Add uniqueArray(I)
+    Next I
+    
+End Function
+
+
+
+
+

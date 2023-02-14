@@ -25,7 +25,7 @@ Private Sub testDictget()
 End Sub
 
 
-Public Function dictget(D As Dictionary, key As Variant, Optional default As Variant = Empty) As Variant
+Public Function dictget(D As Dictionary, Key As Variant, Optional default As Variant = Empty) As Variant
     ' Return the entry in the input Dictionary at the given key. If the given key doesn't exist,
     ' the default value is returned if it's not empty. Else an error is raised.
     '
@@ -37,8 +37,8 @@ Public Function dictget(D As Dictionary, key As Variant, Optional default As Var
     ' Returns:
     '   The Dictionary's entry or the default value.
     
-    If D.Exists(key) Then
-        assign dictget, D.Item(key)
+    If D.Exists(Key) Then
+        assign dictget, D.Item(Key)
         
     ElseIf Not IsEmpty(default) Then
         assign dictget, default
@@ -47,7 +47,7 @@ Public Function dictget(D As Dictionary, key As Variant, Optional default As Var
         Dim errmsg As String
         On Error Resume Next
             errmsg = "Key "
-            errmsg = errmsg & "`" & key & "` "
+            errmsg = errmsg & "`" & Key & "` "
             errmsg = errmsg & "not in dictionary"
         On Error GoTo 0
         
@@ -85,11 +85,11 @@ Public Sub ConcatDicts(ParamArray Dicts())
 
     Dim J As Long
 
-    Dim key As Variant
+    Dim Key As Variant
     For J = 1 To UBound(Dicts)
-        For Each key In Dicts(J).Keys
-            Dicts(0)(key) = Dicts(J).Item(key)
-        Next key
+        For Each Key In Dicts(J).Keys
+            Dicts(0)(Key) = Dicts(J).Item(Key)
+        Next Key
 
     Next
 
@@ -128,12 +128,12 @@ Public Function JoinDicts(ParamArray Dicts()) As Dictionary
    
     Dim D As New Dictionary
     D.CompareMode = dictCompareMode
-    Dim key As Variant
+    Dim Key As Variant
 
     For Each Dict In Dicts
-        For Each key In Dict.Keys
-            D(key) = Dict.Item(key)
-        Next key
+        For Each Key In Dict.Keys
+            D(Key) = Dict.Item(Key)
+        Next Key
 
     Next Dict
 

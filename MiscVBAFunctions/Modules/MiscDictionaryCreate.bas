@@ -34,7 +34,7 @@ Cont:
 End Function
 
 
-Public Function dicti(ParamArray Args() As Variant) As Dictionary
+Public Function DictI(ParamArray Args() As Variant) As Dictionary
     ' Case insensitive dictionary
     '
     ' Args:
@@ -45,8 +45,8 @@ Public Function dicti(ParamArray Args() As Variant) As Dictionary
     '   The case insensitive Dictionary
     
     Dim errmsg As String
-    Set dicti = New Dictionary
-    dicti.CompareMode = TextCompare
+    Set DictI = New Dictionary
+    DictI.CompareMode = TextCompare
     
     Dim I As Long
     Dim Cnt As Long
@@ -61,7 +61,7 @@ Public Function dicti(ParamArray Args() As Variant) As Dictionary
             Err.Raise 9, , errmsg
         End If
         
-        dicti.Add Args(I), Args(I + 1)
+        DictI.Add Args(I), Args(I + 1)
 Cont:
     Next I
 

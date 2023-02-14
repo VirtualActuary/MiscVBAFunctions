@@ -211,7 +211,7 @@ Public Sub CopyTable(InputTableName As String _
     '   InputWB: WorkBook of the input Table. ThisWorkBook is used if left empty.
     '   EscapeFormulas: whether to escape formulas in the copy (ie cells starting with =)
 
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim InputTableRange As Range
     Dim OutputTableRange As Range
     Dim I As Long
@@ -221,9 +221,9 @@ Public Sub CopyTable(InputTableName As String _
     End If
     If InputWB Is Nothing Then Set InputWB = ThisWorkbook
 
-    Set col1 = TableToDicts(InputTableName, InputWB)
+    Set Col1 = TableToDicts(InputTableName, InputWB)
     Set InputTableRange = TableRange(InputTableName, InputWB)
-    Set OutputTableRange = DictsToTable(col1, StartRange, OutputTableName, EscapeFormulas).Range
+    Set OutputTableRange = DictsToTable(Col1, StartRange, OutputTableName, EscapeFormulas).Range
 
     For I = 1 To InputTableRange.Count
         OutputTableRange(I).NumberFormat = InputTableRange(I).NumberFormat
@@ -242,15 +242,15 @@ Function TableColumnToCollection(TableDicts As Collection, ColumnName As String)
     ' Returns:
     '   Collection of the selected column.
     
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Dict As Dictionary
     
-    Set col1 = New Collection
+    Set Col1 = New Collection
     For Each Dict In TableDicts
-        col1.Add dictget(Dict, ColumnName)
+        Col1.Add dictget(Dict, ColumnName)
     Next Dict
     
-    Set TableColumnToCollection = col1
+    Set TableColumnToCollection = Col1
 End Function
 
 
@@ -442,3 +442,7 @@ Public Function GetTableRowNumberDataRange(LO As ListObject, RowNumber As Long) 
     Set listR = LO.ListRows(RowNumber)
     Set GetTableRowNumberDataRange = listR.Range
 End Function
+
+
+
+

@@ -8,7 +8,7 @@ Private Sub TestHasKey()
 
     Dim C As New Collection
     C.Add "a", "a"
-    C.Add col("x", "y", "z"), "b"
+    C.Add Col("x", "y", "z"), "b"
     
     Debug.Print vbLf & "*********** TestHasKey tests ***********"
     Debug.Print True, hasKey(C, "a") ' True for scalar
@@ -19,7 +19,7 @@ Private Sub TestHasKey()
     
     Dim D As New Dictionary
     D.Add "a", "a"
-    D.Add "b", col("x", "y", "z")
+    D.Add "b", Col("x", "y", "z")
     
     Debug.Print True, hasKey(D, "a") ' True for scalar
     Debug.Print True, hasKey(D, "b") ' True for object
@@ -29,7 +29,7 @@ Private Sub TestHasKey()
     Set dObj = CreateObject("Scripting.Dictionary")
     
     dObj.Add "a", "a"
-    dObj.Add "b", col("x", "y", "z")
+    dObj.Add "b", Col("x", "y", "z")
     
     Debug.Print True, hasKey(dObj, "a") ' True for scalar
     Debug.Print True, hasKey(dObj, "b") ' True for object
@@ -49,7 +49,7 @@ Private Sub TestHasKey()
 End Sub
 
 
-Public Function hasKey(Container As Variant, key As Variant) As Boolean
+Public Function hasKey(Container As Variant, Key As Variant) As Boolean
     ' Checks whether a key exists in an existing container
     ' The container can be a `Collection`, `Dictionary` or any
     ' built-in Dictionary-like object. For example `ThisWorkbook.Sheets`
@@ -69,7 +69,7 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     ' First try .HasKey method on the object
     On Error Resume Next
         Err.Number = 0
-        hasKeyFlag = Container.Exists(key)
+        hasKeyFlag = Container.Exists(Key)
         ErrX = Err.Number
     On Error GoTo 0
     If ErrX = 0 Then
@@ -82,7 +82,7 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     emptyFlag = False
     On Error Resume Next
         Err.Number = 0
-        emptyFlag = TypeName(Container.Item(key)) = "Empty"
+        emptyFlag = TypeName(Container.Item(Key)) = "Empty"
         ErrX = Err.Number
     On Error GoTo 0
     
@@ -99,7 +99,7 @@ Public Function hasKey(Container As Variant, key As Variant) As Boolean
     emptyFlag = False
     On Error Resume Next
         Err.Number = 0
-        emptyFlag = TypeName(Container(key)) = "Empty"
+        emptyFlag = TypeName(Container(Key)) = "Empty"
         ErrX = Err.Number
     On Error GoTo 0
     

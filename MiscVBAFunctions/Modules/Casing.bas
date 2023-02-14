@@ -24,3 +24,5 @@ Option Explicit
 'Dim Destination
 'Dim Row
 'Dim Arr
+'Dim Err
+'Dim Fso

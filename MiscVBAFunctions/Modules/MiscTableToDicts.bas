@@ -36,7 +36,7 @@ Public Function TableToDictsLogSource( _
     RowIndex = 0
     For Each Dict In TableToDictsLogSource
         RowIndex = RowIndex + 1
-        Dict.Add "__source__", dicti("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
+        Dict.Add "__source__", DictI("Workbook", WB, "Table", TableName, "RowIndex", RowIndex)
     Next Dict
 End Function
 
@@ -97,9 +97,9 @@ End Function
 
 Private Function TestGetTableRowIndex()
     Dim Table As Collection
-    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"))
-    Debug.Print GetTableRowIndex(Table, col("a", "b"), col(3, 4)), 2
-    Debug.Print GetTableRowIndex(Table, col("a", "b"), col("foo", "bar")), 3
+    Set Table = Col(DictI("a", 1, "b", 2), DictI("a", 3, "b", 4), DictI("a", "foo", "b", "bar"))
+    Debug.Print GetTableRowIndex(Table, Col("a", "b"), Col(3, 4)), 2
+    Debug.Print GetTableRowIndex(Table, Col("a", "b"), Col("foo", "bar")), 3
 End Function
 
 
@@ -210,7 +210,7 @@ Public Function GetTableRowIndex( _
     For Each Dict In EnsureTableDicts(Table, WB) ' Already a Dicti
         isMatch = True
         RowNumber = RowNumber + 1
-        For Each keyValuePair In zip(Columns, Values)
+        For Each keyValuePair In Zip(Columns, Values)
             assign ValLhs, Dict(keyValuePair(1))  ' Allow entries to be objects
             assign ValRhs, keyValuePair(2)
             
