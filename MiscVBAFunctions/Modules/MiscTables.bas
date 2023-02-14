@@ -199,7 +199,9 @@ Public Sub CopyTable(InputTableName As String _
                     , Optional EscapeFormulas As Boolean = False)
     ' Copy a List Object or TableRange to the desired location as a Table.
     ' This can be in the same Workbook, or a different workbook.
-    ' The of the output Table NumberFormat is the same as the input table's.
+    ' The output Table NumberFormat is the same as the input table's.
+    ' The same conventions on column names are used as in TableToDicts (case insensitive and
+    ' last instance of duplicated columns are used).
     '
     ' Args:
     '   InputTableName: Table name that will be copied.

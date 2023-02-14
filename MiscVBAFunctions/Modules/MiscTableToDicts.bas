@@ -46,9 +46,10 @@ Public Function TableToDicts( _
         , Optional WB As Workbook _
         , Optional Columns As Collection _
         ) As Collection
-    
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/8e1b9709a380d71eaf0d59bd0c2882c8501e9540/aa_py_xl/data_util.py#L21
     ' Convert a Table to a Collection of Dicts.
+    ' Column names are case insensitive, i.e. `c` and `C` will be treated as duplicate column names.
+    ' When columns are duplicated the last instance of the column name is used.
     '
     ' Args:
     '   TableName: Name of the Selected Table.
@@ -70,12 +71,14 @@ Public Function TableToDicts( _
     TableData = TableToArray(TableName, WB)
     
     For I = LBound(TableData, 1) + 1 To UBound(TableData, 1)
+
         Set D = New Dictionary
         D.CompareMode = TextCompare ' must be case insensitive
         
         If Columns Is Nothing Then
             For J = LBound(TableData, 2) To UBound(TableData, 2)
                 D.Add TableData(0, J), TableData(I, J)
+
             Next J
         Else
             Dim ColumnName As Variant
@@ -84,7 +87,9 @@ Public Function TableToDicts( _
             For J = LBound(TableData, 2) To UBound(TableData, 2)
                 ColumnName = TableData(LBound(TableData, 2), J)
                 If IsValueInCollection(Columns, ColumnName) Then
+
                     D.Add ColumnName, TableData(I, J)
+
                 End If
             Next J
         End If
