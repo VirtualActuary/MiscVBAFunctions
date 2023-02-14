@@ -304,3 +304,32 @@ Function Test_AddWS()
 TestFail:
     Test_AddWS = False
 End Function
+
+
+Function Test_InsertColumns()
+    Dim Pass As Boolean
+    Pass = True
+    
+    Dim WB As Workbook
+    Dim RangeStart As Range
+    Dim RelevantR As Range
+  
+    Set WB = ExcelBook("")
+    Set RangeStart = WB.ActiveSheet.Range("C4")
+    
+    WB.ActiveSheet.Range("D5") = "foo"
+    Set RelevantR = RelevantRange(WB.ActiveSheet)
+
+    Pass = 20 = CInt(RelevantR.Count) = True = Pass
+    Pass = 5 = CInt(RelevantR.Rows.Count) = True = Pass
+    Pass = 4 = CInt(RelevantR.Columns.Count) = True = Pass
+    
+    InsertColumns RangeStart
+    
+    Pass = 25 = CInt(RelevantR.Count) = True = Pass
+    Pass = 5 = CInt(RelevantR.Rows.Count) = True = Pass
+    Pass = 5 = CInt(RelevantR.Columns.Count) = True = Pass
+    
+    Test_InsertColumns = Pass
+    WB.Close False
+End Function

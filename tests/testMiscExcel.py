@@ -129,6 +129,10 @@ class MiscExcel(unittest.TestCase):
                 book.sheets.add("NewSheet")
                 self.assertTrue((func_ContainsSheet("NewSheet")))
 
+            with self.subTest("Test_InsertColumns"):
+                func = book.macro("Test__Helper_MiscExcel.Test_InsertColumns")
+                self.assertTrue(func())
+
 
 if __name__ == "__main__":
     unittest.main(
