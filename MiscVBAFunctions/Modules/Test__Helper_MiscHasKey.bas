@@ -9,9 +9,9 @@ Function Test_HasKey_Collection()
     C.Add "foo", "a"
     C.Add Col("x", "y", "z"), "b"
     
-    Pass = True = hasKey(C, "a") = Pass ' True for scalar
-    Pass = True = hasKey(C, "b") = Pass ' True for scalar
-    Pass = True = hasKey(C, "A") = Pass ' True for case insensitive
+    Pass = True = hasKey(C, "a") = Pass = True ' True for scalar
+    Pass = True = hasKey(C, "b") = Pass = True ' True for scalar
+    Pass = True = hasKey(C, "A") = Pass = True ' True for case insensitive
     
     Test_HasKey_Collection = Pass
 End Function
@@ -32,9 +32,9 @@ Function Test_HasKey_Dictionary_object()
     dObj.Add "a", "foo"
     dObj.Add "b", Col("x", "y", "z")
     
-    Pass = hasKey(dObj, "a") = Pass ' True for scalar
-    Pass = hasKey(dObj, "b") = Pass ' True for scalar
-    Pass = (False = hasKey(dObj, "A")) = Pass ' False - case sensitive by default
+    Pass = hasKey(dObj, "a") = Pass = True ' True for scalar
+    Pass = hasKey(dObj, "b") = Pass = True ' True for scalar
+    Pass = (False = hasKey(dObj, "A")) = Pass = True ' False - case sensitive by default
 
     Test_HasKey_Dictionary_object = Pass
 End Function

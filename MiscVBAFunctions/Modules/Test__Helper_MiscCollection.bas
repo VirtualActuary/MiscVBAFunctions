@@ -111,12 +111,12 @@ Function Test_Concat_Collections(C1, C2, C3)
 
     ConcatCollections C1, C2, C3
 
-    Pass = 1 = C1(1) = Pass
-    Pass = 2 = C1(2) = Pass
-    Pass = 5 = C1(3) = Pass
-    Pass = 6 = C1(4) = Pass
-    Pass = 3 = C1(5) = Pass
-    Pass = 4 = C1(6) = Pass
+    Pass = 1 = C1(1) = Pass = True
+    Pass = 2 = C1(2) = Pass = True
+    Pass = 5 = C1(3) = Pass = True
+    Pass = 6 = C1(4) = Pass = True
+    Pass = 3 = C1(5) = Pass = True
+    Pass = 4 = C1(6) = Pass = True
 
     Test_Concat_Collections = Pass
 End Function
@@ -126,9 +126,9 @@ Function Test_CollectionToArray_empty(Arr() As Variant)
     Dim Pass As Boolean
     Pass = True
 
-    Pass = IsArray(Arr) = Pass
-    Pass = CLng(0) = LBound(Arr) = Pass
-    Pass = CLng(-1) = UBound(Arr) = Pass
+    Pass = IsArray(Arr) = Pass = True
+    Pass = CLng(0) = LBound(Arr) = Pass = True
+    Pass = CLng(-1) = UBound(Arr) = Pass = True
     
     Test_CollectionToArray_empty = Pass
 End Function

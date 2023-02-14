@@ -17,8 +17,8 @@ Function Test_EnsureUniqueKey_Col()
     C2.Add 1, "b"
     C2.Add 1, "b1"
     
-    Pass = "d" = EnsureUniqueKey(C1, "d") = Pass
-    Pass = "b2" = EnsureUniqueKey(C2, "b") = Pass
+    Pass = "d" = EnsureUniqueKey(C1, "d") = Pass = True
+    Pass = "b2" = EnsureUniqueKey(C2, "b") = Pass = True
     
     Test_EnsureUniqueKey_Col = Pass
 End Function

@@ -5,8 +5,8 @@ Function TestListObjectsToDicts1(Dicts)
     Dim Pass As Boolean
     Pass = True
     
-    Pass = 5 = CInt(Dicts(2)("b")) = Pass
-    Pass = 5 = CInt(Dicts(2)("B")) = Pass ' must be case insensitive
+    Pass = 5 = CInt(Dicts(2)("b")) = Pass = True
+    Pass = 5 = CInt(Dicts(2)("B")) = Pass = True ' must be case insensitive
     
     TestListObjectsToDicts1 = Pass
 End Function
@@ -16,8 +16,8 @@ Function TestListObjectsToDicts2(Dicts)
     Dim Pass As Boolean
     Pass = True
     
-    Pass = hasKey(Dicts(1), "A") = Pass ' should contain A
-    Pass = (Not hasKey(Dicts(1), "b")) = Pass ' should not contain b
+    Pass = hasKey(Dicts(1), "A") = Pass = True ' should contain A
+    Pass = (Not hasKey(Dicts(1), "b")) = Pass = True ' should not contain b
     
     TestListObjectsToDicts2 = Pass
 End Function
@@ -27,8 +27,8 @@ Function TestNamedRangeToDicts1(Dicts)
     Dim Pass As Boolean
     Pass = True
 
-    Pass = 5 = CInt(Dicts(2)("b")) = Pass
-    Pass = 5 = CInt(Dicts(2)("B")) = Pass ' must be case insensitive
+    Pass = 5 = CInt(Dicts(2)("b")) = Pass = True
+    Pass = 5 = CInt(Dicts(2)("B")) = Pass = True ' must be case insensitive
     
     TestNamedRangeToDicts1 = Pass
 End Function
@@ -38,8 +38,8 @@ Function TestNamedRangeToDicts2(Dicts)
     Dim Pass As Boolean
     Pass = True
 
-    Pass = True = hasKey(Dicts(1), "A") = Pass ' should contain A
-    Pass = True = (Not hasKey(Dicts(1), "b")) = Pass ' should not contain b
+    Pass = True = hasKey(Dicts(1), "A") = Pass = True ' should contain A
+    Pass = True = (Not hasKey(Dicts(1), "b")) = Pass = True ' should not contain b
     
     TestNamedRangeToDicts2 = Pass
 End Function
@@ -79,9 +79,9 @@ Function TestGetTableRowIndex1()
     Dim Table As Collection
     Set Table = Col(DictI("a", 1, "b", 2), DictI("a", 3, "b", 4), DictI("a", "foo", "b", "bar"), DictI("a", "Baz", "b", "Bla"))
 
-    Pass = CLng(2) = GetTableRowIndex(Table, Col("a", "b"), Col(3, 4)) = Pass
-    Pass = CLng(3) = GetTableRowIndex(Table, Col("a", "b"), Col("foo", "bar")) = Pass
-    Pass = CLng(3) = GetTableRowIndex(Table, Col("a", "b"), Col("FoO", "BAr")) = Pass
+    Pass = CLng(2) = GetTableRowIndex(Table, Col("a", "b"), Col(3, 4)) = Pass = True
+    Pass = CLng(3) = GetTableRowIndex(Table, Col("a", "b"), Col("foo", "bar")) = Pass = True
+    Pass = CLng(3) = GetTableRowIndex(Table, Col("a", "b"), Col("FoO", "BAr")) = Pass = True
     
     TestGetTableRowIndex1 = Pass
 End Function
@@ -114,9 +114,9 @@ Function TestTableToDictsLogSource(WB As Workbook)
     Set Dicts = TableToDictsLogSource("ListObject1", WB)
     Set Source = dictget(Dicts(2), "__source__")
     
-    Pass = "ListObject1" = dictget(Source, "table") = Pass
-    Pass = CLng(2) = dictget(Source, "rowindex") = Pass
-    Pass = "MiscTableToDicts.xlsx" = dictget(Source, "workbook").Name = Pass
+    Pass = "ListObject1" = dictget(Source, "table") = Pass = True
+    Pass = CLng(2) = dictget(Source, "rowindex") = Pass = True
+    Pass = "MiscTableToDicts.xlsx" = dictget(Source, "workbook").Name = Pass = True
     
     TestTableToDictsLogSource = Pass
 End Function

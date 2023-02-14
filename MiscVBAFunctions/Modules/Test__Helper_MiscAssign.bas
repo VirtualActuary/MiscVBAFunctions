@@ -9,8 +9,8 @@ Function Test_MiscAssign_object(I)
     
     assign Obj1, I
     
-    Pass = 4 = Obj1(1) = Pass
-    Pass = 5 = assign(Obj2, I)(2) = Pass
+    Pass = 4 = Obj1(1) = Pass = True
+    Pass = 5 = assign(Obj2, I)(2) = Pass = True
 
     Test_MiscAssign_object = Pass
 End Function

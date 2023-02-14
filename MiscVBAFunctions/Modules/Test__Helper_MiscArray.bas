@@ -10,10 +10,10 @@ Function Test_ErrorToNullStringTransformation_1()
     Arr(1, 0) = 2.1: Arr(1, 1) = CVErr(xlErrNA)
     ErrorToNullStringTransformation Arr
 
-    Pass = 100.2 = Arr(0, 0) = Pass
-    Pass = vbNullString = Arr(0, 1) = Pass
-    Pass = 2.1 = Arr(1, 0) = Pass
-    Pass = vbNullString = Arr(1, 1) = Pass
+    Pass = 100.2 = Arr(0, 0) = Pass = True
+    Pass = vbNullString = Arr(0, 1) = Pass = True
+    Pass = 2.1 = Arr(1, 0) = Pass = True
+    Pass = vbNullString = Arr(1, 1) = Pass = True
     
     Test_ErrorToNullStringTransformation_1 = Pass
 End Function
@@ -27,9 +27,9 @@ Function Test_ErrorToNullStringTransformation_2()
     Arr(0) = 1.2: Arr(1) = CVErr(xlErrRef): Arr(2) = 3.8
     ErrorToNullStringTransformation Arr
 
-    Pass = 1.2 = Arr(0) = Pass
-    Pass = vbNullString = Arr(1) = Pass
-    Pass = 3.8 = Arr(2) = Pass
+    Pass = 1.2 = Arr(0) = Pass = True
+    Pass = vbNullString = Arr(1) = Pass = True
+    Pass = 3.8 = Arr(2) = Pass = True
     
     Test_ErrorToNullStringTransformation_2 = Pass
 End Function

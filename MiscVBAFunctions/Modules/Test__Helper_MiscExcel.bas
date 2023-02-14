@@ -231,14 +231,14 @@ Function Test_RelevantRange()
     Set R1 = RelevantRange(WB.Sheets(1))
     Arr = R1.Value
     
-    Pass = 99 = CInt(R1.Count)
-    Pass = 11 = CInt(R1.Rows.Count)
-    Pass = 9 = CInt(R1.Columns.Count)
-    Pass = 1 = CInt(LBound(Arr, 1))
-    Pass = 11 = CInt(UBound(Arr, 1))
-    Pass = 1 = CInt(LBound(Arr, 2))
-    Pass = 9 = CInt(UBound(Arr, 2))
-    Pass = "$I$11" = R1.Range(Cells(UBound(Arr, 1), UBound(Arr, 2)), Cells(UBound(Arr, 1), UBound(Arr, 2))).Address
+    Pass = 99 = CInt(R1.Count) = Pass = True
+    Pass = 11 = CInt(R1.Rows.Count) = Pass = True
+    Pass = 9 = CInt(R1.Columns.Count) = Pass = True
+    Pass = 1 = CInt(LBound(Arr, 1)) = Pass = True
+    Pass = 11 = CInt(UBound(Arr, 1)) = Pass = True
+    Pass = 1 = CInt(LBound(Arr, 2)) = Pass = True
+    Pass = 9 = CInt(UBound(Arr, 2)) = Pass = True
+    Pass = "$I$11" = R1.Range(Cells(UBound(Arr, 1), UBound(Arr, 2)), Cells(UBound(Arr, 1), UBound(Arr, 2))).Address = Pass = True
 
     Test_RelevantRange = Pass
     WB.Close False

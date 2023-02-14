@@ -13,8 +13,8 @@ Function Test_GetNewKey1()
         C.Add "bla", "name" & I
     Next I
 
-    Pass = "name21" = GetNewKey("name", C) = Pass
-    Pass = "NewName" = GetNewKey("NewName", C) = Pass
+    Pass = "name21" = GetNewKey("name", C) = Pass = True
+    Pass = "NewName" = GetNewKey("NewName", C) = Pass = True
     
     Test_GetNewKey1 = Pass
 End Function
@@ -30,8 +30,8 @@ Function Test_GetNewKey2()
     D.Add "bla", "not"
     D.Add "bla", "matter"
 
-    Pass = "not1" = GetNewKey("not", D) = Pass
-    Pass = "foo" = GetNewKey("foo", D) = Pass
+    Pass = "not1" = GetNewKey("not", D) = Pass = True
+    Pass = "foo" = GetNewKey("foo", D) = Pass = True
     
     Test_GetNewKey2 = Pass
 End Function
