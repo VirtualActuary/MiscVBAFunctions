@@ -3,7 +3,7 @@ Option Explicit
 
 Private Sub ModuleInitialize()
     Dim WB As Workbook
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel23763464453.xlsx"), True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, ".\tests\MiscExcel\MiscExcel23763464453.xlsx"), True)
     
 End Sub
 
@@ -14,6 +14,7 @@ Public Function ExcelBook( _
     ) As Workbook
     ' Inspiration: https://github.com/AutoActuary/aa-py-xl/blob/master/aa_py_xl/context.py
     ' Create an Excel Workbook with custom arguments.
+    ' If Path = "", a temp WB gets created.
     '
     ' Args:
     '   Path: Path to the file.
@@ -35,17 +36,17 @@ Public Function ExcelBook( _
         Exit Function
     End If
     
-    If fso.FileExists(Path) Then
+    If Fso.FileExists(Path) Then
         Set ExcelBook = OpenWorkbook(Path, ReadOnly)
         Exit Function
     End If
     
     If MustExist Then
-        Err.Raise -999, , "FileNotFoundError: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+        Err.Raise -999, , "FileNotFoundError: File '" & Fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
     
     If ReadOnly Then
-        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & fso.GetAbsolutePathName(Path) & "' does not exist."
+        Err.Raise -998, , "File must exist to open in ReadOnly mode: File '" & Fso.GetAbsolutePathName(Path) & "' does not exist."
     End If
     
     Set ExcelBook = Workbooks.Add
@@ -68,18 +69,18 @@ Public Function OpenWorkbook( _
     ' Returns:
     '   The opened Workbook.
     
-    If hasKey(Workbooks, fso.GetFileName(Path)) Then
-        Set OpenWorkbook = Workbooks(fso.GetFileName(Path))
+    If hasKey(Workbooks, Fso.GetFileName(Path)) Then
+        Set OpenWorkbook = Workbooks(Fso.GetFileName(Path))
         
         ' check if the workbook is actually the one specified in path
         ' use AbsolutePathName to remove any relative path references  (\..\ / \.\)
-        If VBA.LCase(OpenWorkbook.FullName) <> VBA.LCase(fso.GetAbsolutePathName(Path)) Then
-            Debug.Print fso.GetAbsolutePathName(Path)
-            Err.Raise 457, , "Existing workbook with the same name is already open: '" & fso.GetFileName(Path) & "'"
+        If VBA.LCase(OpenWorkbook.FullName) <> VBA.LCase(Fso.GetAbsolutePathName(Path)) Then
+            Debug.Print Fso.GetAbsolutePathName(Path)
+            Err.Raise 457, , "Existing workbook with the same name is already open: '" & Fso.GetFileName(Path) & "'"
         End If
         
         If ReadOnly And OpenWorkbook.ReadOnly = False Then
-            Err.Raise -999, , "Workbook'" & fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
+            Err.Raise -999, , "Workbook'" & Fso.GetFileName(Path) & "' is already open and is not in ReadOnly mode. Only closed workbooks can be opened as readonly."
         End If
     Else
         If DisableUpdateLinksAndDisplayAlerts Then
@@ -210,3 +211,181 @@ Public Function SanitiseExcelName(Name As String)
     End If
     
 End Function
+
+
+Sub RenameSheet(SourceWS As Variant, NewSheetName As String, Optional RaiseErrorIfSheetNameExists = False)
+    ' name a sheet given the proposed name (check first if it exists).
+    ' Add "(NextAvailableNumber)" to the new sheet name if RaiseErrorIfSheetNameExists = False
+    '
+    ' Args:
+    '   SourceWS: Worksheet whose name must be changed. This argument's Variable type can be String or Worksheet
+    '   NewSheetName: Desired new worksheet name
+    '   RaiseErrorIfSheetNameExists: Optional argument - If True, raise an error if the NewSheetName
+    '       already exists in the WorkBook.
+    
+    If Not (VarType(SourceWS) = vbString Or VarType(SourceWS) = vbObject) Then
+        Err.Raise ErrNr.TypeMismatch, , "Source Worksheet must be of type: Worksheet or String."
+    End If
+    
+    Dim WS As Worksheet
+    If VarType(SourceWS) = vbObject Then
+        Set WS = SourceWS
+    Else
+        Set WS = GetLO(CStr(SourceWS))
+    End If
+        
+    
+    Dim SheetNames As New Collection
+    Dim S As Worksheet
+    For Each S In WS.Parent.Sheets
+        SheetNames.Add S, S.Name
+    Next S
+    
+    If RaiseErrorIfSheetNameExists Then
+        If hasKey(SheetNames, NewSheetName) Then
+            Err.Raise ErrNr.FileAlreadyExists, , "Worksheet name already exists."
+        End If
+    End If
+
+    Dim Name As String
+    Dim I As Integer
+    I = 0
+    Name = NewSheetName
+    Do While hasKey(SheetNames, Name)
+        I = I + 1
+        Name = Left(NewSheetName, 25) & " (" & I & ")" ' 31 max characters - ie supports up to 999 sheets
+    Loop
+    WS.Name = Left(Name, 31)
+End Sub
+
+
+Function AddWS(ByVal Name As String, _
+               Optional After As Worksheet, _
+               Optional Before As Worksheet, _
+               Optional WB As Workbook, _
+               Optional ErrIfExists As Boolean = False, _
+               Optional ForceNewIfExists As Boolean = False) As Worksheet
+    ' Add a Worksheet to the selected Workbook.
+    ' First check if the name already exists.
+    '
+    ' Args:
+    '   Name: Name of the new Worksheet
+    '   After: An object that specifies the sheet after which the new sheet is added.
+    '   Before: An object that specifies the sheet before which the new sheet is added.
+    '   WB: Workbook to add the Worksheet in.
+    '   ErrIfExists: If True, Raise an error if the WorkSheet name already exists.
+    '   ForceNewIfExists: If True, A unique key will be generated from the selected name
+    '                     and will be used as the new name (e.x. MyTable -> MyTable1)
+    '
+    ' Returns:
+    '   The new Worksheet object.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Name = Left(Name, 31)
+    
+    If hasKey(WB.Sheets, Name) Then
+        If ErrIfExists Then
+            Err.Raise ErrNr.FileAlreadyExists, , "Worksheet '" & Name & "' already exists"
+        End If
+
+        If ForceNewIfExists Then
+            ' to allow new names up to *99 (99 sheets)
+            Name = EnsureUniqueKey(WB.Sheets, Left(Name, 29))
+        Else
+            Set AddWS = WB.Sheets(Name)
+            Exit Function
+        End If
+    End If
+    
+  
+    If Not After Is Nothing Then
+        Set AddWS = WB.Sheets.Add(After:=After)
+    ElseIf Not Before Is Nothing Then
+        Set AddWS = WB.Sheets.Add(Before:=Before)
+    Else
+        ' by default add to the last sheet
+        Set AddWS = WB.Sheets.Add(After:=WB.Sheets(WB.Sheets.Count))
+    End If
+    
+    AddWS.Name = Name
+End Function
+
+
+Sub DeleteSheet(SheetName As String, Optional WB As Workbook = Nothing)
+    ' Delete a sheet from the selected WorkBook.
+    ' If the sheet doesn't exist, nothing happens.
+    '
+    ' Args:
+    '   WB: Selected WorkBook. If left empty, ThisWorkbook is selected
+    '   SheetName: Name of the sheet to search for.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim DA
+    DA = Application.DisplayAlerts
+    Application.DisplayAlerts = False
+    If ContainsSheet(SheetName, WB) Then
+        WB.Sheets(SheetName).Delete
+    End If
+    Application.DisplayAlerts = DA
+End Sub
+
+
+Function ContainsSheet(Key As Variant, Optional WB As Workbook = Nothing) As Boolean
+    ' whether a sheet exists in a Workbook
+    '
+    ' Args:
+    '   WB: Selected Workbook. If left empty, ThisWorkbook is selected
+    '   Key: Sheet to search for.
+    '
+    ' Returns:
+    '   True if the selected Workbook contains the sheet, False otherwise.
+    
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    
+    Dim obj As Variant
+    Dim Sheets As Variant
+
+    Set Sheets = WB.Sheets
+    On Error GoTo Err
+        ContainsSheet = True
+        Set obj = Sheets(Key)
+        Exit Function
+Err:
+        ContainsSheet = False
+End Function
+
+
+Sub InsertColumns(ReferenceR As Range, Optional NrCols As Integer = 1)
+    ' Insert 1 or more Columns to a Worksheet.
+    ' If the input Range object contains more than 1 cell, the first
+    ' cell's location will be used to add the new column.
+    '
+    ' Args:
+    '   ReferenceR: Range object, used to place the new Column. This Range object will be altered
+    '   NrCols: Number of columns to add.
+    
+    Dim I As Long
+    For I = 1 To NrCols
+        ReferenceR.Cells(1, 1).EntireColumn.Insert
+    Next I
+End Sub
+
+
+Sub InsertRows(ReferenceR As Range, Optional NrRows As Integer = 1)
+    ' Insert 1 or more rows to a Worksheet.
+    ' If the input Range object contains more than 1 cell, the first
+    ' cell's location will be used to add the new row.
+    '
+    ' Args:
+    '   ReferenceR: Range object, used to place the new row.
+    '   NrCols: Number of rows to add.
+    
+    Dim I As Long
+    For I = 1 To NrRows
+        ReferenceR.Cells(1, 1).EntireRow.Insert
+    Next I
+End Sub
+
+

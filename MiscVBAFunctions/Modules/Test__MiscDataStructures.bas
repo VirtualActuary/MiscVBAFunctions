@@ -1,18 +1,18 @@
-Attribute VB_Name = "Test__MiscAssign"
+Attribute VB_Name = "Test__MiscDataStructures"
 Option Explicit
 Option Private Module
 
 '@TestModule
 '@Folder("Tests")
 
-Private Assert As Rubberduck.AssertClass
-Private Fakes As Rubberduck.FakesProvider
+Private Assert As Object
+Private Fakes As Object
 
 '@ModuleInitialize
 Private Sub ModuleInitialize()
     'this method runs once per module.
-    Set Assert = New Rubberduck.AssertClass
-    Set Fakes = New Rubberduck.FakesProvider
+    Set Assert = CreateObject("Rubberduck.AssertClass")
+    Set Fakes = CreateObject("Rubberduck.FakesProvider")
 End Sub
 
 '@ModuleCleanup
@@ -32,22 +32,28 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_variant()
+'@TestMethod("MiscDataStructures")
+Private Sub Test_EnsureUniqueKey_Col()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim I As Variant
-    
+    Dim C As Collection
+    Dim C2 As Collection
+    Set C = New Collection
+    Set C2 = New Collection
 
     'Act:
-
+    C.Add 1, "a"
+    C.Add 1, "b"
+    C.Add 1, "c"
+    
+    C2.Add 1, "a"
+    C2.Add 1, "b"
+    C2.Add 1, "b1"
+    
     'Assert:
-    Assert.AreEqual 5, assign(I, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(I, 1.4), "assign test succeeded"
-    
-    
-    'Assert.Succeed
+    Assert.AreEqual "d", EnsureUniqueKey(C, "d")
+    Assert.AreEqual "b2", EnsureUniqueKey(C2, "b")
 
 TestExit:
     Exit Sub
@@ -56,21 +62,21 @@ TestFail:
     Resume TestExit
 End Sub
 
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_object()
+'@TestMethod("MiscDataStructures")
+Private Sub Test_EnsureUniqueKey_Dict()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim x As Variant
-    Dim y As Variant
-    Dim I As Variant
-    Set I = Col(4, 5, 6)
-    assign x, I
+    Dim D As Dictionary
+    Dim D2 As Dictionary
+    
+    'Act:
+    Set D = Dict("a", 1, "b", 1, "c", 1)
+    Set D2 = Dict("a", 1, "b", 1, "b1", 1)
     
     'Assert:
-    Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, I)(2)
-
+    Assert.AreEqual "d", EnsureUniqueKey(D, "d")
+    Assert.AreEqual "b2", EnsureUniqueKey(D2, "b")
 
 TestExit:
     Exit Sub

@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscAssign"
+Attribute VB_Name = "Test__MiscCsv"
 Option Explicit
 Option Private Module
 
@@ -32,49 +32,30 @@ Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_variant()
+'@TestMethod("MiscCsv")
+Private Sub Test_CsvToLO()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim I As Variant
-    
+    Dim LO As ListObject
+    Dim WB As Workbook
+    Dim WS As Worksheet
 
     'Act:
-
+    Set WB = ExcelBook("")
+    Set WS = WB.Worksheets(1)
+    Set LO = CsvToLO(WS.Cells(10, 10), Fso.BuildPath(ThisWorkbook.Path, ".\tests\Csv\MiscCsv.csv"), "MyTable")
+    
     'Assert:
-    Assert.AreEqual 5, assign(I, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(I, 1.4), "assign test succeeded"
-    
-    
-    'Assert.Succeed
-
+    Assert.AreEqual "MyTable", LO.Name
+    Assert.AreEqual "1", LO.Range(1, 1).Value
+    Assert.AreEqual 11, CInt(LO.Range(3, 1).Value)
+   
 TestExit:
+    WB.Close False
     Exit Sub
 TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
 
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_object()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim x As Variant
-    Dim y As Variant
-    Dim I As Variant
-    Set I = Col(4, 5, 6)
-    assign x, I
-    
-    'Assert:
-    Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, I)(2)
-
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub

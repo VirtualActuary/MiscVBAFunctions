@@ -14,7 +14,7 @@ Private Sub ModuleInitialize()
     'this method runs once per module.
     Set Assert = New Rubberduck.AssertClass
     Set Fakes = New Rubberduck.FakesProvider
-    Set WB = ExcelBook(fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
+    Set WB = ExcelBook(Fso.BuildPath(ThisWorkbook.Path, "tests\MiscTableToDicts\MiscTableToDicts.xlsx"), True, True)
 End Sub
 
 '@ModuleCleanup
@@ -49,7 +49,7 @@ Private Sub TestListObjectsToDicts()
     Assert.AreEqual 5, CInt(Dicts(2)("b"))
     Assert.AreEqual 5, CInt(Dicts(2)("B")) ' must be case insensitive
     
-    Set Dicts = TableToDicts("ListObject1", WB, col("a", "C"))
+    Set Dicts = TableToDicts("ListObject1", WB, Col("a", "C"))
     Assert.AreEqual True, hasKey(Dicts(1), "A") ' should contain A
     Assert.AreNotEqual True, hasKey(Dicts(1), "b") ' should not contain b
 
@@ -73,7 +73,7 @@ Private Sub TestNamedRangeToDicts()
     Assert.AreEqual 5, CInt(Dicts(2)("b"))
     Assert.AreEqual 5, CInt(Dicts(2)("B")) ' must be case insensitive
     
-    Set Dicts = TableToDicts("NamedRange1", WB, col("a", "C"))
+    Set Dicts = TableToDicts("NamedRange1", WB, Col("a", "C"))
     Assert.AreEqual True, hasKey(Dicts(1), "A") ' should contain A
     Assert.AreNotEqual True, hasKey(Dicts(1), "b") ' should not contain b
     
@@ -142,19 +142,19 @@ Private Sub TestGetTableRowIndex()
     Dim Table As Collection
     
     'Act:
-    Set Table = col(dicti("a", 1, "b", 2), dicti("a", 3, "b", 4), dicti("a", "foo", "b", "bar"), dicti("a", "Baz", "b", "Bla"))
+    Set Table = Col(DictI("a", 1, "b", 2), DictI("a", 3, "b", 4), DictI("a", "foo", "b", "bar"), DictI("a", "Baz", "b", "Bla"))
     
     'Assert:
-    Assert.AreEqual CLng(2), GetTableRowIndex(Table, col("a", "b"), col(3, 4))
-    Assert.AreEqual CLng(3), GetTableRowIndex(Table, col("a", "b"), col("foo", "bar"))
-    Assert.AreEqual CLng(3), GetTableRowIndex(Table, col("a", "b"), col("FoO", "BAr"))
+    Assert.AreEqual CLng(2), GetTableRowIndex(Table, Col("a", "b"), Col(3, 4))
+    Assert.AreEqual CLng(3), GetTableRowIndex(Table, Col("a", "b"), Col("foo", "bar"))
+    Assert.AreEqual CLng(3), GetTableRowIndex(Table, Col("a", "b"), Col("FoO", "BAr"))
     
     
     Dim IndexTest As Variant
     IndexTest = 999
     On Error GoTo NoFind
         ' this should throw an error as no match of the same index should be found
-        IndexTest = GetTableRowIndex(Table, col("a", "b"), col("baz", "bla"), IgnoreCaseValues:=False)
+        IndexTest = GetTableRowIndex(Table, Col("a", "b"), Col("baz", "bla"), IgnoreCaseValues:=False)
 NoFind:
     On Error GoTo TestFail
     Assert.AreEqual CLng(999), CLng(IndexTest)
@@ -175,13 +175,13 @@ Private Sub TestTableLookupValue()
     Dim Table As Collection
     
     'Act:
-    Set Table = col(dicti("a", 1, "b", 2, "c", 5), dicti("a", 3, "b", 4, "c", 6), dicti("a", "foo", "b", "bar"))
+    Set Table = Col(DictI("a", 1, "b", 2, "c", 5), DictI("a", 3, "b", 4, "c", 6), DictI("a", "foo", "b", "bar"))
     
     'Assert:
     ' look for the value in column 'c' where column 'a' = 3 and column 'b' = 4:
-    Assert.AreEqual CLng(6), CLng(TableLookupValue(Table, col("a", "b"), col(3, 4), "c"))
+    Assert.AreEqual CLng(6), CLng(TableLookupValue(Table, Col("a", "b"), Col(3, 4), "c"))
     ' Also test for when no lookup is found and default is given:
-    Assert.AreEqual "foo", TableLookupValue(Table, col("a", "b"), col(3, 400), "c", "foo")
+    Assert.AreEqual "foo", TableLookupValue(Table, Col("a", "b"), Col(3, 400), "c", "foo")
 
 TestExit:
     Exit Sub
@@ -224,15 +224,15 @@ Private Sub TestGetTableRowRange()
     'Arrange:
     Dim Dicts As Collection
     Dim Source As Dictionary
-    Dim r As Range
+    Dim R As Range
     
     'Act:
     ' Test list object:
-    Set r = GetTableRowRange("ListObject1", col("a", "b"), col(4, 5), WB)
-    Assert.AreEqual "$B$6:$D$6", r.Address
+    Set R = GetTableRowRange("ListObject1", Col("a", "b"), Col(4, 5), WB)
+    Assert.AreEqual "$B$6:$D$6", R.Address
     
-    Set r = GetTableRowRange("NamedRange1", col("a", "b"), col(4, 5), WB)
-    Assert.AreEqual "$G$6:$I$6", r.Address
+    Set R = GetTableRowRange("NamedRange1", Col("a", "b"), Col(4, 5), WB)
+    Assert.AreEqual "$G$6:$I$6", R.Address
 
 TestExit:
     Exit Sub
@@ -242,17 +242,16 @@ TestFail:
 End Sub
 
 
-'@TestMethod("MiscTableToDicts")
 Private Sub Test_TableDictToArray()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12))
-    Arr = TableDictToArray(col1)
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("b", 11, "a", 12))
+    Arr = TableDictToArray(Col1)
 
     'Assert:
     Assert.AreEqual "a", Arr(0, 0)
@@ -275,12 +274,12 @@ Private Sub Test_TableDictToArray_fail_1()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "a", 12, "c", 3))
-    Arr = TableDictToArray(col1)
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("b", 11, "a", 12, "c", 3))
+    Arr = TableDictToArray(Col1)
 
 
 
@@ -302,12 +301,12 @@ Private Sub Test_TableDictToArray_fail_2()
     Const ExpectedError As Long = -996
     On Error GoTo TestFail
     
-    Dim col1 As Collection
+    Dim Col1 As Collection
     Dim Arr() As Variant
     
     'Act:
-    Set col1 = col(dict("a", 1, "b", 2), dict("b", 11, "c", 3))
-    Arr = TableDictToArray(col1)
+    Set Col1 = Col(Dict("a", 1, "b", 2), Dict("b", 11, "c", 3))
+    Arr = TableDictToArray(Col1)
 
 Assert:
     Assert.Fail "Expected error was not raised"

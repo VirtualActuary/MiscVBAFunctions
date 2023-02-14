@@ -24,7 +24,7 @@ Public Function Glob(Dir As String, Pattern As String) As Collection
     End If
     
     Dim DirPath As folder
-    Set DirPath = fso.GetFolder(Dir)
+    Set DirPath = Fso.GetFolder(Dir)
     
     Dim PatternSplitted() As String
     Pattern = Replace(Pattern, "/", "\")
@@ -80,7 +80,7 @@ Public Function RGlob(Dir As String, Pattern As String) As Collection
     
     
     Dim DirPath As folder
-    Set DirPath = fso.GetFolder(Dir)
+    Set DirPath = Fso.GetFolder(Dir)
     
     If Pattern = "" Then
         Pattern = "**"
@@ -153,7 +153,7 @@ Private Function IsGlobValid(CurrentPath As String, PatternSplitted() As String,
         If PatternSplitted(I) = "**" Then
             
             If I = PatternLen Then
-                If fso.FolderExists(BaseDir + "\" + CurrentPath) Then
+                If Fso.FolderExists(BaseDir + "\" + CurrentPath) Then
                     IsGlobValid = True
                 Else
                     IsGlobValid = False
@@ -246,7 +246,7 @@ Private Function IsRGlobValid(ByVal CurrentPath As String, PatternSplit() As Str
             
             If I = 0 Then
                 ' if The last section of the pattern is "**", only folders are considered.
-                If Not fso.FolderExists(BaseDir + "\" + CurrentPath) Then
+                If Not Fso.FolderExists(BaseDir + "\" + CurrentPath) Then
                     IsRGlobValid = False
                     Exit Function
                 End If

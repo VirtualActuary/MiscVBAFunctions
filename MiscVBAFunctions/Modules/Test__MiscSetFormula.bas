@@ -1,4 +1,4 @@
-Attribute VB_Name = "Test__MiscAssign"
+Attribute VB_Name = "Test__MiscSetFormula"
 Option Explicit
 Option Private Module
 
@@ -8,12 +8,14 @@ Option Private Module
 Private Assert As Rubberduck.AssertClass
 Private Fakes As Rubberduck.FakesProvider
 
+
 '@ModuleInitialize
 Private Sub ModuleInitialize()
-    'this method runs once per module.
+'this method runs once per module.
     Set Assert = New Rubberduck.AssertClass
     Set Fakes = New Rubberduck.FakesProvider
 End Sub
+
 
 '@ModuleCleanup
 Private Sub ModuleCleanup()
@@ -22,56 +24,36 @@ Private Sub ModuleCleanup()
     Set Fakes = Nothing
 End Sub
 
+
 '@TestInitialize
 Private Sub TestInitialize()
     'This method runs before every test in the module..
 End Sub
+
 
 '@TestCleanup
 Private Sub TestCleanup()
     'this method runs after every test in the module.
 End Sub
 
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_variant()
+'@TestMethod("SetFormula")
+Private Sub Test_SetFormula_1()
     On Error GoTo TestFail
     
     'Arrange:
-    Dim I As Variant
+    Dim WB As Workbook
+    Set WB = ExcelBook("")
+    Dim Sht As Worksheet
+    Set Sht = WB.Worksheets(1)
+    Dim rng As Range
+    Set rng = Sht.Range("B2")
     
-
     'Act:
-
-    'Assert:
-    Assert.AreEqual 5, assign(I, 5), "assign test succeeded"
-    Assert.AreEqual 1.4, assign(I, 1.4), "assign test succeeded"
-    
-    
-    'Assert.Succeed
-
-TestExit:
-    Exit Sub
-TestFail:
-    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
-    Resume TestExit
-End Sub
-
-'@TestMethod("MiscAssign")
-Private Sub Test_MiscAssign_object()
-    On Error GoTo TestFail
-    
-    'Arrange:
-    Dim x As Variant
-    Dim y As Variant
-    Dim I As Variant
-    Set I = Col(4, 5, 6)
-    assign x, I
+    SetFormula rng, "=1+2.1"
     
     'Assert:
-    Assert.AreEqual 4, x(1)
-    Assert.AreEqual 5, assign(y, I)(2)
-
-
+    Assert.AreEqual 3.1, rng.Value
+    
 TestExit:
     Exit Sub
 TestFail:

@@ -69,7 +69,7 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
 End Function
 
 
-Private Function parentDir(ByVal folder)
+Public Function parentDir(ByVal folder)
     parentDir = Left$(folder, InStrRev(folder, "\") - 1)
 End Function
 
@@ -104,7 +104,12 @@ Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = 
     Dim PathTemp As String ' for when the relative names becomes too long:
     PathTemp = EvalPath(StrPath)
 
-    If fso.FolderExists(PathTemp) Then
+
+    Dim pathTemp As String ' for when the relative names becomes too long:
+    pathTemp = EvalPath(strPath)
+
+    If Fso.FolderExists(pathTemp) Then Exit Sub
+
         ' if the folder already exists, no need to create anything
         If ExistOk = False Then
             Err.Raise ErrNr.FileAlreadyExists, , ErrorMessage(ErrNr.FileAlreadyExists, "Could not create folder with path: " & PathTemp & ". Folder already exists.")
@@ -135,6 +140,7 @@ Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = 
     Next J
     If Not fso.FolderExists(PathTemp) Then
         Err.Raise ErrNr.FileNotFound, , ErrorMessage(ErrNr.FileNotFound, "Could not create folder with path: " & PathTemp & ". Ensure you have write access to the required folder.")
+
     End If
     Set MakeDirs = fso.GetFolder(PathTemp)
 End Function

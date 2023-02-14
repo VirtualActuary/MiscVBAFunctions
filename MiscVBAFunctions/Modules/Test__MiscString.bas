@@ -36,10 +36,6 @@ End Sub
 Private Sub Test_randomString()
     On Error GoTo TestFail
     
-    'Arrange:
-
-    'Act:
-
     'Assert:
     Assert.AreEqual 4, CInt(Len(randomString(4)))
     Assert.AreNotEqual randomString(5), randomString(5)
@@ -50,3 +46,38 @@ TestFail:
     Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
     Resume TestExit
 End Sub
+
+'@TestMethod("MiscString")
+Private Sub Test_EndsWith()
+    On Error GoTo TestFail
+
+    'Assert:
+    Assert.IsTrue EndsWith("foo bar baz", " baz")
+    Assert.IsTrue EndsWith("foo bar baz", "az")
+    Assert.IsFalse EndsWith("foo bar baz", " baz ")
+    Assert.IsFalse EndsWith("foo bar baz", "bar")
+
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
+'@TestMethod("MiscString")
+Private Sub Test_StartsWith()
+    On Error GoTo TestFail
+    
+    'Assert:
+    Assert.IsTrue StartsWith("foo bar baz", "foo ")
+    Assert.IsTrue StartsWith("foo bar baz", "foo bar baz")
+    Assert.IsFalse StartsWith("foo bar baz", "bar")
+    Assert.IsFalse StartsWith("foo bar baz", " Foo")
+    
+TestExit:
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+    Resume TestExit
+End Sub
+
