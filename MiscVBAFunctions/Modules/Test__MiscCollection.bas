@@ -386,7 +386,7 @@ TestFail:
 End Sub
 
 '@TestMethod("MiscCollection")
-Private Sub Test_indexOf()
+Private Sub Test_IndexInCOllection()
     On Error GoTo TestFail
     
     'Arrange:
@@ -398,12 +398,12 @@ Private Sub Test_indexOf()
     Set C2 = Col(12, 23, 34, 45, 56, 67)
     
     'Assert:
-    Assert.AreEqual 3, CInt(IndexOf(C, "variables"))
-    Assert.AreEqual 2, CInt(IndexOf(C, 0))
-    Assert.AreEqual 0, CInt(IndexOf(C, "Foo"))
+    Assert.AreEqual 3, CInt(IndexInCollection(C, "variables"))
+    Assert.AreEqual 2, CInt(IndexInCollection(C, 0))
+    Assert.AreEqual 0, CInt(IndexInCollection(C, "Foo"))
 
-    Assert.AreEqual 5, CInt(IndexOf(C2, 56))
-    Assert.AreEqual 0, CInt(IndexOf(C2, "23"))
+    Assert.AreEqual 5, CInt(IndexInCollection(C2, 56))
+    Assert.AreEqual 0, CInt(IndexInCollection(C2, "23"))
 
     
 TestExit:
