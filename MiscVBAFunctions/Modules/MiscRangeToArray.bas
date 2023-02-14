@@ -64,7 +64,7 @@ Public Function RangeTo1DArray( _
                 Arr(Counter) = Values(I, J)
                 Counter = Counter + 1
             ElseIf Values(I, J) = vbNullString And IgnoreEmpty Then
-                ReDim Preserve Arr(UBound(Arr) - 1) ' when there is an empty cell, just reduce array size by 1
+                ' Skip this cell
             Else
                 Arr(Counter) = Values(I, J)
                 Counter = Counter + 1
@@ -72,8 +72,8 @@ Public Function RangeTo1DArray( _
         Next J
     Next I
     
+    ReDim Preserve Arr(Counter - 1) ' when there is an empty cell, just reduce array size by 1
     RangeTo1DArray = Arr
-    
 End Function
 
 
