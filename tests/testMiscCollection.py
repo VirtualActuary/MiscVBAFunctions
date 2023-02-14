@@ -1,5 +1,6 @@
 import unittest
 from locate import prepend_sys_path
+
 with prepend_sys_path():
     from util import functions_book, vba_dict
 
@@ -106,6 +107,28 @@ class MiscCollection(unittest.TestCase):
                 func_Col_to_arr = book.macro("MiscCollection.CollectionToArray")
                 arr = func_Col_to_arr(func_col())
                 self.assertTrue(func(arr))
+
+            with self.subTest():
+                func_IndexInCollection = book.macro("MiscCollection.IndexInCollection")
+                C = func_col(
+                    "variables10",
+                    0,
+                    "variables",
+                    10,
+                    "variables2",
+                    "20",
+                    "variables_10",
+                    30,
+                    "variables_2",
+                    40,
+                )
+                C2 = func_col(12, 23, 34, 45, 56, 67)
+
+                self.assertEqual(3, (func_IndexInCollection(C, "variables")))
+                self.assertEqual(2, func_IndexInCollection(C, 0))
+                self.assertEqual(0, func_IndexInCollection(C, "Foo"))
+                self.assertEqual(5, func_IndexInCollection(C2, 56))
+                self.assertEqual(0, func_IndexInCollection(C2, "23"))
 
 
 if __name__ == "__main__":
