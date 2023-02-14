@@ -111,6 +111,10 @@ class MiscExcel(unittest.TestCase):
                 func = book.macro("Test__Helper_MiscExcel.Test_RenameSheet_fail")
                 self.assertTrue(func())
 
+            with self.subTest("Test_AddWS"):
+                func = book.macro("Test__Helper_MiscExcel.Test_AddWS")
+                self.assertTrue(func())
+
 
 if __name__ == "__main__":
     unittest.main(

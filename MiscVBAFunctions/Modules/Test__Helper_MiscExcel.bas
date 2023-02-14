@@ -286,3 +286,21 @@ TestFail:
     
     WB.Close False
 End Function
+
+
+Function Test_AddWS()
+    Test_AddWS = False
+    On Error GoTo TestFail
+    
+    Dim WB As Workbook
+    Dim WS As Worksheet
+
+    Set WB = ExcelBook("")
+    Set WS = AddWS("NewSheet", WB:=WB)
+    
+    Test_AddWS = True
+    WB.Close False
+    Exit Function
+TestFail:
+    Test_AddWS = False
+End Function
