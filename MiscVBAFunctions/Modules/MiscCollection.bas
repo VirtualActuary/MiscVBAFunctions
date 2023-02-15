@@ -107,7 +107,7 @@ Public Function IsValueInCollection(ColInput As Collection, Val As Variant, Opti
 End Function
 
 
-Public Function IndexOf(ByVal Col1 As Collection, ByVal Item As Variant) As Long
+Public Function IndexInCollection(ByVal Col1 As Collection, ByVal Item As Variant) As Long
     'https://stackoverflow.com/questions/28985579/retrieve-the-index-of-an-object-stored-in-a-collection-using-its-key-vba
     'returns index of item if found, returns 0 if not found
     '
@@ -120,12 +120,10 @@ Public Function IndexOf(ByVal Col1 As Collection, ByVal Item As Variant) As Long
     
     Dim I As Long
     For I = 1 To Col1.Count
-
         If Col1(I) = Item Then
-            IndexOf = I
+            IndexInCollection = I
             Exit Function
         End If
-        
     Next
 End Function
 
@@ -209,7 +207,11 @@ Function CollectionToArray(C As Collection) As Variant()
     ReDim Result(C.Count - 1)
 
     For I = 1 To C.Count
-        Result(I - 1) = C(I)
+        If VarType(C(I)) = vbObject Then
+            Result(I - 1) = CollectionToArray(C(I))
+        Else
+            Result(I - 1) = C(I)
+        End If
     Next I
 
     CollectionToArray = Result

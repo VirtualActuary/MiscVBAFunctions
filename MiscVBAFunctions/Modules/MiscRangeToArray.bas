@@ -14,11 +14,12 @@ Public Function RangeToArray(R As Range, _
     '
     ' Returns:
     '   The normalized array.
-    
+
     ' Seperate functions (RangeTo1DArray, RangeTo2DArray) required
     ' because of differences in indexing for 1D-, and 2D arrays
     If R.Cells.Count = 1 Then
         RangeToArray = Array(R.Value)  ' zero index
+
     ElseIf R.Rows.Count = 1 Or R.Columns.Count = 1 Then
         RangeToArray = RangeTo1DArray(R, IgnoreEmptyInFlatArray)
     Else
@@ -40,7 +41,6 @@ Public Function RangeTo1DArray( _
     '
     ' Returns:
     '   The normalized array.
-    
     
     If R.Cells.Count = 1 Then
         RangeTo1DArray = Array(R.Value)

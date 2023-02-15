@@ -8,6 +8,8 @@ Option Explicit
 'Dim M
 'Dim WB
 'Dim WS
+'Dim Dict
+'Dim R
 'Dim Keys
 'Dim Columns
 'Dim Values
@@ -24,8 +26,5 @@ Option Explicit
 'Dim Arr
 'Dim Err
 'Dim Fso
-
-
-
-
+'Dim PathTemp
 

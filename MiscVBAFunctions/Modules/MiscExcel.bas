@@ -231,7 +231,7 @@ Sub RenameSheet(SourceWS As Variant, NewSheetName As String, Optional RaiseError
     If VarType(SourceWS) = vbObject Then
         Set WS = SourceWS
     Else
-        Set WS = GetLO(CStr(SourceWS))
+        Set WS = ThisWorkbook.Sheets(SourceWS)
     End If
         
     

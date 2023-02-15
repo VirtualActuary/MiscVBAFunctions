@@ -71,14 +71,12 @@ Public Function TableToDicts( _
     TableData = TableToArray(TableName, WB)
     
     For I = LBound(TableData, 1) + 1 To UBound(TableData, 1)
-
         Set D = New Dictionary
-        D.CompareMode = TextCompare ' must be case insensitive
+        D.CompareMode = TextCompare ' columns are case insensitive
         
         If Columns Is Nothing Then
             For J = LBound(TableData, 2) To UBound(TableData, 2)
-                D.Add TableData(0, J), TableData(I, J)
-
+                D(TableData(0, J)) = TableData(I, J)
             Next J
         Else
             Dim ColumnName As Variant
@@ -87,9 +85,7 @@ Public Function TableToDicts( _
             For J = LBound(TableData, 2) To UBound(TableData, 2)
                 ColumnName = TableData(LBound(TableData, 2), J)
                 If IsValueInCollection(Columns, ColumnName) Then
-
-                    D.Add ColumnName, TableData(I, J)
-
+                    D(ColumnName) = TableData(I, J)
                 End If
             Next J
         End If
