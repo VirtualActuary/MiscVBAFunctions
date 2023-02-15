@@ -27,6 +27,19 @@ class MiscRange(unittest.TestCase):
                 func = book.macro("Test__Helper_MiscRange.Test_RangeToLO_fail")
                 self.assertTrue(func())
 
+            with self.subTest("Test_IsInRange"):
+                func_IsInRange = book.macro("MiscRange.IsInRange")
+                func_ArrayToRange = book.macro("MiscArray.ArrayToRange")
+
+                arr = [[11, 22, 33], [44, "111", "222"], ["333", "444", "555"]]
+
+                range_start = book.sheets[0].range("B4")
+                range_test = func_ArrayToRange(arr, range_start, True)
+
+                self.assertTrue(func_IsInRange(range_test, 11))
+                self.assertFalse(func_IsInRange(range_test, 123))
+                self.assertTrue(func_IsInRange(range_test, "111"))
+
 
 if __name__ == "__main__":
     unittest.main(
