@@ -133,6 +133,24 @@ class MiscExcel(unittest.TestCase):
                 func = book.macro("Test__Helper_MiscExcel.Test_InsertColumns")
                 self.assertTrue(func())
 
+            with self.subTest("Test_InsertRows"):
+                func_RelevantRange = book.macro("MiscExcel.RelevantRange")
+                func_InsertRows = book.macro("MiscExcel.InsertRows")
+                range_start = book.sheets[0].range("C4")
+
+                book.sheets[0].range("D5").value = "foo"
+                relevant_r = func_RelevantRange(book.sheets[0])
+
+                self.assertEqual(20, relevant_r.Count)
+                self.assertEqual(5, relevant_r.Rows.Count)
+                self.assertEqual(4, relevant_r.Columns.Count)
+
+                func_InsertRows(range_start, 2)
+
+                self.assertEqual(28, relevant_r.Count)
+                self.assertEqual(7, relevant_r.Rows.Count)
+                self.assertEqual(4, relevant_r.Columns.Count)
+
 
 if __name__ == "__main__":
     unittest.main(
