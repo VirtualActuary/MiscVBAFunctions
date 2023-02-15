@@ -23,6 +23,13 @@ class MiscString(unittest.TestCase):
                 self.assertFalse(func_EndsWith("foo bar baz", " baz "))
                 self.assertFalse(func_EndsWith("foo bar baz", "bar"))
 
+            with self.subTest("Test_StartsWith"):
+                func_StartsWith = book.macro("MiscString.StartsWith")
+
+                self.assertTrue(func_StartsWith("foo bar baz", "foo "))
+                self.assertTrue(func_StartsWith("foo bar baz", "foo bar baz"))
+                self.assertFalse(func_StartsWith("foo bar baz", "bar"))
+                self.assertFalse(func_StartsWith("foo bar baz", " Foo"))
 
 
 if __name__ == "__main__":
