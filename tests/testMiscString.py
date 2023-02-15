@@ -15,6 +15,15 @@ class MiscString(unittest.TestCase):
                 self.assertEqual(4, len(func_randomString(4)))
                 self.assertNotEqual(func_randomString(5), func_randomString(5))
 
+            with self.subTest("Test_EndsWith"):
+                func_EndsWith = book.macro("MiscString.EndsWith")
+
+                self.assertTrue(func_EndsWith("foo bar baz", " baz"))
+                self.assertTrue(func_EndsWith("foo bar baz", "az"))
+                self.assertFalse(func_EndsWith("foo bar baz", " baz "))
+                self.assertFalse(func_EndsWith("foo bar baz", "bar"))
+
+
 
 if __name__ == "__main__":
     unittest.main(
