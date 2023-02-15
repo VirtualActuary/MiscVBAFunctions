@@ -62,6 +62,19 @@ class MiscRangeToArray(unittest.TestCase):
                     self.assertEqual(88, arr[2])
                     self.assertEqual(3, len(arr))
 
+                with self.subTest("Test_RangeToFlatArray"):
+                    func_RangeToFlatArray = book.macro("MiscRangeToArray.RangeToFlatArray")
+                    func_ArrayToRange = book.macro("MiscArray.ArrayToRange")
+
+                    arr = [[11, 22, 33], [44, "111", "222"], ["333", "444", "555"]]
+
+                    range_start = book.sheets[0].range("B4")
+                    range_test = func_ArrayToRange(arr, range_start, True)
+
+                    ArrayOutput = func_RangeToFlatArray(range_test)
+
+                    self.assertEqual((11, 22, 33, 44, "111", "222", "333", "444", "555"), ArrayOutput)
+
 
 if __name__ == "__main__":
     unittest.main(
