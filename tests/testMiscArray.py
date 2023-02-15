@@ -229,6 +229,23 @@ class MiscArray(unittest.TestCase):
                 range_obj = book.sheets.active.range("B4")
                 self.assertTrue(func(arr, range_obj))
 
+            with self.subTest("Test_ArrayGetNumDimensions"):
+                func_ArrayGetNumDimensions = book.macro(
+                    "MiscArray.ArrayGetNumDimensions"
+                )
+
+                arr = []
+                self.assertEqual(1, func_ArrayGetNumDimensions(arr))
+
+                arr = [[], []]
+                self.assertEqual(2, func_ArrayGetNumDimensions(arr))
+
+                arr = [[[], []], [[], []]]
+                self.assertEqual(3, func_ArrayGetNumDimensions(arr))
+
+                arr = [[[[], []], [[], []]], [[[], []], [[], []]]]
+                self.assertEqual(4, func_ArrayGetNumDimensions(arr))
+
 
 if __name__ == "__main__":
     unittest.main(
