@@ -222,9 +222,7 @@ class MiscArray(unittest.TestCase):
                 self.assertTrue(func_Test_ArrayToRange_fail(arr, range_obj))
 
             with self.subTest("Test_ArrayToNewTable_fail"):
-                func = book.macro(
-                    "Test__Helper_MiscArray.Test_ArrayToNewTable_fail"
-                )
+                func = book.macro("Test__Helper_MiscArray.Test_ArrayToNewTable_fail")
                 arr = [["col1", "col2", "col3"], ["-[d]", "=d", 1]]
                 range_obj = book.sheets.active.range("B4")
                 self.assertTrue(func(arr, range_obj))
@@ -245,6 +243,16 @@ class MiscArray(unittest.TestCase):
 
                 arr = [[[[], []], [[], []]], [[[], []], [[], []]]]
                 self.assertEqual(4, func_ArrayGetNumDimensions(arr))
+
+            with self.subTest("Test_IsInArray"):
+                func_IsInArray = book.macro("MiscArray.IsInArray")
+                arr = [1, "2", "k", 3.4]
+
+                self.assertTrue(func_IsInArray(arr, 1))
+                self.assertFalse(func_IsInArray(arr, "1"))
+                self.assertFalse(func_IsInArray(arr, 2))
+                self.assertTrue(func_IsInArray(arr, "2"))
+                self.assertTrue(func_IsInArray(arr, 3.4))
 
 
 if __name__ == "__main__":
