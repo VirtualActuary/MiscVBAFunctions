@@ -254,12 +254,26 @@ class MiscArray(unittest.TestCase):
                 self.assertTrue(func_IsInArray(arr, "2"))
                 self.assertTrue(func_IsInArray(arr, 3.4))
 
-            with self.subTest("Test_IsInArray"):
+            with self.subTest("IsArrayUnique"):
                 func_IsArrayUnique = book.macro("MiscArray.IsArrayUnique")
                 arr = [1, "1", "3.4", 3.4]
                 arr2 = ["asdf", 3.4, 3.4, "1"]
                 self.assertTrue(func_IsArrayUnique(arr))
                 self.assertFalse(func_IsArrayUnique(arr2))
+
+            with self.subTest("Test_ArrayUniqueValues"):
+                func_ArrayUniqueValues = book.macro("MiscArray.ArrayUniqueValues")
+                arr = [1, "1", 1, "3.4", "asdf", 3.4, 3.4, "1"]
+                arr2 = func_ArrayUniqueValues(arr)
+                self.assertEqual(5, len(arr2))
+                self.assertEqual(arr2, (1, "1", "3.4", "asdf", 3.4))
+
+            with self.subTest("Test_ArrayUniqueValues_2D"):
+                func_ArrayUniqueValues = book.macro("MiscArray.ArrayUniqueValues")
+                arr = [[1, "1", 1, "foo"], [3.4, 1, "asdf", 3.4]]
+                arr2 = func_ArrayUniqueValues(arr)
+                self.assertEqual(5, len(arr2))
+                self.assertEqual(arr2, (1, "1", "foo", 3.4, "asdf"))
 
 
 if __name__ == "__main__":
