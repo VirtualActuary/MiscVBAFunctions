@@ -20,6 +20,8 @@ class MiscString(unittest.TestCase):
 
                 self.assertTrue(func_EndsWith("foo bar baz", " baz"))
                 self.assertTrue(func_EndsWith("foo bar baz", "az"))
+                self.assertTrue(func_EndsWith("MyTableName", "Name"))
+                self.assertTrue(func_EndsWith("MyTableName", "naMe"))
                 self.assertFalse(func_EndsWith("foo bar baz", " baz "))
                 self.assertFalse(func_EndsWith("foo bar baz", "bar"))
 
@@ -28,6 +30,8 @@ class MiscString(unittest.TestCase):
 
                 self.assertTrue(func_StartsWith("foo bar baz", "foo "))
                 self.assertTrue(func_StartsWith("foo bar baz", "foo bar baz"))
+                self.assertTrue(func_StartsWith("MyTableName", "MyTable"))
+                self.assertTrue(func_StartsWith("MyTableName", "mytable"))
                 self.assertFalse(func_StartsWith("foo bar baz", "bar"))
                 self.assertFalse(func_StartsWith("foo bar baz", " Foo"))
 
