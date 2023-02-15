@@ -207,7 +207,11 @@ Function CollectionToArray(C As Collection) As Variant()
     ReDim Result(C.Count - 1)
 
     For I = 1 To C.Count
-        Result(I - 1) = C(I)
+        If VarType(C(I)) = vbObject Then
+            Result(I - 1) = CollectionToArray(C(I))
+        Else
+            Result(I - 1) = C(I)
+        End If
     Next I
 
     CollectionToArray = Result
