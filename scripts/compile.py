@@ -30,7 +30,8 @@ with tempfile.TemporaryDirectory() as outdir:
             glob_exclude="**/Test__*",
             combine_bas_files="Fn",
             auto_cls_rename=False,
-        )
+        ),
+        casing="pascal",
     ).run(outdir)
 
     compile_xl(outdir, app_xl_lib)
