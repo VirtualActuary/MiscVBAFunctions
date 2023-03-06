@@ -1,6 +1,6 @@
 import tempfile
 from pathlib import Path
-from zebra_vba_packager import decompile_xl, backup_last_50_paths
+from zebra_vba_packager import decompile_xl, backup_last_50_paths, fix_casing
 import locate
 
 app_name = "MiscVBAFunctions"
@@ -15,3 +15,4 @@ if app_dir.exists():
 
 # Decompile (and remove zebra files)
 decompile_xl(app_xl, app_dir)
+fix_casing(app_dir, "pascal")

@@ -2,7 +2,7 @@ Attribute VB_Name = "MiscString"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-Public Function randomString(length As Variant)
+Public Function RandomString(Length As Variant)
     ' Create a random string containing hex characters only.
     ' (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F)
     '
@@ -13,10 +13,10 @@ Public Function randomString(length As Variant)
     '   The Random string.
     
     Dim S As String
-    While Len(S) < length
+    While Len(S) < Length
         S = S & Hex(Rnd * 16777216)
     Wend
-    randomString = Mid(S, 1, length)
+    RandomString = Mid(S, 1, Length)
 End Function
 
 
@@ -51,9 +51,9 @@ Public Function EndsWith(StrComplete As String, Ending As String) As Boolean
     ' Returns:
     '   True if the input string ends with the correct ending, False otherwise
     
-     Dim endingLen As Integer
-     endingLen = Len(Ending)
-     EndsWith = (Right(Trim(UCase(StrComplete)), endingLen) = UCase(Ending))
+     Dim EndingLen As Integer
+     EndingLen = Len(Ending)
+     EndsWith = (Right(Trim(UCase(StrComplete)), EndingLen) = UCase(Ending))
 End Function
 
 
@@ -67,7 +67,7 @@ Public Function StartsWith(Str As String, Start As String) As Boolean
     ' Returns:
     '   True if the input string ends with the correct ending, False otherwise
     
-     Dim startLen As Integer
-     startLen = Len(Start)
-     StartsWith = (Left(Trim(UCase(Str)), startLen) = UCase(Start))
+     Dim StartLen As Integer
+     StartLen = Len(Start)
+     StartsWith = (Left(Trim(UCase(Str)), StartLen) = UCase(Start))
 End Function

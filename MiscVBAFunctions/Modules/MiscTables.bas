@@ -117,7 +117,7 @@ Public Function TableRange( _
         Exit Function
     End If
     
-    If hasKey(WB.Names, Name) Then
+    If HasKey(WB.Names, Name) Then
         Set TableRange = WB.Names(Name).RefersToRange
         Exit Function
     End If
@@ -125,7 +125,7 @@ Public Function TableRange( _
     Dim WS As Worksheet
     ' this will find the first occurrence of the table called 'Name'
     For Each WS In WB.Worksheets
-        If hasKey(WS.Names, Name) Then
+        If HasKey(WS.Names, Name) Then
             Set TableRange = WS.Names(Name).RefersToRange
             Exit Function
         End If
@@ -184,7 +184,7 @@ Public Function TableColumnToArray(TableDicts As Collection, ColumnName As Strin
     Dim Dict As Dictionary
     Dim Counter As Long
     For Each Dict In TableDicts
-        Arr(Counter) = dictget(Dict, ColumnName)
+        Arr(Counter) = Dictget(Dict, ColumnName)
         Counter = Counter + 1 ' zero indexing
     Next Dict
     
@@ -247,7 +247,7 @@ Function TableColumnToCollection(TableDicts As Collection, ColumnName As String)
     
     Set Col1 = New Collection
     For Each Dict In TableDicts
-        Col1.Add dictget(Dict, ColumnName)
+        Col1.Add Dictget(Dict, ColumnName)
     Next Dict
     
     Set TableColumnToCollection = Col1
@@ -268,8 +268,8 @@ Public Sub ResizeLO(LO As ListObject, NumRows As Long)
         Exit Sub
     End If
     
-    Dim oldNumRows As Long
-    oldNumRows = LO.ListRows.Count
+    Dim OldNumRows As Long
+    OldNumRows = LO.ListRows.Count
     
     ' Resize the table (add 1 to the number of rows because mListObject.Range
     ' includes the header row).
@@ -292,10 +292,10 @@ Public Sub ResizeLO(LO As ListObject, NumRows As Long)
     
     ' If the new number of rows is less than the old number of rows, clear out
     ' the rows that were just removed from the table.
-    If NumRows < oldNumRows Then
+    If NumRows < OldNumRows Then
         LO.DataBodyRange _
             .Offset(NumRows, 0) _
-            .Resize(oldNumRows - NumRows, LO.ListColumns.Count) _
+            .Resize(OldNumRows - NumRows, LO.ListColumns.Count) _
             .ClearContents
     End If
 End Sub
@@ -322,12 +322,12 @@ Public Function GetTableColumnRange( _
     Dim I As Long
     For I = 1 To TableR.Columns.Count
         If VBA.LCase(TableR(1, I).Value) = VBA.LCase(Column) Then
-            GoTo found
+            GoTo Found
         End If
     Next I
     
     Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Column '" & Column & "' not found in table '" & TableName & "'")
-found:
+Found:
     ' Intersect of table range and entirecolumn
     Set GetTableColumnRange = Intersect(TableR, TableR(1, I).EntireColumn)
 
@@ -345,22 +345,22 @@ Public Function GetTableColumnDataRange(LO As ListObject, ColumnName As String) 
     ' Returns:
     '   Data Range of the given column.
     
-    Dim listCol As ListColumn
+    Dim ListCol As ListColumn
     
-    If Not hasKey(LO.ListColumns, ColumnName) Then
+    If Not HasKey(LO.ListColumns, ColumnName) Then
         Err.Raise 32000, Description:= _
         "Column: '" & ColumnName & "' of table '" _
             & LO.Name & "' Doesn't exist."
     End If
     
-    Set listCol = LO.ListColumns(ColumnName)
+    Set ListCol = LO.ListColumns(ColumnName)
     
     'On Error GoTo noDataRange
     If LO.DataBodyRange Is Nothing Then
         Exit Function
     End If
     
-    Set GetTableColumnDataRange = listCol.DataBodyRange
+    Set GetTableColumnDataRange = ListCol.DataBodyRange
 '    Exit Function
 '
 'noDataRange:
@@ -430,17 +430,17 @@ Public Function GetTableRowNumberDataRange(LO As ListObject, RowNumber As Long) 
     ' Returns:
     '   Data Range of the given row number.
     
-    Dim listCol As ListColumn
-    Dim listR As listRow
+    Dim ListCol As ListColumn
+    Dim ListR As ListRow
         
-    If Not hasKey(LO.ListRows, RowNumber) Then
+    If Not HasKey(LO.ListRows, RowNumber) Then
         Err.Raise 32000, Description:= _
         "Row number '" & RowNumber & "' of table '" _
             & LO.Name & "' doesn't exist."
     End If
     
-    Set listR = LO.ListRows(RowNumber)
-    Set GetTableRowNumberDataRange = listR.Range
+    Set ListR = LO.ListRows(RowNumber)
+    Set GetTableRowNumberDataRange = ListR.Range
 End Function
 
 

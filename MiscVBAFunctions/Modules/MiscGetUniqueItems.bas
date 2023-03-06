@@ -55,12 +55,12 @@ End Function
 
 ' Returns the number of elements in an array for a given dimension.
 Private Function ArrayLen(Arr As Variant, _
-    Optional dimNum As Integer = 1) As Long
+    Optional DimNum As Integer = 1) As Long
     
     If IsEmpty(Arr) Then
         ArrayLen = 0
     Else
-        ArrayLen = UBound(Arr, dimNum) - LBound(Arr, dimNum) + 1
+        ArrayLen = UBound(Arr, DimNum) - LBound(Arr, DimNum) + 1
     End If
 End Function
 

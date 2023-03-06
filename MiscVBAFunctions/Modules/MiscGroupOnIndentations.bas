@@ -8,10 +8,10 @@ Public Sub GroupRowsOnIndentations(R As Range)
     ' Args:
     '   r: Range or Rows that will be grouped.
     
-    Dim ri As Range
-    For Each ri In R
-        ri.EntireRow.OutlineLevel = ri.IndentLevel + 1
-    Next ri
+    Dim Ri As Range
+    For Each Ri In R
+        Ri.EntireRow.OutlineLevel = Ri.IndentLevel + 1
+    Next Ri
     
 End Sub
 
@@ -21,10 +21,10 @@ Public Sub GroupColumnsOnIndentations(R As Range)
     ' Args:
     '   r: Range of Columns that will be grouped.
     
-    Dim ri As Range
-    For Each ri In R
-        ri.EntireColumn.OutlineLevel = ri.IndentLevel + 1
-    Next ri
+    Dim Ri As Range
+    For Each Ri In R
+        Ri.EntireColumn.OutlineLevel = Ri.IndentLevel + 1
+    Next Ri
     
 End Sub
 
@@ -45,12 +45,12 @@ Public Sub RemoveRowGroupings(WS As Worksheet)
     '   WS: The workseheet where the grouping will be removed.
     
     Dim R As Range
-    Dim ri As Range
+    Dim Ri As Range
     Set R = WS.UsedRange ' todo: better way to find last "active" cell
     WS.Outline.ShowLevels RowLevels:=8
-    For Each ri In R.Columns(1)
-        ri.EntireRow.OutlineLevel = 1
-    Next ri
+    For Each Ri In R.Columns(1)
+        Ri.EntireRow.OutlineLevel = 1
+    Next Ri
 End Sub
 
 Public Sub RemoveColumnGroupings(WS As Worksheet)
@@ -60,11 +60,11 @@ Public Sub RemoveColumnGroupings(WS As Worksheet)
     '   WS: The workseheet where the grouping will be removed.
     
     Dim R As Range
-    Dim ri As Range
+    Dim Ri As Range
     Set R = WS.UsedRange ' todo: better way to find last "active" cell
-    WS.Outline.ShowLevels columnlevels:=8
-    For Each ri In R.Rows(1)
-        ri.EntireColumn.OutlineLevel = 1
-    Next ri
+    WS.Outline.ShowLevels Columnlevels:=8
+    For Each Ri In R.Rows(1)
+        Ri.EntireColumn.OutlineLevel = 1
+    Next Ri
 End Sub
 

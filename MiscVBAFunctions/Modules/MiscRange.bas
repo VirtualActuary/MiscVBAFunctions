@@ -18,10 +18,10 @@ Function RangeToLO(WS As Worksheet, Data As Range, TableName As String) As ListO
     End If
 
     Set RangeToLO = WS.ListObjects.Add( _
-        SourceType:=xlSrcRange, _
+        SourceType:=XlSrcRange, _
         Source:=Data, _
-        xlListObjectHasHeaders:=xlYes, _
-        tablestyleName:="TableStyleMedium2" _
+        XlListObjectHasHeaders:=XlYes, _
+        TablestyleName:="TableStyleMedium2" _
     )
     RangeToLO.Name = TableName
 End Function

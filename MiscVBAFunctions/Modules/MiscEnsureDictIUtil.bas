@@ -45,10 +45,10 @@ Public Function EnsureDictI(Container As Variant) As Object
         Set EnsureDictI = D
     Else
     
-        Dim errmsg As String
-        errmsg = "ConvertToTextCompare only supports type 'Dictionary' and 'Collection'"
-        On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Container) & "'": On Error GoTo 0
-        Err.Raise 5, , errmsg
+        Dim Errmsg As String
+        Errmsg = "ConvertToTextCompare only supports type 'Dictionary' and 'Collection'"
+        On Error Resume Next: Errmsg = Errmsg & ". Got type '" & TypeName(Container) & "'": On Error GoTo 0
+        Err.Raise 5, , Errmsg
         
     End If
 End Function

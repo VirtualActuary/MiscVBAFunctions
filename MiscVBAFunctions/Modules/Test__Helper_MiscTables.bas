@@ -58,8 +58,8 @@ Function Test_CopyTable(WB As Workbook, WB2 As Workbook)
     Pass = 22 = CInt(LOEntries(2, 2).Value) = Pass = True
     Pass = "Hello" = LOEntries(3, 1).Value = Pass = True
     Pass = 32 = CInt(LOEntries(3, 2).Value) = Pass = True
-    Pass = CVErr(xlErrName) = LOEntries(4, 1).Value = Pass = True
-    Pass = CVErr(xlErrNA) = LOEntries(4, 2).Value = Pass = True
+    Pass = CVErr(XlErrName) = LOEntries(4, 1).Value = Pass = True
+    Pass = CVErr(XlErrNA) = LOEntries(4, 2).Value = Pass = True
     Pass = "=foo" = LOEntries(5, 1).Value = Pass = True
     
     Test_CopyTable = Pass

@@ -11,7 +11,7 @@ Public Function Dict(ParamArray Args() As Variant) As Dictionary
     ' Returns:
     '   The Dictionary
     
-    Dim errmsg As String
+    Dim Errmsg As String
     Set Dict = New Dictionary
     
     Dim I As Long
@@ -22,9 +22,9 @@ Public Function Dict(ParamArray Args() As Variant) As Dictionary
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
         If I + 1 > UBound(Args) Then
-            errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
-            Err.Raise 9, , errmsg
+            Errmsg = "Dict construction is missing a pair"
+            On Error Resume Next: Errmsg = Errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
+            Err.Raise 9, , Errmsg
         End If
         
         Dict.Add Args(I), Args(I + 1)
@@ -44,7 +44,7 @@ Public Function DictI(ParamArray Args() As Variant) As Dictionary
     ' Returns:
     '   The case insensitive Dictionary
     
-    Dim errmsg As String
+    Dim Errmsg As String
     Set DictI = New Dictionary
     DictI.CompareMode = TextCompare
     
@@ -56,9 +56,9 @@ Public Function DictI(ParamArray Args() As Variant) As Dictionary
         If (Cnt Mod 2) = 0 Then GoTo Cont
 
         If I + 1 > UBound(Args) Then
-            errmsg = "Dict construction is missing a pair"
-            On Error Resume Next: errmsg = errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
-            Err.Raise 9, , errmsg
+            Errmsg = "Dict construction is missing a pair"
+            On Error Resume Next: Errmsg = Errmsg & " for key `" & Args(I) & "`": On Error GoTo 0
+            Err.Raise 9, , Errmsg
         End If
         
         DictI.Add Args(I), Args(I + 1)

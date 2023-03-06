@@ -49,7 +49,7 @@ Public Function RenameVariableInFormula( _
     For Each MatchName In Matches
         If LCase(MatchName.Value) = LCase(OldName) Then
             For Each StrMatch In StringMatches
-                If StrMatch.FirstIndex <= MatchName.FirstIndex And MatchName.FirstIndex < StrMatch.FirstIndex + StrMatch.length Then
+                If StrMatch.FirstIndex <= MatchName.FirstIndex And MatchName.FirstIndex < StrMatch.FirstIndex + StrMatch.Length Then
                     GoTo ContinueForLoop
                 End If
             Next
@@ -61,7 +61,7 @@ ContinueForLoop:
     RenameVariableInFormula = InputFormula
     Dim I As Long
     For I = Filtered.Count To 1 Step -1
-        RenameVariableInFormula = Mid(RenameVariableInFormula, 1, Filtered(I).FirstIndex) & NewName & Mid(RenameVariableInFormula, Filtered(I).FirstIndex + Filtered(I).length + 1)
+        RenameVariableInFormula = Mid(RenameVariableInFormula, 1, Filtered(I).FirstIndex) & NewName & Mid(RenameVariableInFormula, Filtered(I).FirstIndex + Filtered(I).Length + 1)
     Next
     
 End Function

@@ -7,7 +7,7 @@ Function Test_dictget_fail()
 
     Dim D As Dictionary
     Set D = Dict("a", 2, "b", ThisWorkbook)
-    dictget D, "c"
+    Dictget D, "c"
     
     Test_dictget_fail = False
     Exit Function

@@ -24,8 +24,8 @@ Public Sub FreezePanes(R As Range)
     Dim WS As Worksheet
     Set WS = R.Parent
     
-    Dim currentScreenUpdating As Boolean
-    currentScreenUpdating = Application.ScreenUpdating
+    Dim CurrentScreenUpdating As Boolean
+    CurrentScreenUpdating = Application.ScreenUpdating
     Application.ScreenUpdating = False
     With Application.Windows(WS.Parent.Name)
         ' if existing freezed panes, remove them
@@ -38,7 +38,7 @@ Public Sub FreezePanes(R As Range)
         .FreezePanes = True
     End With
     
-    Application.ScreenUpdating = currentScreenUpdating
+    Application.ScreenUpdating = CurrentScreenUpdating
     
     CurrentActiveSheet.Activate
 End Sub

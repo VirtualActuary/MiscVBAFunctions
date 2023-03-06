@@ -2,7 +2,7 @@ Attribute VB_Name = "MiscPath"
 Option Explicit
 
 
-Public Function EvalPath(pth As String, Optional WB As Workbook) As String
+Public Function EvalPath(Pth As String, Optional WB As Workbook) As String
     ' Convert a path to absolute path.
     ' Converts system variables to String in the Path.
     ' Convert "/" to "\" in the Path.
@@ -18,7 +18,7 @@ Public Function EvalPath(pth As String, Optional WB As Workbook) As String
     
     If WB Is Nothing Then Set WB = ThisWorkbook
 
-    EvalPath = ExpandEnvironmentalVariables(pth)
+    EvalPath = ExpandEnvironmentalVariables(Pth)
     
     EvalPath = AbsolutePath(EvalPath, WB)
 End Function
@@ -125,7 +125,7 @@ Public Function Path(ParamArray Args() As Variant) As String
     
     ' Check for empty string as input
     ' Return empty string witout go through the below
-    If ArgsCollection.Count = 1 And ArgsCollection(1) = vbNullString Then Exit Function
+    If ArgsCollection.Count = 1 And ArgsCollection(1) = VbNullString Then Exit Function
     
     ' Always use backslash, because we need to support server paths like `\\server1\asdf` on Windows.
     ' This is unfortunate, because forward slashes `/` are the universal standard, and is even
@@ -180,8 +180,8 @@ Public Function Path(ParamArray Args() As Variant) As String
 End Function
 
 
-Private Function ConvertToBackslashes(pth As String) As String
-    ConvertToBackslashes = Replace(pth, "/", "\")
+Private Function ConvertToBackslashes(Pth As String) As String
+    ConvertToBackslashes = Replace(Pth, "/", "\")
 
 End Function
 
@@ -261,7 +261,7 @@ End Function
 Public Function PathDriveRegex() As Object
     Dim Regex As Object
     Set Regex = CreateObject("VBScript.RegExp")
-    Regex.Pattern = "^[a-z]:"
+    Regex.Pattern = "^[A-Z]:"
     Regex.IgnoreCase = True
     Regex.Global = False
     Regex.MultiLine = False

@@ -1,7 +1,7 @@
 Attribute VB_Name = "MiscAssign"
 Option Explicit
 
-Public Function assign(ByRef var As Variant, ByRef Val As Variant)
+Public Function Assign(ByRef Var As Variant, ByRef Val As Variant)
     ' Assign a value to a variable and also return that value. The goal of this function is to
     ' overcome the different `set` syntax for assigning an object vs. assigning a native type
     ' like Int, Double etc. Additionally this function has similar functionality to Python's
@@ -15,10 +15,10 @@ Public Function assign(ByRef var As Variant, ByRef Val As Variant)
     '   The value from the input.
     
     If IsObject(Val) Then 'Object
-        Set var = Val
-        Set assign = Val
+        Set Var = Val
+        Set Assign = Val
     Else 'Variant
-        var = Val
-        assign = Val
+        Var = Val
+        Assign = Val
     End If
 End Function
