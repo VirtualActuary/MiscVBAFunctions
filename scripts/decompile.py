@@ -15,4 +15,4 @@ if app_dir.exists():
 
 # Decompile (and remove zebra files)
 decompile_xl(app_xl, app_dir)
-fix_casing(app_dir)
+fix_casing(app_dir, "pascal")
