@@ -23,7 +23,7 @@ Public Function Glob(Dir As String, Pattern As String) As Collection
         Err.Raise -345, , "ValueError: Unacceptable pattern: ''"
     End If
     
-    Dim DirPath As folder
+    Dim DirPath As Folder
     Set DirPath = Fso.GetFolder(Dir)
     
     Dim PatternSplitted() As String
@@ -79,7 +79,7 @@ Public Function RGlob(Dir As String, Pattern As String) As Collection
     '   A Collection with all files that match the input pattern
     
     
-    Dim DirPath As folder
+    Dim DirPath As Folder
     Set DirPath = Fso.GetFolder(Dir)
     
     If Pattern = "" Then
@@ -392,7 +392,7 @@ Private Function ReverseArray(Arr() As String) As String()
 End Function
 
 
-Private Function GetAllPaths(Directory As folder, Optional MaxDepth = 999, Optional CurrentDepth = 0) As Collection
+Private Function GetAllPaths(Directory As Folder, Optional MaxDepth = 999, Optional CurrentDepth = 0) As Collection
 
     Set GetAllPaths = New Collection
     GetAllPaths.Add Directory
@@ -401,7 +401,7 @@ Private Function GetAllPaths(Directory As folder, Optional MaxDepth = 999, Optio
 End Function
 
 
-Private Sub GetAllPathsHelper(Directory As folder, ListOfFiles As Collection, Optional MaxDepth = 999, Optional CurrentDepth = 0)
+Private Sub GetAllPathsHelper(Directory As Folder, ListOfFiles As Collection, Optional MaxDepth = 999, Optional CurrentDepth = 0)
     ' Depth first ordering
 
     Dim F As File
@@ -409,7 +409,7 @@ Private Sub GetAllPathsHelper(Directory As folder, ListOfFiles As Collection, Op
         ListOfFiles.Add F
     Next F
 
-    Dim SubDir As folder
+    Dim SubDir As Folder
     For Each SubDir In Directory.SubFolders
         ListOfFiles.Add SubDir
         If CurrentDepth < MaxDepth Then

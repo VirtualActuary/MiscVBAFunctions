@@ -3,7 +3,7 @@ Option Explicit
 
 Public Function DictsToTable( _
         TableDicts As Collection, _
-        start_range As Range, _
+        Start_range As Range, _
         TableName As String, _
         Optional EscapeFormulas As Boolean = False _
     ) As ListObject
@@ -49,7 +49,7 @@ Public Function DictsToTable( _
     
     Dim Arr() As Variant
     Arr = DictsToArray(TableDicts)
-    Set DictsToTable = ArrayToNewTable(TableName, Arr, start_range, EscapeFormulas)
+    Set DictsToTable = ArrayToNewTable(TableName, Arr, Start_range, EscapeFormulas)
 End Function
 
 

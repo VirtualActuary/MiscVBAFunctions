@@ -6,14 +6,14 @@ Function Test_ErrorToNullStringTransformation_1()
     Dim Pass As Boolean
     Pass = True
     
-    Arr(0, 0) = 100.2: Arr(0, 1) = CVErr(xlErrName)
-    Arr(1, 0) = 2.1: Arr(1, 1) = CVErr(xlErrNA)
+    Arr(0, 0) = 100.2: Arr(0, 1) = CVErr(XlErrName)
+    Arr(1, 0) = 2.1: Arr(1, 1) = CVErr(XlErrNA)
     ErrorToNullStringTransformation Arr
 
     Pass = 100.2 = Arr(0, 0) = Pass = True
-    Pass = vbNullString = Arr(0, 1) = Pass = True
+    Pass = VbNullString = Arr(0, 1) = Pass = True
     Pass = 2.1 = Arr(1, 0) = Pass = True
-    Pass = vbNullString = Arr(1, 1) = Pass = True
+    Pass = VbNullString = Arr(1, 1) = Pass = True
     
     Test_ErrorToNullStringTransformation_1 = Pass
 End Function
@@ -24,11 +24,11 @@ Function Test_ErrorToNullStringTransformation_2()
     Dim Pass As Boolean
     Pass = True
     
-    Arr(0) = 1.2: Arr(1) = CVErr(xlErrRef): Arr(2) = 3.8
+    Arr(0) = 1.2: Arr(1) = CVErr(XlErrRef): Arr(2) = 3.8
     ErrorToNullStringTransformation Arr
 
     Pass = 1.2 = Arr(0) = Pass = True
-    Pass = vbNullString = Arr(1) = Pass = True
+    Pass = VbNullString = Arr(1) = Pass = True
     Pass = 3.8 = Arr(2) = Pass = True
     
     Test_ErrorToNullStringTransformation_2 = Pass

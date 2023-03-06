@@ -1,7 +1,7 @@
 Attribute VB_Name = "MiscTextFile"
 Option Explicit
 
-Private Sub testCreateTextFile()
+Private Sub TestCreateTextFile()
     CreateTextFile "foo", ThisWorkbook.Path & "\tests\MiscCreateTextFile\test.txt"
     ' TODO: assertion
 End Sub

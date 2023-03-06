@@ -20,7 +20,7 @@ Function EnsureUniqueKey(C As Variant, Key As String, Optional Depth As Long)
         EnsureUniqueKey = Key & Depth
     End If
     
-    If hasKey(C, EnsureUniqueKey) Then
+    If HasKey(C, EnsureUniqueKey) Then
         EnsureUniqueKey = EnsureUniqueKey(C, Key, Depth + 1)
     End If
 End Function

@@ -136,10 +136,10 @@ Public Sub ConcatCollections(ParamArray CollectionArr() As Variant)
     Dim Col As Variant
     For Each Col In CollectionArr
         If Not TypeOf Col Is Collection Then
-            Dim errmsg As String
-            errmsg = "All inputs need to be Collections"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Col) & "'": On Error GoTo 0
-            Err.Raise 5, , errmsg
+            Dim Errmsg As String
+            Errmsg = "All inputs need to be Collections"
+            On Error Resume Next: Errmsg = Errmsg & ". Got type '" & TypeName(Col) & "'": On Error GoTo 0
+            Err.Raise 5, , Errmsg
         End If
     Next Col
     
@@ -167,10 +167,10 @@ Public Function JoinCollections(ParamArray CollectionArr()) As Collection
     Dim Col As Variant
     For Each Col In CollectionArr
         If Not TypeOf Col Is Collection Then
-            Dim errmsg As String
-            errmsg = "All inputs need to be Collections"
-            On Error Resume Next: errmsg = errmsg & ". Got type '" & TypeName(Col) & "'": On Error GoTo 0
-            Err.Raise 5, , errmsg
+            Dim Errmsg As String
+            Errmsg = "All inputs need to be Collections"
+            On Error Resume Next: Errmsg = Errmsg & ". Got type '" & TypeName(Col) & "'": On Error GoTo 0
+            Err.Raise 5, , Errmsg
         End If
     Next Col
     
@@ -207,7 +207,7 @@ Function CollectionToArray(C As Collection) As Variant()
     ReDim Result(C.Count - 1)
 
     For I = 1 To C.Count
-        If VarType(C(I)) = vbObject Then
+        If VarType(C(I)) = VbObject Then
             Result(I - 1) = CollectionToArray(C(I))
         Else
             Result(I - 1) = C(I)
@@ -227,13 +227,13 @@ Function UniqueCollection(C As Collection) As Collection
     ' Returns:
     '   A Collection with no duplicate entries.
     
-    Dim uniqueArray(), I As Long
+    Dim UniqueArray(), I As Long
     
-    uniqueArray = ArrayUniqueValues(CollectionToArray(C))
+    UniqueArray = ArrayUniqueValues(CollectionToArray(C))
 
     Set UniqueCollection = New Collection
-    For I = LBound(uniqueArray) To UBound(uniqueArray)
-        UniqueCollection.Add uniqueArray(I)
+    For I = LBound(UniqueArray) To UBound(UniqueArray)
+        UniqueCollection.Add UniqueArray(I)
     Next I
     
 End Function

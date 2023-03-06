@@ -63,7 +63,7 @@ Public Function RangeTo1DArray( _
                 ' if error, we cannot check if empty, we need to add it
                 Arr(Counter) = Values(I, J)
                 Counter = Counter + 1
-            ElseIf Values(I, J) = vbNullString And IgnoreEmpty Then
+            ElseIf Values(I, J) = VbNullString And IgnoreEmpty Then
                 ' Skip this cell
             Else
                 Arr(Counter) = Values(I, J)

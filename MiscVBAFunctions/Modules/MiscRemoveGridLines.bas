@@ -8,10 +8,10 @@ Public Sub RemoveGridLines(WS As Worksheet)
     ' Args:
     '   WS: Selected WorkSheet.
     
-    Dim view As WorksheetView
-    For Each view In WS.Parent.Windows(1).SheetViews
-        If view.Sheet.Name = WS.Name Then
-            view.DisplayGridlines = False
+    Dim View As WorksheetView
+    For Each View In WS.Parent.Windows(1).SheetViews
+        If View.Sheet.Name = WS.Name Then
+            View.DisplayGridlines = False
             Exit Sub
         End If
     Next

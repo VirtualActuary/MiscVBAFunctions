@@ -22,34 +22,34 @@ Function GetListOfChildren(Depths As Collection, Optional SearchDown As Boolean 
     Next C
     
     Dim I As Long
-    Dim idx As Long
+    Dim Idx As Long
     
     If SearchDown Then ' look down / forward in list
         For I = 1 To Depths.Count
-            idx = I
-            Do While idx < Depths.Count ' last one doesn't have children by definition
-                idx = idx + 1 ' move down / forward in list
-                If Depths(idx) <= Depths(I) Then
+            Idx = I
+            Do While Idx < Depths.Count ' last one doesn't have children by definition
+                Idx = Idx + 1 ' move down / forward in list
+                If Depths(Idx) <= Depths(I) Then
                     Exit Do
                 End If
                 
-                If Depths(idx) = Depths(I) + 1 Then
-                    ListOfChildren(I).Add idx
+                If Depths(Idx) = Depths(I) + 1 Then
+                    ListOfChildren(I).Add Idx
                 End If
             Loop
             
         Next I
     Else ' look up / backwards in list
         For I = 1 To Depths.Count
-            idx = I
-            Do While idx > 1 ' first one doesn't have children by definition
-                idx = idx - 1 ' move up / backwards in list
-                If Depths(idx) <= Depths(I) Then
+            Idx = I
+            Do While Idx > 1 ' first one doesn't have children by definition
+                Idx = Idx - 1 ' move up / backwards in list
+                If Depths(Idx) <= Depths(I) Then
                     Exit Do
                 End If
                 
-                If Depths(idx) = Depths(I) + 1 Then
-                    ListOfChildren(I).Add idx
+                If Depths(Idx) = Depths(I) + 1 Then
+                    ListOfChildren(I).Add Idx
                 End If
             Loop
             

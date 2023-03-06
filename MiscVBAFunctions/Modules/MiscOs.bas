@@ -16,7 +16,7 @@ Public Function Is64BitXl() As Boolean
 End Function
 
 
-Public Function ExpandEnvironmentalVariables(pth As String) As String
+Public Function ExpandEnvironmentalVariables(Pth As String) As String
     ' Find the Windows/Linux system environment variables in the input path
     ' and convert it to string in the input path and return it.
     '
@@ -26,12 +26,12 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
     ' Returns:
     '   A string of Path with environment variables converted to its matching value.
     
-    ExpandEnvironmentalVariables = pth
-    If InStr(pth, "%") > 0 Then
+    ExpandEnvironmentalVariables = Pth
+    If InStr(Pth, "%") > 0 Then
         Dim I As Integer
         Dim EnvironVar As String
         Dim EnvironVarArr() As String
-        EnvironVarArr = Split(pth, "%")
+        EnvironVarArr = Split(Pth, "%")
         Dim IsEnvironmentalVariable As Boolean
         
         Do While UBound(EnvironVarArr) >= 2
@@ -69,8 +69,8 @@ Public Function ExpandEnvironmentalVariables(pth As String) As String
 End Function
 
 
-Public Function parentDir(ByVal folder)
-    parentDir = Left$(folder, InStrRev(folder, "\") - 1)
+Public Function ParentDir(ByVal Folder)
+    ParentDir = Left$(Folder, InStrRev(Folder, "\") - 1)
 End Function
 
 
@@ -88,7 +88,7 @@ Public Sub CreateFolders( _
 End Sub
                   
                   
-Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = True) As folder
+Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = True) As Folder
     ' source: https://stackoverflow.com/questions/10803834/is-there-a-way-to-create-a-folder-and-sub-folders-in-excel-vba
     ' this code will make the folders recursively if required.
     ' the StrPath can, therefore, be a Path where multiple sub-dirs don't exist yet.
@@ -141,7 +141,7 @@ Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = 
 End Function
 
 
-Public Function RunShell(ByVal command As String, Optional WaitOnReturn As Boolean = True)
+Public Function RunShell(ByVal Command As String, Optional WaitOnReturn As Boolean = True)
     ' run WScript.Shell with the selected command.
     '
     ' Args:
@@ -151,14 +151,14 @@ Public Function RunShell(ByVal command As String, Optional WaitOnReturn As Boole
     ' Returns:
     '   The task ID of the started program.
     
-    Dim wsh As Object
-    Set wsh = VBA.CreateObject("WScript.Shell")
+    Dim Wsh As Object
+    Set Wsh = VBA.CreateObject("WScript.Shell")
     'RunShell = wsh
     ':https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/shell-function
-    Dim windowStyle As Integer: windowStyle = 0 ' vbHide (no pop-ups)
+    Dim WindowStyle As Integer: WindowStyle = 0 ' vbHide (no pop-ups)
     
     ' If the Shell function successfully executes the named file, it returns the task ID of the started program.
-    RunShell = wsh.Run(command, windowStyle, WaitOnReturn)
+    RunShell = Wsh.Run(Command, WindowStyle, WaitOnReturn)
 End Function
 
 

@@ -69,7 +69,7 @@ Public Function OpenWorkbook( _
     ' Returns:
     '   The opened Workbook.
     
-    If hasKey(Workbooks, Fso.GetFileName(Path)) Then
+    If HasKey(Workbooks, Fso.GetFileName(Path)) Then
         Set OpenWorkbook = Workbooks(Fso.GetFileName(Path))
         
         ' check if the workbook is actually the one specified in path
@@ -116,7 +116,7 @@ Public Function LastRow(WS As Worksheet) As Long
         LastRow = 0
         Exit Function
     End If
-    LastRow = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+    LastRow = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=XlValues, Lookat:=XlPart, SearchOrder:=XlByRows, SearchDirection:=XlPrevious).Row
 End Function
 
 
@@ -134,7 +134,7 @@ Public Function LastColumn(WS As Worksheet) As Long
         LastColumn = 0
         Exit Function
     End If
-    LastColumn = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=xlValues, lookat:=xlPart, SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).Column
+    LastColumn = WS.Cells.Find(What:="*", After:=WS.Cells(1, 1), LookIn:=XlValues, Lookat:=XlPart, SearchOrder:=XlByColumns, SearchDirection:=XlPrevious).Column
 End Function
 
 Public Function LastCell(WS As Worksheet) As Range
@@ -223,12 +223,12 @@ Sub RenameSheet(SourceWS As Variant, NewSheetName As String, Optional RaiseError
     '   RaiseErrorIfSheetNameExists: Optional argument - If True, raise an error if the NewSheetName
     '       already exists in the WorkBook.
     
-    If Not (VarType(SourceWS) = vbString Or VarType(SourceWS) = vbObject) Then
+    If Not (VarType(SourceWS) = VbString Or VarType(SourceWS) = VbObject) Then
         Err.Raise ErrNr.TypeMismatch, , "Source Worksheet must be of type: Worksheet or String."
     End If
     
     Dim WS As Worksheet
-    If VarType(SourceWS) = vbObject Then
+    If VarType(SourceWS) = VbObject Then
         Set WS = SourceWS
     Else
         Set WS = ThisWorkbook.Sheets(SourceWS)
@@ -242,7 +242,7 @@ Sub RenameSheet(SourceWS As Variant, NewSheetName As String, Optional RaiseError
     Next S
     
     If RaiseErrorIfSheetNameExists Then
-        If hasKey(SheetNames, NewSheetName) Then
+        If HasKey(SheetNames, NewSheetName) Then
             Err.Raise ErrNr.FileAlreadyExists, , "Worksheet name already exists."
         End If
     End If
@@ -251,7 +251,7 @@ Sub RenameSheet(SourceWS As Variant, NewSheetName As String, Optional RaiseError
     Dim I As Integer
     I = 0
     Name = NewSheetName
-    Do While hasKey(SheetNames, Name)
+    Do While HasKey(SheetNames, Name)
         I = I + 1
         Name = Left(NewSheetName, 25) & " (" & I & ")" ' 31 max characters - ie supports up to 999 sheets
     Loop
@@ -284,7 +284,7 @@ Function AddWS(ByVal Name As String, _
     
     Name = Left(Name, 31)
     
-    If hasKey(WB.Sheets, Name) Then
+    If HasKey(WB.Sheets, Name) Then
         If ErrIfExists Then
             Err.Raise ErrNr.FileAlreadyExists, , "Worksheet '" & Name & "' already exists"
         End If
@@ -344,13 +344,13 @@ Function ContainsSheet(Key As Variant, Optional WB As Workbook = Nothing) As Boo
     
     If WB Is Nothing Then Set WB = ThisWorkbook
     
-    Dim obj As Variant
+    Dim Obj As Variant
     Dim Sheets As Variant
 
     Set Sheets = WB.Sheets
     On Error GoTo Err
         ContainsSheet = True
-        Set obj = Sheets(Key)
+        Set Obj = Sheets(Key)
         Exit Function
 Err:
         ContainsSheet = False

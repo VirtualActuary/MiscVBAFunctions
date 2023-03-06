@@ -124,10 +124,10 @@ Public Function ArrayToNewTable( _
     )
     
     Set ArrayToNewTable = StartCell.Worksheet.ListObjects.Add( _
-        SourceType:=xlSrcRange, _
+        SourceType:=XlSrcRange, _
         Source:=CellRange, _
-        xlListObjectHasHeaders:=xlYes, _
-        tablestyleName:="TableStyleMedium2" _
+        XlListObjectHasHeaders:=XlYes, _
+        TablestyleName:="TableStyleMedium2" _
     )
     ArrayToNewTable.Name = TableName
 End Function
@@ -297,11 +297,11 @@ Private Function DateToString(D As Date, Fmt As String) As String
 End Function
 
 
-Private Function DecStr(x As Variant) As String
-     DecStr = CStr(x)
+Private Function DecStr(X As Variant) As String
+     DecStr = CStr(X)
 
      'Frikin ridiculous loops for VBA
-     If IsNumeric(x) Then
+     If IsNumeric(X) Then
         DecStr = Replace(DecStr, Format(0, "."), ".")
         ' Format(0, ".") gives the system decimal separator
      End If
@@ -314,7 +314,7 @@ Private Function ErrorToNull2D(TableArr As Variant) As Variant
     For I = LBound(TableArr, 1) To UBound(TableArr, 1)
         For J = LBound(TableArr, 2) To UBound(TableArr, 2)
             If IsError(TableArr(I, J)) Then ' set all error values to an empty string
-                TableArr(I, J) = vbNullString
+                TableArr(I, J) = VbNullString
             End If
         Next J
     Next I
@@ -326,7 +326,7 @@ Private Function ErrorToNull1D(TableArr As Variant) As Variant
     Dim I As Long
     For I = LBound(TableArr) To UBound(TableArr)
         If IsError(TableArr(I)) Then ' set all error values to an empty string
-            TableArr(I) = vbNullString
+            TableArr(I) = VbNullString
         End If
     Next I
     ErrorToNull1D = TableArr

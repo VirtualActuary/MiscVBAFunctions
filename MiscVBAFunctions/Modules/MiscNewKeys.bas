@@ -19,7 +19,7 @@ Public Function NewSheetName(Name As String, Optional WB As Workbook)
     ' max 31 characters
     NewSheetName = Left(Name, 31)
 
-    If Not hasKey(WB.Sheets, NewSheetName) Then
+    If Not HasKey(WB.Sheets, NewSheetName) Then
         ' sheet name doesn't exist, so we can continue
         Exit Function
     Else
@@ -64,7 +64,7 @@ Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLeng
         GetNewKey = Left(Name, MaxLength)
     End If
     
-    If Not hasKey(Container, GetNewKey) Then
+    If Not HasKey(Container, GetNewKey) Then
         ' Key is "New" and we don't need further iteration
         Exit Function
     Else
@@ -76,7 +76,7 @@ Public Function GetNewKey(Name As String, Container As Variant, Optional MaxLeng
             GetNewKey = Left(GetNewKey, MaxLength - Len(CStr(Depth))) & Depth
         End If
         
-        If Not hasKey(Container, GetNewKey) Then
+        If Not HasKey(Container, GetNewKey) Then
             Exit Function
         End If
         

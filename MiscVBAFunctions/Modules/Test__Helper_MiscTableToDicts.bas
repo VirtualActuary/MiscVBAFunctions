@@ -16,8 +16,8 @@ Function TestListObjectsToDicts2(Dicts)
     Dim Pass As Boolean
     Pass = True
     
-    Pass = hasKey(Dicts(1), "A") = Pass = True ' should contain A
-    Pass = (Not hasKey(Dicts(1), "b")) = Pass = True ' should not contain b
+    Pass = HasKey(Dicts(1), "A") = Pass = True ' should contain A
+    Pass = (Not HasKey(Dicts(1), "b")) = Pass = True ' should not contain b
     
     TestListObjectsToDicts2 = Pass
 End Function
@@ -38,8 +38,8 @@ Function TestNamedRangeToDicts2(Dicts)
     Dim Pass As Boolean
     Pass = True
 
-    Pass = True = hasKey(Dicts(1), "A") = Pass = True ' should contain A
-    Pass = True = (Not hasKey(Dicts(1), "b")) = Pass = True ' should not contain b
+    Pass = True = HasKey(Dicts(1), "A") = Pass = True ' should contain A
+    Pass = True = (Not HasKey(Dicts(1), "b")) = Pass = True ' should not contain b
     
     TestNamedRangeToDicts2 = Pass
 End Function
@@ -112,11 +112,11 @@ Function TestTableToDictsLogSource(WB As Workbook)
     Dim Source As Dictionary
 
     Set Dicts = TableToDictsLogSource("ListObject1", WB)
-    Set Source = dictget(Dicts(2), "__source__")
+    Set Source = Dictget(Dicts(2), "__source__")
     
-    Pass = "ListObject1" = dictget(Source, "table") = Pass = True
-    Pass = CLng(2) = dictget(Source, "rowindex") = Pass = True
-    Pass = "MiscTableToDicts.xlsx" = dictget(Source, "workbook").Name = Pass = True
+    Pass = "ListObject1" = Dictget(Source, "table") = Pass = True
+    Pass = CLng(2) = Dictget(Source, "rowindex") = Pass = True
+    Pass = "MiscTableToDicts.xlsx" = Dictget(Source, "workbook").Name = Pass = True
     
     TestTableToDictsLogSource = Pass
 End Function

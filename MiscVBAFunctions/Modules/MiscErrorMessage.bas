@@ -165,9 +165,9 @@ Public Function BreakLines(SubMessage As String) As String
     For I = LBound(MsgArr) To UBound(MsgArr)
         ' only split if one "word" is longer than 100 or 50 characters
         If Len(MsgArr(I)) > 100 Then
-            MsgArr(I) = BreakLines & Mid(MsgArr(I), 1, 50) & chr(10) & Mid(MsgArr(I), 51, 50) & chr(10) & Right(MsgArr(I), Len(MsgArr(I)) - 50 * 2)
+            MsgArr(I) = BreakLines & Mid(MsgArr(I), 1, 50) & Chr(10) & Mid(MsgArr(I), 51, 50) & Chr(10) & Right(MsgArr(I), Len(MsgArr(I)) - 50 * 2)
         ElseIf Len(MsgArr(I)) > 50 Then
-            MsgArr(I) = Mid(MsgArr(I), 1, 50) & chr(10) & Right(MsgArr(I), Len(MsgArr(I)) - 50)
+            MsgArr(I) = Mid(MsgArr(I), 1, 50) & Chr(10) & Right(MsgArr(I), Len(MsgArr(I)) - 50)
         End If
     Next I
     

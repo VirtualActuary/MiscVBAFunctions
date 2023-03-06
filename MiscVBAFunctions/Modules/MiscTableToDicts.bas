@@ -108,7 +108,7 @@ Public Function TableLookupValue( _
       , Columns As Collection _
       , Values As Collection _
       , ValueColName As String _
-      , Optional default As Variant = Empty _
+      , Optional Default As Variant = Empty _
       , Optional WB As Workbook _
       ) As Variant
     ' Returns the value from the ValueColName column in a TableToDicts object _
@@ -130,15 +130,15 @@ Public Function TableLookupValue( _
     If WB Is Nothing Then Set WB = ThisWorkbook
     
     ' for when GetTableRowIndex fails
-    If Not IsEmpty(default) Then On Error GoTo SetDefault
+    If Not IsEmpty(Default) Then On Error GoTo SetDefault
     
     Dim Dict As Dictionary
     Set Dict = EnsureTableDicts(Table, WB)(GetTableRowIndex(Table, Columns, Values, WB))
-    TableLookupValue = dictget(Dict, ValueColName, default)
+    TableLookupValue = Dictget(Dict, ValueColName, Default)
     
     Exit Function
 SetDefault:
-    TableLookupValue = default
+    TableLookupValue = Default
     
 End Function
 
@@ -200,19 +200,19 @@ Public Function GetTableRowIndex( _
     '   The row in which the values matches the comparison.
     
     Dim Dict As Dictionary
-    Dim keyValuePair As Collection
-    Dim isMatch As Boolean
+    Dim KeyValuePair As Collection
+    Dim IsMatch As Boolean
     Dim RowNumber As Long
     Dim ValLhs As Variant
     Dim ValRhs As Variant
     
     
     For Each Dict In EnsureTableDicts(Table, WB) ' Already a Dicti
-        isMatch = True
+        IsMatch = True
         RowNumber = RowNumber + 1
-        For Each keyValuePair In Zip(Columns, Values)
-            assign ValLhs, Dict(keyValuePair(1))  ' Allow entries to be objects
-            assign ValRhs, keyValuePair(2)
+        For Each KeyValuePair In Zip(Columns, Values)
+            Assign ValLhs, Dict(KeyValuePair(1))  ' Allow entries to be objects
+            Assign ValRhs, KeyValuePair(2)
             
             If IgnoreCaseValues Then
                 If IsString(ValLhs) Then ValLhs = LCase(ValLhs)
@@ -220,13 +220,13 @@ Public Function GetTableRowIndex( _
             End If
                 
             If ValLhs <> ValRhs Then
-                isMatch = False
+                IsMatch = False
             End If
-        Next keyValuePair
-        If isMatch = True Then Exit For
+        Next KeyValuePair
+        If IsMatch = True Then Exit For
     Next Dict
     
-    If isMatch Then
+    If IsMatch Then
         GetTableRowIndex = RowNumber
     Else
         Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage(ErrNr.SubscriptOutOfRange, "Columns-values pairs did not find a match")
