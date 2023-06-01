@@ -55,6 +55,12 @@ class MiscDictionary(unittest.TestCase):
                 func = book.macro("Test__Helper_MiscDictionary.Test_dictget_fail")
                 self.assertTrue(func())
 
+            with self.subTest("DictToCollection"):
+                func = book.macro("MiscDictionary.DictToCollection")
+                c = func(vba_dict({"a": 2, "b": "foo"}))
+                self.assertEqual(2, c.Item("a"))
+                self.assertEqual("foo", c.Item("b"))
+
 
 if __name__ == "__main__":
     unittest.main(
