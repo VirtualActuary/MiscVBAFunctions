@@ -102,7 +102,7 @@ Public Function MakeDirs(ByVal StrPath As String, Optional ExistOk As Boolean = 
     Dim PathTempSplit() As String
    
     Dim PathTemp As String ' for when the relative names becomes too long:
-    PathTemp = EvalPath(StrPath)
+    PathTemp = Path(StrPath)
 
     If Fso.FolderExists(PathTemp) Then
         ' if the folder already exists, no need to create anything

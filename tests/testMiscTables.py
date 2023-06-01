@@ -11,7 +11,7 @@ class MiscTables(unittest.TestCase):
     def test_1(self) -> None:
         with excel_app(True, True) as app:
             book: Book
-            with functions_book(app) as book:
+            with functions_book(app=app) as book:
                 func_HasLO = book.macro("MiscTables.HasLO")
                 func_GetLO = book.macro("MiscTables.GetLO")
 

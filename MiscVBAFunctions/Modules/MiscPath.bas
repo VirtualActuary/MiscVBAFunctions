@@ -3,69 +3,16 @@ Option Explicit
 
 
 Public Function EvalPath(Pth As String, Optional WB As Workbook) As String
-    ' Convert a path to absolute path.
-    ' Converts system variables to String in the Path.
-    ' Convert "/" to "\" in the Path.
-    ' If the input Path doesn't start with "[A-Za-z]" and then ":" or starts with "\\",
-    ' the selected WorkBook's Path is used to create the absolute path of the input Path.
-    '
-    ' Args:
-    '   Pth: input path
-    '   WB: Optional WorkBook.
-    '
-    ' Returns:
-    '   The absolute Path.
-    
+    Debug.Print "DeprecationWarning: `EvalPath` is deprecated. Use `Path(WB.Path, ExpandEnvironmentalVariables(Pth))` instead."
     If WB Is Nothing Then Set WB = ThisWorkbook
-
-    EvalPath = ExpandEnvironmentalVariables(Pth)
-    
-    EvalPath = AbsolutePath(EvalPath, WB)
+    EvalPath = Path(WB.Path, ExpandEnvironmentalVariables(Pth))
 End Function
 
 
 Function AbsolutePath(ByVal PathString As String, Optional WB As Workbook = Nothing) As String
-    ' Convert the input Path string to an absolute path string.
-    ' The result is normalised to contain only backslashes
-    '
-    ' Args:
-    '   PathString: Path to be converted to an absolute path
-    '   WB: The WorkBook that will be used to convert the PathString to an absolute Path
-    '       if the PathString is a relative Path.
-    '
-    ' Returns:
-    '   The Absolute Path as a string
-    
+    Debug.Print "DeprecationWarning: `AbsolutePath` is deprecated. Use `Path(WB.Path, PathString)` instead."
     If WB Is Nothing Then Set WB = ThisWorkbook
-    PathString = ConvertToBackslashes(PathString)
-    Dim IsNetwokDrive As Boolean
-    IsNetwokDrive = False
-    
-    If IsAbsolutePath(PathString) Then
-        If PathHasServer(PathString) Then
-            ' fso.GetAbsolutePathName(...) doesn't work with network paths, so "x:\" gets added instead
-            ' to ensure fso.GetAbsolutePathName(...) can function.
-            ' The "x:\" gets replaced by "\\" in the last step
-            PathString = "x:\" & Mid(PathString, 3)
-            IsNetwokDrive = True
-        
-        ElseIf Left(PathString, 1) = "\" Then
-            ' If PathString starts with a "\" and its not a network drive, Prepend drive letter only.
-            ' fso.GetAbsolutePathName(...) points to ThisWorkbook's drive letter.
-            PathString = PathGetDrive(WB.Path) & PathString
-        End If
-    Else
-        ' Prepend WB.Path to PathString if not an absolute Path.
-        PathString = Path(WB.Path, PathString)
-    End If
-
-    ' Breaking example: fso.GetAbsolutePathName("\\hello\world\\..\2")
-    AbsolutePath = Fso.GetAbsolutePathName(PathString)
-    If IsNetwokDrive Then
-        ' Remove the "x:\" prefix and replace it with "\\" if the PathString is a network drive.
-        AbsolutePath = "\\" & Mid(AbsolutePath, 4)
-    End If
-
+    AbsolutePath = Path(WB.Path, PathString)
 End Function
 
 
@@ -90,15 +37,15 @@ Public Function Path(ParamArray Args() As Variant) As String
     ' Examples:
     '   Using separate arguments (ParamArray):
     '     ? Path("a", "b")
-    '     a/b
+    '     a\b
     '
     '   Using an array:
     '     ? Path(array("a", "b"))
-    '     a/b
+    '     a\b
     '
     '   Using a collection:
     '     ? Path(col("a", "b"))
-    '     a/b
+    '     a\b
     '
     '   See the unit tests for more examples.
     
@@ -134,10 +81,8 @@ Public Function Path(ParamArray Args() As Variant) As String
     Slash = "\"
     
     ' Collect path segments from args.
-    Dim SegmentsRegex As Object
-    Set SegmentsRegex = PathSegmentsRegex()
     Dim Segments As Collection
-    Set Segments = Col()
+    Set Segments = New Collection
     Dim I As Integer
     Dim SegmentMatches As Variant
     Dim SegmentMatch As Variant
@@ -150,13 +95,13 @@ Public Function Path(ParamArray Args() As Variant) As String
         If PathHasDrive(ArgStr) Then
             ' This is an absolute path with a drive letter.
             ' Throw away everything that came before it.
-            Set Segments = Col()
+            Set Segments = New Collection
             LastKnownDrive = PathGetDrive(ArgStr)
         ElseIf PathHasServer(ArgStr) Then
             ' This is a network path.
             ' Throw away everything that came before it, but preserve the extra leading
             ' backslash, which indicates a network path.
-            Set Segments = Col("\")
+            Set Segments = Col(Slash)
         ElseIf PathStartsWithSlash(ArgStr) Then
             ' This is an absolute path without a drive letter.
             ' Throw away everything that came before it, but preserve the last known drive letter.
@@ -165,24 +110,35 @@ Public Function Path(ParamArray Args() As Variant) As String
             ' This is a relative path. Continue collecting segments as normal.
         End If
         
-        Set SegmentMatches = SegmentsRegex.Execute(ArgStr)
-        For Each SegmentMatch In SegmentMatches
-            Segments.Add SegmentMatch.Value
-        Next SegmentMatch
+        ' Add these segments to the collection, while resolving things like ".." and "."
+        Dim NewSegments As Collection
+        Set NewSegments = SplitPath(ArgStr)
+        Dim S As String
+        Dim J As Integer
+        For J = 1 To NewSegments.Count
+            S = NewSegments(J)
+            
+            If S = ".." And Segments.Count > 0 Then
+                ' Ignore this segment and discard the previous one.
+                Segments.Remove Segments.Count
+            ElseIf S = "." Then
+                ' Ignore this segment.
+            Else
+                ' Use this segment.
+                Segments.Add S
+            End If
+        Next
     Next
     
-    'Debug.Print "Segment: " & Segments(1)
     Path = Segments(1)
     For I = 2 To Segments.Count
-        'Debug.Print "Segment: " & Segments(I)
         Path = Path & Slash & Segments(I)
     Next
-End Function
-
-
-Private Function ConvertToBackslashes(Pth As String) As String
-    ConvertToBackslashes = Replace(Pth, "/", "\")
-
+    
+    If PathHasDrive(Path) And Right(Path, 1) <> Slash And Segments.Count < 2 Then
+        ' Path is just a drive letter. Give it a trailing slash.
+        Path = Path & Slash
+    End If
 End Function
 
 
@@ -277,4 +233,28 @@ Public Function PathSegmentsRegex() As Object
     PathSegmentsRegex.IgnoreCase = True
     PathSegmentsRegex.Global = True
     PathSegmentsRegex.MultiLine = False
+End Function
+
+
+Public Function SplitPath(ByVal P As String) As Collection
+    ' Split a path into segments
+    '
+    ' Args:
+    '   P: The path string to split.
+    '
+    ' Returns:
+    '   A collection of strings.
+    
+    Dim SegmentsRegex As Object
+    Set SegmentsRegex = PathSegmentsRegex()
+    
+    Dim SegmentMatches As Variant
+    Set SegmentMatches = SegmentsRegex.Execute(P)
+    
+    Set SplitPath = New Collection
+    
+    Dim SegmentMatch As Variant
+    For Each SegmentMatch In SegmentMatches
+        SplitPath.Add SegmentMatch.Value
+    Next SegmentMatch
 End Function

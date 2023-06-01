@@ -11,7 +11,7 @@ class MiscGroupOnIndentations(unittest.TestCase):
     def test_1(self) -> None:
         with excel_app(True, True) as app:
             book: Book
-            with functions_book(app) as book:
+            with functions_book(app=app) as book:
                 repo_path = this_dir().parent
                 repo_path = repo_path.joinpath(
                     r"test_data\MiscGroupOnIndentations\MiscGroupOnIndentations.xlsx"

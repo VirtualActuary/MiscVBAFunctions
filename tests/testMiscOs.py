@@ -34,6 +34,10 @@ class MiscOs(unittest.TestCase):
                         r"%windir%\%foo\bar%\%username\%username%"
                     ),
                 )
+                self.assertEqual(
+                    os.environ["HOMEDRIVE"] + "\\Users\\" + os.environ["username"],
+                    func_ExpandEnvironmentalVariables(r"%HOMEDRIVE%\Users\%username%"),
+                )
 
             with self.subTest("CreateFolders"):
                 func_CreateFolders = book.macro("MiscOs.CreateFolders")

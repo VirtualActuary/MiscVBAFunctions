@@ -11,12 +11,13 @@ class MiscTextFile(unittest.TestCase):
         with functions_book() as book:
             with self.subTest("CreateTextFile"):
                 func_CreateTextFile = book.macro("MiscTextFile.CreateTextFile")
-                func_EvalPath = book.macro("MiscPath.EvalPath")
-                inputText = "my test text."
-                FilePath = func_EvalPath(r".\test_data\MiscCreateTextFile\test.txt")
-                func_CreateTextFile(inputText, FilePath)
+                input_text = "my test text."
+                file_path = str(
+                    Path(book.api.Path, r".\test_data\MiscCreateTextFile\test.txt")
+                )
+                func_CreateTextFile(input_text, file_path)
 
-                with open(Path(FilePath).resolve()) as file:
+                with open(Path(file_path).resolve()) as file:
                     lines = [line.rstrip() for line in file]
 
                 self.assertEqual("my test text.", lines[0])
@@ -24,11 +25,12 @@ class MiscTextFile(unittest.TestCase):
             with self.subTest("ReadTextFile"):
                 func_CreateTextFile = book.macro("MiscTextFile.CreateTextFile")
                 func_ReadTextFile = book.macro("MiscTextFile.ReadTextFile")
-                func_EvalPath = book.macro("MiscPath.EvalPath")
-                inputText = "my test text."
-                FilePath = func_EvalPath(r".\test_data\MiscCreateTextFile\test.txt")
-                func_CreateTextFile(inputText, FilePath)
-                self.assertEqual("my test text.", func_ReadTextFile(FilePath).strip())
+                input_text = "my test text."
+                file_path = str(
+                    Path(book.api.Path, r".\test_data\MiscCreateTextFile\test.txt")
+                )
+                func_CreateTextFile(input_text, file_path)
+                self.assertEqual("my test text.", func_ReadTextFile(file_path).strip())
 
 
 if __name__ == "__main__":
