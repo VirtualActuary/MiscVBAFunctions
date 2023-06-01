@@ -35,6 +35,12 @@ class MiscString(unittest.TestCase):
                 self.assertFalse(func_StartsWith("foo bar baz", "bar"))
                 self.assertFalse(func_StartsWith("foo bar baz", " Foo"))
 
+            with self.subTest("FixDecimalSeparator"):
+                func_FixDecimalSeparator = book.macro("MiscString.FixDecimalSeparator")
+
+                self.assertEqual("1.23", func_FixDecimalSeparator("1.23"))
+                self.assertEqual("foo", func_FixDecimalSeparator("foo"))
+
 
 if __name__ == "__main__":
     unittest.main(

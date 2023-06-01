@@ -71,3 +71,21 @@ Public Function StartsWith(Str As String, Start As String) As Boolean
      StartLen = Len(Start)
      StartsWith = (Left(Trim(UCase(Str)), StartLen) = UCase(Start))
 End Function
+
+
+Public Function FixDecimalSeparator(X As Variant) As String
+    ' Convert the input value to a string. If it's numeric, make sure that it uses "." as
+    ' the decimal separator, regardless of the locale.
+    '
+    ' Args:
+    '   X: The input value
+    '
+    ' Returns:
+    '   A string representing a number, using "." as the decimal separator.
+    
+    FixDecimalSeparator = CStr(X)
+    If IsNumeric(X) Then
+        ' Format(0, ".") gives the system decimal separator
+        FixDecimalSeparator = Replace(FixDecimalSeparator, Format(0, "."), ".")
+    End If
+End Function
