@@ -278,3 +278,27 @@ Public Function PathSegmentsRegex() As Object
     PathSegmentsRegex.Global = True
     PathSegmentsRegex.MultiLine = False
 End Function
+
+
+Public Function SplitPath(ByVal P As String) As Collection
+    ' Split a path into segments
+    '
+    ' Args:
+    '   P: The path string to split.
+    '
+    ' Returns:
+    '   A collection of strings.
+    
+    Dim SegmentsRegex As Object
+    Set SegmentsRegex = PathSegmentsRegex()
+    
+    Dim SegmentMatches As Variant
+    Set SegmentMatches = SegmentsRegex.Execute(P)
+    
+    Set SplitPath = New Collection
+    
+    Dim SegmentMatch As Variant
+    For Each SegmentMatch In SegmentMatches
+        SplitPath.Add SegmentMatch.Value
+    Next SegmentMatch
+End Function
