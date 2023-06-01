@@ -90,15 +90,15 @@ Public Function Path(ParamArray Args() As Variant) As String
     ' Examples:
     '   Using separate arguments (ParamArray):
     '     ? Path("a", "b")
-    '     a/b
+    '     a\b
     '
     '   Using an array:
     '     ? Path(array("a", "b"))
-    '     a/b
+    '     a\b
     '
     '   Using a collection:
     '     ? Path(col("a", "b"))
-    '     a/b
+    '     a\b
     '
     '   See the unit tests for more examples.
     
