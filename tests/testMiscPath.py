@@ -212,7 +212,7 @@ class MiscPath(unittest.TestCase):
                     r"\\hello\2", func_AbsolutePath(r"\\hello\world\\..\2")
                 )
 
-            with self.subTest("Test_AbsolutePath"):
+            with self.subTest("Test_EvalPath"):
                 self.assertEqual(r"C:\foo", func_EvalPath(r"C:\foo"))
                 self.assertEqual(r"C:\foo", func_EvalPath(r"C:/foo"))
                 self.assertEqual(r"C:\c", func_EvalPath(r"C:\a\..\b\..\c"))
