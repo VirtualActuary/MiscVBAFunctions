@@ -297,18 +297,6 @@ Private Function DateToString(D As Date, Fmt As String) As String
 End Function
 
 
-Private Function DecStr(X As Variant) As String
-     DecStr = CStr(X)
-
-     'Frikin ridiculous loops for VBA
-     If IsNumeric(X) Then
-        DecStr = Replace(DecStr, Format(0, "."), ".")
-        ' Format(0, ".") gives the system decimal separator
-     End If
-
-End Function
-
-
 Private Function ErrorToNull2D(TableArr As Variant) As Variant
     Dim I As Long, J As Long
     For I = LBound(TableArr, 1) To UBound(TableArr, 1)
@@ -338,7 +326,7 @@ Private Function EnsureDotSeparator2D(TableArr As Variant) As Variant
     For I = LBound(TableArr, 1) To UBound(TableArr, 1)
         For J = LBound(TableArr, 2) To UBound(TableArr, 2)
             If IsNumeric(TableArr(I, J)) Then ' force numeric values to use . as decimal separator
-                TableArr(I, J) = DecStr(TableArr(I, J))
+                TableArr(I, J) = FixDecimalSeparator(TableArr(I, J))
             End If
         Next J
     Next I
@@ -350,7 +338,7 @@ Private Function EnsureDotSeparator1D(TableArr As Variant) As Variant
     Dim I As Long
     For I = LBound(TableArr) To UBound(TableArr)
         If IsNumeric(TableArr(I)) Then ' force numeric values to use . as decimal separator
-            TableArr(I) = DecStr(TableArr(I))
+            TableArr(I) = FixDecimalSeparator(TableArr(I))
         End If
     Next I
     EnsureDotSeparator1D = TableArr

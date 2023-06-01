@@ -9,6 +9,7 @@ class MiscCollection(unittest.TestCase):
     def test_1(self) -> None:
         with functions_book() as book:
             func_col = book.macro("MiscCollectionCreate.Col")
+            func_dict_to_col = book.macro("MiscDictionary.DictToCollection")
 
             with self.subTest("min"):
                 func_min = book.macro("MiscCollection.Min")
@@ -36,6 +37,15 @@ class MiscCollection(unittest.TestCase):
                 self.assertFalse(
                     func_IsValueInCollection(func_col("a", "b"), "B", True)
                 )
+
+            with self.subTest("IsKeyInCollection"):
+                func_IsKeyInCollection = book.macro("MiscCollection.IsKeyInCollection")
+
+                col = func_dict_to_col(vba_dict({"a": 100, "b": 200, "c": 300}))
+
+                self.assertTrue(func_IsKeyInCollection(col, "b"))
+                self.assertFalse(func_IsKeyInCollection(col, "f"))
+                self.assertFalse(func_IsKeyInCollection(col, 100))
 
             with self.subTest("Join_Collections"):
                 func_Join_Collections = book.macro("MiscCollection.JoinCollections")

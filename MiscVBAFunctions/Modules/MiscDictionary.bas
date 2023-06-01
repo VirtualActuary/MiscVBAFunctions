@@ -142,3 +142,24 @@ Public Function JoinDicts(ParamArray Dicts()) As Dictionary
 End Function
 
 
+Function DictToCollection(D As Dictionary) As Collection
+    ' Create a keyed collection from a dictionary
+    '
+    ' Collections may be used like dictionaries, but it's not convenient, because you can't get a list of available keys.
+    ' You probably do not want to do this. Rather use a dictionary!
+    '
+    ' This might be useful in some backwards-compatibility situations.
+    '
+    ' Args:
+    '   Args: List of keys and values that gets inserted into the Collection.
+    '         All uneven entries are the keys and all even entries are the values for the matching keys.
+    '
+    ' Returns:
+    '   The Collection
+    
+    Dim Key As Variant
+    Set DictToCollection = New Collection
+    For Each Key In D.Keys
+        DictToCollection.Add D.Item(Key), Key
+    Next Key
+End Function
