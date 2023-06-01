@@ -19,7 +19,7 @@ tab_width = 4
 end_of_line = crlf
 
 # VBA-specific settings.
-[{*.frm, *.cls, *.bas}]
+[{*.frm,*.cls,*.bas}]
 indent_size = 4
 tab_width = 4
 trim_trailing_whitespace = false
