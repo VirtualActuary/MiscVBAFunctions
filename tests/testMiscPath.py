@@ -89,28 +89,31 @@ class MiscPath(unittest.TestCase):
                 )
 
             with self.subTest("Path: Relative paths"):
+                repo_dir = Path(book.api.Path)
+                tests_dir = Path(book.api.Path) / "tests"
+
                 self.assertEqual(
-                    Path.cwd().drive + r"\foo",
+                    repo_dir.drive + r"\foo",
                     func_Path(book.api.Path, r"\foo"),
                 )
                 self.assertEqual(
-                    str(Path.cwd().parent) + r"\foo\bar",
+                    str(repo_dir) + r"\foo\bar",
                     func_Path(book.api.Path, "foo/bar"),
                 )
                 self.assertEqual(
-                    str(Path.cwd().parent) + r"\foo",
+                    str(repo_dir) + r"\foo",
                     func_Path(book.api.Path, r".\foo"),
                 )
                 self.assertEqual(
-                    str(Path.cwd().parent.parent) + r"\foo",
+                    str(repo_dir.parent) + r"\foo",
                     func_Path(book.api.Path, r"..\foo"),
                 )
                 self.assertEqual(
-                    str(Path(str(Path.cwd()) + r"foo\..\..").resolve()),
+                    str(Path(str(tests_dir) + r"foo\..\..").resolve()),
                     func_Path(book.api.Path, r"foo\..\.."),
                 )
                 self.assertEqual(
-                    str(Path(str(Path.cwd()) + r"foo//..//..").resolve()),
+                    str(Path(str(tests_dir) + r"foo//..//..").resolve()),
                     func_Path(book.api.Path, "foo//..//.."),
                 )
                 self.assertEqual(r"\a\b", func_Path(r"\a\b\c\d\e\f\g\..\..\..\..\.."))
