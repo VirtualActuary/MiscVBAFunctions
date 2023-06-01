@@ -107,6 +107,29 @@ Public Function IsValueInCollection(ColInput As Collection, Val As Variant, Opti
 End Function
 
 
+Public Function IsKeyInCollection(Col As Collection, Key As Variant) As Boolean
+    ' Check if a key exists in the collection.
+    '
+    ' Since there is no way to check which keys are available in a collection, we must try to get the key,
+    ' and catch the error.
+    '
+    ' Args:
+    '   col: The collection that potentially has the key
+    '   key: The key to check for.
+    '
+    ' Returns:
+    '   True if the collection has the key.
+    
+    Dim Value As Variant
+    On Error GoTo Err
+    Assign Value, Col(Key)
+    IsKeyInCollection = True
+    Exit Function
+Err:
+    IsKeyInCollection = False
+End Function
+
+
 Public Function IndexInCollection(ByVal Col1 As Collection, ByVal Item As Variant) As Long
     'https://stackoverflow.com/questions/28985579/retrieve-the-index-of-an-object-stored-in-a-collection-using-its-key-vba
     'returns index of item if found, returns 0 if not found
