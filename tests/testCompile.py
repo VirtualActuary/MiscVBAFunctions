@@ -1,8 +1,9 @@
 import unittest
-
+from locate import prepend_sys_path
 from aa_py_xl import automatically_click_vba_error
 
-from tests.util import functions_book
+with prepend_sys_path():
+    from util import functions_book
 
 
 class TestCompile(unittest.TestCase):
