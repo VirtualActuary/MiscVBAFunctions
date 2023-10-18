@@ -76,3 +76,28 @@ TestFail:
         Exit Function
     End If
 End Function
+
+
+Function Test_ArrayToNewTable_StringDates(RangeObj As Range)
+
+    Dim Arr() As Variant
+    ReDim Arr(4, 0)
+    
+    Arr(0, 0) = "Dates" ' a string that looks like a date - should remain a string
+    Arr(1, 0) = "2023-12-31" ' a string that looks like a date - should remain a string
+    Arr(2, 0) = "2023/12/31" ' a string that looks like a date - should remain a string
+    Arr(3, 0) = "31 Dec 2023" ' a string that looks like a date - should remain a string
+    Arr(4, 0) = DateSerial(2023, 12, 31) ' an actual date
+    
+    Dim NewTable As ListObject
+    Set NewTable = ArrayToNewTable("TestStringDates", Arr, RangeObj)
+    
+    Dim Pass As Boolean
+    
+    Pass = NewTable.ListColumns("Dates").DataBodyRange(1, 1).Value = "2023-12-31"
+    Pass = NewTable.ListColumns("Dates").DataBodyRange(2, 1).Value = "2023/12/31" And Pass
+    Pass = NewTable.ListColumns("Dates").DataBodyRange(3, 1).Value = "31 Dec 2023" And Pass
+    Pass = NewTable.ListColumns("Dates").DataBodyRange(4, 1).Value = DateSerial(2023, 12, 31) And Pass
+    
+    Test_ArrayToNewTable_StringDates = Pass
+End Function

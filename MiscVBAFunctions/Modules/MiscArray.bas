@@ -69,7 +69,7 @@ Public Function ArrayToRange( _
                         
                     End If
                     If IsNumeric(Data(CountOuter, CountInner)) Then
-                        If Application.WorksheetFunction.IsText(Data(CountOuter, CountInner)) Then
+                        If VarType(Data(CountOuter, CountInner)) = VbString Then
                             Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
                         End If
                     End If
@@ -77,6 +77,18 @@ Public Function ArrayToRange( _
             Next
         Next
     End If
+    
+    ' Check for string dates and keep them as strings:
+    For CountOuter = LBound(Data) To UBound(Data)
+        For CountInner = LBound(Data, 2) To UBound(Data, 2)
+            If IsDate(Data(CountOuter, CountInner)) Then ' this would return true, even for strings that looks like dates
+                If VarType(Data(CountOuter, CountInner)) = VbString Then ' This would be false for strings that looks like dates
+                    ' escape strings looking like dates
+                    Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+                End If
+            End If
+        Next CountInner
+    Next CountOuter
     
     CellRange.Value = Data
     Set ArrayToRange = CellRange
