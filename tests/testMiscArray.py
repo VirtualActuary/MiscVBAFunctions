@@ -142,6 +142,15 @@ class MiscArray(unittest.TestCase):
                     table.range.value,
                 )
 
+            with self.subTest("StringDates"):
+                func = book.macro("Test__Helper_MiscArray.Test_ArrayToNewTable_StringDates")
+
+                range_obj = book.sheets["Sheet1"].range("B1000")
+                
+                self.assertTrue(
+                    func(range_obj)
+                )
+
             with self.subTest("ArrayToNewTable_FunkyHeaders"):
 
                 func_ArrayToNewTable = book.macro("MiscArray.ArrayToNewTable")
