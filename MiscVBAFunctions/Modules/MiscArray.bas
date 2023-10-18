@@ -69,7 +69,7 @@ Public Function ArrayToRange( _
                         
                     End If
                     If IsNumeric(Data(CountOuter, CountInner)) Then
-                        If Application.WorksheetFunction.IsText(Data(CountOuter, CountInner)) Then
+                        If VarType(Data(CountOuter, CountInner)) = VbString Then
                             Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
                         End If
                     End If
