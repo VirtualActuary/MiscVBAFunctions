@@ -9,7 +9,7 @@ with prepend_sys_path():
 
 class MiscTableToDicts(unittest.TestCase):
     def test_1(self) -> None:
-        with excel_app(True, True) as app:
+        with excel_app(quiet=True, close=True, events=False, logger=None) as app:
             book: Book
             with functions_book(app=app) as book:
                 repo_path = this_dir().parent

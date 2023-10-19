@@ -27,6 +27,7 @@ class MiscRangeToArray(unittest.TestCase):
                 close_excel=True,
                 must_exist=True,
                 read_only=True,
+                events=False,
             ) as book_temp:
                 with self.subTest("RangeToArray_2D"):
                     range_obj = book_temp.sheets["Sheet1"].range("A1:C2")

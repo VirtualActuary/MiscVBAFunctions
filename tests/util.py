@@ -28,6 +28,7 @@ def functions_book(
             close_excel=True,
             must_exist=True,
             read_only=True,
+            events=False,
         ) as book:
             try:
                 yield book
@@ -35,7 +36,7 @@ def functions_book(
                 pass
     else:
         with excel_book(
-            app,
+            app=app,
             path=functions_book_path,
             save=False,
             close=True,
@@ -58,6 +59,7 @@ def template_book() -> Generator[Book, None, None]:
         close_excel=True,
         must_exist=True,
         read_only=True,
+        events=False,
     ) as book:
         try:
             yield book
@@ -68,7 +70,7 @@ def template_book() -> Generator[Book, None, None]:
 @contextmanager
 def extra_book(app: App, path: Union[str, Path]) -> Generator[Book, None, None]:
     with excel_book(
-        app,
+        app=app,
         path=path,
         save=False,
         close=True,
@@ -93,6 +95,7 @@ def tmp_book() -> Generator[Book, None, None]:
             close_excel=True,
             must_exist=False,
             read_only=False,
+            events=False,
         ) as book:
             try:
                 yield book
