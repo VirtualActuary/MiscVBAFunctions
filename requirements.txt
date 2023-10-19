@@ -1,4 +1,4 @@
-xlwings==0.23.4
-locate==1.1.1
-aa-py-xl==9.0.0
-zebra-vba-packager==0.3.2
+xlwings==0.30.*,>=0.30.12
+locate==1.*,>=1.1.1
+aa-py-xl==10.*,>=10.5.0
+zebra-vba-packager==0.3.*,>=0.3.3
