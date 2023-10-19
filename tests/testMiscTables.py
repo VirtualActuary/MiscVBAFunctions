@@ -98,7 +98,6 @@ class MiscTables(unittest.TestCase):
                         self.assertEqual(23, arr[2])
 
                     with self.subTest("GetTableColumnDataRange_2"):
-
                         func_GetTableColumnDataRange = book.macro(
                             "MiscTables.GetTableColumnDataRange"
                         )

@@ -2,7 +2,7 @@ from pathlib import Path
 import mkdocs_gen_files
 
 
-def main():
+def main() -> None:
     repo_dir = Path("..")
     nav = mkdocs_gen_files.Nav()
 

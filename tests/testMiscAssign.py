@@ -23,9 +23,7 @@ class MiscAssign(unittest.TestCase):
 
             with self.subTest("MiscAssign_object"):
                 func_col = book.macro("MiscCollectionCreate.Col")
-                func = book.macro(
-                    "Test__Helper_MiscAssign.Test_MiscAssign_object"
-                )
+                func = book.macro("Test__Helper_MiscAssign.Test_MiscAssign_object")
                 self.assertTrue(func(func_col(4, 5, 6)))
 
 

@@ -18,7 +18,6 @@ class MiscTableToDicts(unittest.TestCase):
                 )
                 book_extra: Book
                 with extra_book(app, repo_path) as book_extra:
-
                     with self.subTest("TableLookupValue"):
                         func_TableLookupValue = book.macro(
                             "MiscTableToDicts.TableLookupValue"

@@ -10,7 +10,6 @@ class MiscExcel(unittest.TestCase):
     def test_1(self) -> None:
         book: Book
         with functions_book() as book:
-
             with self.subTest("Test_ExcelBook"):
                 func = book.macro("Test__Helper_MiscExcel.Test_ExcelBook")
                 self.assertTrue(func())
@@ -80,7 +79,6 @@ class MiscExcel(unittest.TestCase):
                 )
 
             with self.subTest("RenameSheet"):
-
                 func_RenameSheet = book.macro("MiscExcel.RenameSheet")
                 func_RenameSheet(book.sheets[0], "foo")
                 self.assertEqual("foo", book.sheets[0].name)
