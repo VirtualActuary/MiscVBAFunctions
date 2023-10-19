@@ -8,7 +8,7 @@ Public Function Glob(Dir As String, Pattern As String) As Collection
     '
     ' Available wildcards :  ?          :   Any single character
     '                        *          :   Zero or more characters
-    '                        #          :   Any single digit (0–9)
+    '                        #          :   Any single digit (0-9)
     '                        [charlist] :   Any single character in charlist
     '                        [!charlist]:   Any single character not in charlist
     '
@@ -67,7 +67,7 @@ Public Function RGlob(Dir As String, Pattern As String) As Collection
     '
     ' Available wildcards :  ?          :   Any single character
     '                        *          :   Zero or more characters
-    '                        #          :   Any single digit (0–9)
+    '                        #          :   Any single digit (0-9)
     '                        [charlist] :   Any single character in charlist
     '                        [!charlist]:   Any single character not in charlist
     '
