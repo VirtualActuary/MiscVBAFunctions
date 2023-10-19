@@ -9,7 +9,7 @@ with prepend_sys_path():
 
 class MiscTables(unittest.TestCase):
     def test_1(self) -> None:
-        with excel_app(True, True) as app:
+        with excel_app(quiet=True, close=True, events=False, logger=None) as app:
             book: Book
             with functions_book(app=app) as book:
                 func_HasLO = book.macro("MiscTables.HasLO")
@@ -98,7 +98,6 @@ class MiscTables(unittest.TestCase):
                         self.assertEqual(23, arr[2])
 
                     with self.subTest("GetTableColumnDataRange_2"):
-
                         func_GetTableColumnDataRange = book.macro(
                             "MiscTables.GetTableColumnDataRange"
                         )

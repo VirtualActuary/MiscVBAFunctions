@@ -9,7 +9,7 @@ with prepend_sys_path():
 
 class MiscFreezePanes(unittest.TestCase):
     def test_1(self) -> None:
-        with excel_app(True, True) as app:
+        with excel_app(quiet=True, close=True, events=False, logger=None) as app:
             book: Book
             with functions_book(app=app) as book:
                 repo_path = this_dir().parent
@@ -18,7 +18,6 @@ class MiscFreezePanes(unittest.TestCase):
                 )
                 book_extra: Book
                 with extra_book(app, repo_path) as book_extra:
-
                     with self.subTest("Test_FreezePanes"):
                         func = book.macro(
                             "Test__Helper_MiscFreezePanes.Test_FreezePanes"

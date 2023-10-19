@@ -28,7 +28,9 @@ class MiscHasKey(unittest.TestCase):
                 self.assertFalse(func_hasKey(d, "A"))
 
             with self.subTest("Test_HasKey_Dictionary_object"):
-                func = book.macro("Test__Helper_MiscHasKey.Test_HasKey_Dictionary_object")
+                func = book.macro(
+                    "Test__Helper_MiscHasKey.Test_HasKey_Dictionary_object"
+                )
                 self.assertTrue(func())
 
             with self.subTest("Test_HasKey_Dictionary_fail"):

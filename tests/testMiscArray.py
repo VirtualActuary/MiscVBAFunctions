@@ -29,7 +29,7 @@ class MiscArray(unittest.TestCase):
             with self.subTest("DateToStringTransformation"):
                 import datetime as dt
 
-                def time_helper(date):
+                def time_helper(date: dt.datetime) -> dt.datetime:
                     return date + dt.timedelta(hours=2)
 
                 func_DateToStringTransformation = book.macro(
@@ -143,16 +143,15 @@ class MiscArray(unittest.TestCase):
                 )
 
             with self.subTest("StringDates"):
-                func = book.macro("Test__Helper_MiscArray.Test_ArrayToNewTable_StringDates")
-
-                range_obj = book.sheets["Sheet1"].range("B1000")
-                
-                self.assertTrue(
-                    func(range_obj)
+                func = book.macro(
+                    "Test__Helper_MiscArray.Test_ArrayToNewTable_StringDates"
                 )
 
-            with self.subTest("ArrayToNewTable_FunkyHeaders"):
+                range_obj = book.sheets["Sheet1"].range("B1000")
 
+                self.assertTrue(func(range_obj))
+
+            with self.subTest("ArrayToNewTable_FunkyHeaders"):
                 func_ArrayToNewTable = book.macro("MiscArray.ArrayToNewTable")
 
                 arr = [["asdf", 1234, "2022/11/02", False], ["a", "b", "c", "d"]]
