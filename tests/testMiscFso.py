@@ -11,10 +11,22 @@ class TestDictsToTable(unittest.TestCase):
     def test_1(self) -> None:
         book: Book
         with functions_book() as book:
-            func = book.macro("Test__Helper_MiscFso.Test_GetAllFilesRecursive")
+            look_in_path = Path(this_dir().parent, r"test_data\GetAllFiles")
 
-            self.assertTrue(
-                func(str(Path(this_dir().parent, r"test_data\GetAllFiles").absolute()))
+            self.assertEqual(
+                [
+                    "empty file.txt",
+                    "folder1/empty file.txt",
+                    "folder1/folder1/empty file.xlsx",
+                    "folder2/empty file.docx",
+                    "folder2/folder1/folder1/empty file.txt",
+                ],
+                [
+                    Path(p).relative_to(look_in_path).as_posix()
+                    for p in book.macro(
+                        "Test__Helper_MiscFso.Test_GetAllFilesRecursive"
+                    )(str(look_in_path.absolute()))
+                ],
             )
 
 
