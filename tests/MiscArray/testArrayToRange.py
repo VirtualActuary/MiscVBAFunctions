@@ -1,3 +1,5 @@
+from typing import List, Any
+
 from ..util import TestCaseWithFunctionBook
 
 
@@ -57,7 +59,7 @@ class TestArrayToRange(TestCaseWithFunctionBook):
 
         See https://github.com/AutoActuary/autory/issues/1150
         """
-        data = [
+        data: List[List[Any]] = [
             ["TRUE", "FALSE"],  # Strings that look like booleans.
             ["#VALUE!", "#N/A"],  # Strings that look like errors.
             ["1", "2"],  # Strings that look like integers.
