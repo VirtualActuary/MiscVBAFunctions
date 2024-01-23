@@ -5,7 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Mapping, Any, Generator, Union, ContextManager
 
-from aa_py_xl import excel, excel_book
+from aa_py_xl import excel, excel_book, xlwings_set_max_retries
 from locate import this_dir
 from xlwings import Book, App
 
@@ -56,6 +56,7 @@ class TestCaseWithFunctionBook(unittest.TestCase):
     book: Book
 
     def setUp(self) -> None:
+        xlwings_set_max_retries(100000)
         self._cm = functions_book(quiet=self.quiet)
         self.book = self._cm.__enter__()
 
