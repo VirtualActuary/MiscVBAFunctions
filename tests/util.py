@@ -1,10 +1,11 @@
 import shutil
+import unittest
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Mapping, Any, Generator, Union
+from typing import Mapping, Any, Generator, Union, ContextManager
 
-from aa_py_xl import excel, excel_book
+from aa_py_xl import excel, excel_book, xlwings_set_max_retries
 from locate import this_dir
 from xlwings import Book, App
 
@@ -47,6 +48,20 @@ def functions_book(
                 yield book
             finally:
                 pass
+
+
+class TestCaseWithFunctionBook(unittest.TestCase):
+    quiet: bool = True
+    _cm: ContextManager[Book]
+    book: Book
+
+    def setUp(self) -> None:
+        xlwings_set_max_retries(100000)
+        self._cm = functions_book(quiet=self.quiet)
+        self.book = self._cm.__enter__()
+
+    def tearDown(self) -> None:
+        self._cm.__exit__(None, None, None)
 
 
 @contextmanager

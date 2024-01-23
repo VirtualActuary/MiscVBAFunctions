@@ -11,6 +11,8 @@ Public Function ArrayToRange( _
 ) As Range
     ' This function copies data from the input array to a Range.
     '
+    ' Data types are preserved.
+    '
     ' Args:
     '     Data:
     '         Array containing the data. If this is not 2D, an error will be thrown.
@@ -29,22 +31,24 @@ Public Function ArrayToRange( _
     '
     ' Returns:
     '     The Range to which the data was written.
+    
     If ArrayGetNumDimensions(Data) <> 2 Then
         Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage( _
-                                                   ErrNr.SubscriptOutOfRange, _
-                                                   "ArrayToRange can only function on 2D arrays. " _
-                                                   & "Use 'Ensure2dArray' if the data is 1D before calling this function." _
-                                               )
+            ErrNr.SubscriptOutOfRange, _
+            "ArrayToRange can only function on 2D arrays. Use the `Ensure2dArray` function." _
+        )
     End If
     
     Dim StartRow As Long
-    Dim EndRow As Long
-    Dim StartColumn As Long
-    Dim EndColumn As Long
-    
     StartRow = StartCell.Row
+    
+    Dim StartColumn As Long
     StartColumn = StartCell.Column
+    
+    Dim EndRow As Long
     EndRow = StartRow + UBound(Data) - LBound(Data)
+    
+    Dim EndColumn As Long
     EndColumn = StartColumn + UBound(Data, 2) - LBound(Data, 2)
     
     If IncludesHeader Then
@@ -78,14 +82,11 @@ Public Function ArrayToRange( _
         Next
     End If
     
-    ' Check for string dates and keep them as strings:
+    ' Preserve data types by formatting some cells BEFORE writing the values.
     For CountOuter = LBound(Data) To UBound(Data)
         For CountInner = LBound(Data, 2) To UBound(Data, 2)
-            If IsDate(Data(CountOuter, CountInner)) Then ' this would return true, even for strings that looks like dates
-                If VarType(Data(CountOuter, CountInner)) = VbString Then ' This would be false for strings that looks like dates
-                    ' escape strings looking like dates
-                    Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
-                End If
+            If VarType(Data(CountOuter, CountInner)) = VbString Then
+                StartCell.Offset(CountOuter, CountInner).NumberFormat = "@"
             End If
         Next CountInner
     Next CountOuter
@@ -495,4 +496,3 @@ Function ArrayUniqueValues(Arr() As Variant)  ' , Optional Dimension As Integer 
     ArrayUniqueValues = UniqueValues
 
 End Function
-
