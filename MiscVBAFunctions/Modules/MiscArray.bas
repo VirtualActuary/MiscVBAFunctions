@@ -11,6 +11,8 @@ Public Function ArrayToRange( _
 ) As Range
     ' This function copies data from the input array to a Range.
     '
+    ' Data types are preserved.
+    '
     ' Args:
     '     Data:
     '         Array containing the data. If this is not 2D, an error will be thrown.
@@ -80,14 +82,11 @@ Public Function ArrayToRange( _
         Next
     End If
     
-    ' Check for string dates and keep them as strings:
+    ' Preserve data types by formatting some cells BEFORE writing the values.
     For CountOuter = LBound(Data) To UBound(Data)
         For CountInner = LBound(Data, 2) To UBound(Data, 2)
-            If IsDate(Data(CountOuter, CountInner)) Then ' this would return true, even for strings that looks like dates
-                If VarType(Data(CountOuter, CountInner)) = VbString Then ' This would be false for strings that looks like dates
-                    ' escape strings looking like dates
-                    Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
-                End If
+            If VarType(Data(CountOuter, CountInner)) = VbString Then
+                StartCell.Offset(CountOuter, CountInner).NumberFormat = "@"
             End If
         Next CountInner
     Next CountOuter
