@@ -38,13 +38,15 @@ Public Function ArrayToRange( _
     End If
     
     Dim StartRow As Long
-    Dim EndRow As Long
-    Dim StartColumn As Long
-    Dim EndColumn As Long
-    
     StartRow = StartCell.Row
+    
+    Dim StartColumn As Long
     StartColumn = StartCell.Column
+    
+    Dim EndRow As Long
     EndRow = StartRow + UBound(Data) - LBound(Data)
+    
+    Dim EndColumn As Long
     EndColumn = StartColumn + UBound(Data, 2) - LBound(Data, 2)
     
     If IncludesHeader Then
