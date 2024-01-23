@@ -29,12 +29,12 @@ Public Function ArrayToRange( _
     '
     ' Returns:
     '     The Range to which the data was written.
+    
     If ArrayGetNumDimensions(Data) <> 2 Then
         Err.Raise ErrNr.SubscriptOutOfRange, , ErrorMessage( _
-                                                   ErrNr.SubscriptOutOfRange, _
-                                                   "ArrayToRange can only function on 2D arrays. " _
-                                                   & "Use 'Ensure2dArray' if the data is 1D before calling this function." _
-                                               )
+            ErrNr.SubscriptOutOfRange, _
+            "ArrayToRange can only function on 2D arrays. Use the `Ensure2dArray` function." _
+        )
     End If
     
     Dim StartRow As Long
@@ -495,4 +495,3 @@ Function ArrayUniqueValues(Arr() As Variant)  ' , Optional Dimension As Integer 
     ArrayUniqueValues = UniqueValues
 
 End Function
-
