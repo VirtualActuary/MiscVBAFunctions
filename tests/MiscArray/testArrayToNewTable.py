@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from aa_py_xl import Table
 
 from ..util import TestCaseWithFunctionBook
@@ -82,3 +84,68 @@ class TestArrayToNewTable(TestCaseWithFunctionBook):
         arr = [["col1", "col2", "col3"], ["-[d]", "=d", 1]]
         range_obj = self.book.sheets.active.range("B4")
         self.assertTrue(func(arr, range_obj))
+
+    def test_header_without_rows(self) -> None:
+        func_ArrayToNewTable = self.book.macro("MiscArray.ArrayToNewTable")
+
+        arr = [["a", "b", "c"]]
+
+        table_name = "Table1"
+        func_ArrayToNewTable(
+            table_name,
+            arr,
+            self.book.sheets["Sheet1"].range("A1"),
+            False,
+            self.book.macro("col")("0.00", "General", "yyyy/mm/dd"),
+        )
+
+        table = Table.get_from_book(self.book, table_name)
+        self.assertEqual(
+            [
+                ["a", "b", "c"],
+                [None, None, None],
+            ],
+            table.range.value,
+        )
+        self.assertEqual(
+            [
+                # Header is always text.
+                ["@", "@", "@"],
+                # Number formats are ignored if there are no data rows.
+                # This empty row is added because a ListObject requires at least one row.
+                ["General", "General", "General"],
+            ],
+            [[cell.number_format for cell in row] for row in table.range.rows],
+        )
+
+    def test_single_data_row(self) -> None:
+        func_ArrayToNewTable = self.book.macro("MiscArray.ArrayToNewTable")
+
+        arr = [["a", "b", "c"], [1, 2, 3]]
+
+        table_name = "Table1"
+        func_ArrayToNewTable(
+            table_name,
+            arr,
+            self.book.sheets["Sheet1"].range("A1"),
+            False,
+            self.book.macro("col")("0.00", "General", "yyyy/mm/dd"),
+        )
+
+        table = Table.get_from_book(self.book, table_name)
+        self.assertEqual(
+            [
+                ["a", "b", "c"],
+                [1, 2, datetime(1900, 1, 2)],
+            ],
+            table.range.value,
+        )
+        self.assertEqual(
+            [
+                # Header is always text.
+                ["@", "@", "@"],
+                # The given number formats are applied.
+                ["0.00", "General", "yyyy/mm/dd"],
+            ],
+            [[cell.number_format for cell in row] for row in table.range.rows],
+        )
