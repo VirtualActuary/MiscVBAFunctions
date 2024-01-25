@@ -7,7 +7,8 @@ Public Function ArrayToRange( _
     Data() As Variant, _
     StartCell As Range, _
     Optional EscapeFormulas As Boolean = False, _
-    Optional IncludesHeader As Boolean = False _
+    Optional IncludesHeader As Boolean = False, _
+    Optional PreventStringConversion As Boolean = True _
 ) As Range
     ' This function copies data from the input array to a Range.
     '
@@ -28,6 +29,14 @@ Public Function ArrayToRange( _
     '     IncludesHeader:
     '         Whether `Data` includes a header. The header will be written with a number format
     '         of `@`, because headers must be strings, especially when creating `ListObject`s.
+    '     PreventStringConversion:
+    '         If True, the number format of cells to which strings will be written are set to
+    '         `@` before writing the data, to prevent the string from being converted to
+    '         something else automatically. This could happen if the string looks like a date
+    '         or a boolean, and is usually undesirable behavior.
+    '         If False, the values are written to the cells without touching the number formats.
+    '         This may be useful when the caller of this function already set the number
+    '         formats of the destination range to something useful.
     '
     ' Returns:
     '     The Range to which the data was written.
@@ -82,14 +91,15 @@ Public Function ArrayToRange( _
         Next
     End If
     
-    ' Preserve data types by formatting some cells BEFORE writing the values.
-    For CountOuter = LBound(Data) To UBound(Data)
-        For CountInner = LBound(Data, 2) To UBound(Data, 2)
-            If VarType(Data(CountOuter, CountInner)) = VbString Then
-                StartCell.Offset(CountOuter, CountInner).NumberFormat = "@"
-            End If
-        Next CountInner
-    Next CountOuter
+    If PreventStringConversion Then
+        For CountOuter = LBound(Data) To UBound(Data)
+            For CountInner = LBound(Data, 2) To UBound(Data, 2)
+                If VarType(Data(CountOuter, CountInner)) = VbString Then
+                    StartCell.Offset(CountOuter, CountInner).NumberFormat = "@"
+                End If
+            Next CountInner
+        Next CountOuter
+    End If
     
     CellRange.Value = Data
     Set ArrayToRange = CellRange
