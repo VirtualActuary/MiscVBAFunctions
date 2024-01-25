@@ -111,7 +111,7 @@ Public Function ArrayToRange( _
         Next RowIndex
     End If
     
-    If Not NumberFormatPerColumn Is Nothing Then
+    If EndRow > StartRow And Not NumberFormatPerColumn Is Nothing Then
         For ColumnIndex = LBound(Data, 2) To UBound(Data, 2)
             Sheet.Range(Sheet.Cells(StartRow + 1, StartColumn + ColumnIndex), Sheet.Cells(EndRow, StartColumn + ColumnIndex)).NumberFormat = NumberFormatPerColumn(ColumnIndex + 1)
         Next ColumnIndex
