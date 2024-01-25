@@ -8,7 +8,8 @@ Public Function ArrayToRange( _
     StartCell As Range, _
     Optional EscapeFormulas As Boolean = False, _
     Optional IncludesHeader As Boolean = False, _
-    Optional PreventStringConversion As Boolean = True _
+    Optional PreventStringConversion As Boolean = True, _
+    Optional NumberFormatPerColumn As Collection = Nothing _
 ) As Range
     ' This function copies data from the input array to a Range.
     '
@@ -37,6 +38,12 @@ Public Function ArrayToRange( _
     '         If False, the values are written to the cells without touching the number formats.
     '         This may be useful when the caller of this function already set the number
     '         formats of the destination range to something useful.
+    '         Not compatible with the `NumberFormatPerColumn` argument.
+    '     NumberFormatPerColumn:
+    '         A number format for each column, in the same order as the columns in `Data`.
+    '         Collection keys are ignored. If given, the data range of each column will be
+    '         set to the corresponding number format from this collection before the values are
+    '         written to the destination range.
     '
     ' Returns:
     '     The Range to which the data was written.
@@ -47,6 +54,9 @@ Public Function ArrayToRange( _
             "ArrayToRange can only function on 2D arrays. Use the `Ensure2dArray` function." _
         )
     End If
+    
+    Dim Sheet As Worksheet
+    Set Sheet = StartCell.Parent
     
     Dim StartRow As Long
     StartRow = StartCell.Row
@@ -63,27 +73,27 @@ Public Function ArrayToRange( _
     If IncludesHeader Then
         ' Format the header as `@`, because headers should always be strings.
         Dim HeaderRange As Range
-        Set HeaderRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(StartRow, EndColumn))
+        Set HeaderRange = Sheet.Range(StartCell, Sheet.Cells(StartRow, EndColumn))
         HeaderRange.NumberFormat = "@"
     End If
     
     Dim CellRange As Range
-    Set CellRange = StartCell.Parent.Range(StartCell, StartCell.Parent.Cells(EndRow, EndColumn))
+    Set CellRange = Sheet.Range(StartCell, Sheet.Cells(EndRow, EndColumn))
     
-    Dim CountOuter As Long
-    Dim CountInner As Long
+    Dim RowIndex As Long
+    Dim ColumnIndex As Long
     
     If EscapeFormulas Then
-        For CountOuter = LBound(Data) To UBound(Data)
-            For CountInner = LBound(Data, 2) To UBound(Data, 2)
-                If Not IsError(Data(CountOuter, CountInner)) Then ' don't even try if it's an error value, else we get type mismatch
-                    If Left(Data(CountOuter, CountInner), 1) = "=" Then
-                        Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+        For RowIndex = LBound(Data) To UBound(Data)
+            For ColumnIndex = LBound(Data, 2) To UBound(Data, 2)
+                If Not IsError(Data(RowIndex, ColumnIndex)) Then ' don't even try if it's an error value, else we get type mismatch
+                    If Left(Data(RowIndex, ColumnIndex), 1) = "=" Then
+                        Data(RowIndex, ColumnIndex) = "'" & Data(RowIndex, ColumnIndex)
                         
                     End If
-                    If IsNumeric(Data(CountOuter, CountInner)) Then
-                        If VarType(Data(CountOuter, CountInner)) = VbString Then
-                            Data(CountOuter, CountInner) = "'" & Data(CountOuter, CountInner)
+                    If IsNumeric(Data(RowIndex, ColumnIndex)) Then
+                        If VarType(Data(RowIndex, ColumnIndex)) = VbString Then
+                            Data(RowIndex, ColumnIndex) = "'" & Data(RowIndex, ColumnIndex)
                         End If
                     End If
                 End If
@@ -92,13 +102,19 @@ Public Function ArrayToRange( _
     End If
     
     If PreventStringConversion Then
-        For CountOuter = LBound(Data) To UBound(Data)
-            For CountInner = LBound(Data, 2) To UBound(Data, 2)
-                If VarType(Data(CountOuter, CountInner)) = VbString Then
-                    StartCell.Offset(CountOuter, CountInner).NumberFormat = "@"
+        For RowIndex = LBound(Data) To UBound(Data)
+            For ColumnIndex = LBound(Data, 2) To UBound(Data, 2)
+                If VarType(Data(RowIndex, ColumnIndex)) = VbString Then
+                    StartCell.Offset(RowIndex, ColumnIndex).NumberFormat = "@"
                 End If
-            Next CountInner
-        Next CountOuter
+            Next ColumnIndex
+        Next RowIndex
+    End If
+    
+    If Not NumberFormatPerColumn Is Nothing Then
+        For ColumnIndex = LBound(Data, 2) To UBound(Data, 2)
+            Sheet.Range(Sheet.Cells(StartRow + 1, StartColumn + ColumnIndex), Sheet.Cells(EndRow, StartColumn + ColumnIndex)).NumberFormat = NumberFormatPerColumn(ColumnIndex + 1)
+        Next ColumnIndex
     End If
     
     CellRange.Value = Data

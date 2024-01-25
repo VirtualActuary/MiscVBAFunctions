@@ -74,8 +74,9 @@ class TestArrayToRange(TestCaseWithFunctionBook):
         self.array_to_range(
             data,
             self.book.sheets["Sheet1"].range("A1"),
-            False,  # Escape formulas.
+            False,  # Don't escape formulas.
             False,  # No header.
+            True,  # Prevent string conversion.
         )
         self.assertEqual(
             data,
