@@ -127,7 +127,8 @@ Public Function ArrayToNewTable( _
     TableName As String, _
     DataIncludingHeaders() As Variant, _
     StartCell As Range, _
-    Optional EscapeFormulas As Boolean = False _
+    Optional EscapeFormulas As Boolean = False, _
+    Optional NumberFormatPerColumn As Collection = Nothing _
 ) As ListObject
     ' Create a ListObject and populate it with data from `DataIncludingHeaders`.
     '
@@ -146,6 +147,11 @@ Public Function ArrayToNewTable( _
     '         If True, formulas get copied as text. (E.x. "=d" -> "'=d")
     '         If False, the data is copied as is.
     '         If this is False and "=[foo]" gets copied, the function will crash.
+    '     NumberFormatPerColumn:
+    '         A number format for each column, in the same order as the columns in `Data`.
+    '         Collection keys are ignored. If given, the data range of each column will be
+    '         set to the corresponding number format from this collection before the values are
+    '         written to the destination range.
     '
     ' Returns:
     '     The new ListObject.
@@ -159,7 +165,9 @@ Public Function ArrayToNewTable( _
         Data:=DataIncludingHeaders, _
         StartCell:=StartCell, _
         EscapeFormulas:=EscapeFormulas, _
-        IncludesHeader:=True _
+        IncludesHeader:=True, _
+        PreventStringConversion:=(NumberFormatPerColumn Is Nothing), _
+        NumberFormatPerColumn:=NumberFormatPerColumn _
     )
     
     Set ArrayToNewTable = StartCell.Worksheet.ListObjects.Add( _
