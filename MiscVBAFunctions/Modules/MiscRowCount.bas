@@ -2,13 +2,16 @@ Attribute VB_Name = "MiscRowCount"
 '@IgnoreModule ImplicitByRefModifier
 Option Explicit
 
-Function ActiveRowsDown(Optional RangeInput As Range) As Long
+Function ActiveRowsDown(Optional RangeInput As Range, Optional MaxNumRows As Long = 100000, Optional MaxNumEmptyRows As Long = 100) As Long
+
     ' number of active rows down from the starting range
     ' it's capped at a minimum of 1
     ' This function takes hidden cells into account
     '
     ' Args:
     '   RangeInput: Starting cell to start counting from
+    '   maxNumRows: Maximum number of rows to allow for in the lookup range. The default is 100000
+    '   maxNumEmptyRows: Number of emtpy cells before stopping the row count. The default is 100
     '
     ' Returns:
     '   The number of rows down from the starting range
@@ -18,7 +21,7 @@ Function ActiveRowsDown(Optional RangeInput As Range) As Long
 
     If WS.AutoFilterMode And WS.FilterMode Then
         Dim R_col As Range
-        Set R_col = WS.Range(WS.Cells(RangeInput.Row, RangeInput.Column), WS.Cells(WS.Rows.Count, RangeInput.Column))
+        Set R_col = WS.Range(WS.Cells(RangeInput.Row, RangeInput.Column), WS.Cells(RangeInput.Row + MaxNumRows, RangeInput.Column))
         
         Dim ArrVals() As Variant
         ReDim ArrVals(R_col.Rows.Count - 1)
@@ -37,7 +40,7 @@ Function ActiveRowsDown(Optional RangeInput As Range) As Long
                 EmptyCellCount = 0
             End If
             
-            If EmptyCellCount > 100 Then
+            If EmptyCellCount > MaxNumEmptyRows Then
                 ActiveRowsDown = LastActive
                 Exit Function
             End If
