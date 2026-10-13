@@ -14,8 +14,7 @@ class TestSubprocess(TestCaseWithFunctionBook):
         # Write a script that outputs to stdout and to stderr and has a non-zero exit code.
         with TemporaryDirectory() as tmp_dir_str:
             script_path = Path(tmp_dir_str, "tmp.py")
-            script_path.write_text(
-                r"""\
+            script_path.write_text(r"""\
 import sys
 
 print("Hello World")
@@ -25,8 +24,7 @@ print("Goodbye World", file=sys.stderr)
 print("It's been fun!", file=sys.stderr)
 
 sys.exit(3)
-"""
-            )
+""")
 
             result_vba = func(f"{sys.executable} {script_path}")
 

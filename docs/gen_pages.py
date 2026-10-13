@@ -13,13 +13,11 @@ def main() -> None:
 
     nav["Introduction"] = "index.md"
     with mkdocs_gen_files.open("index.md", "w") as dst:
-        dst.write(
-            """---
+        dst.write("""---
 title: MiscVba
 ---
 Click [here](MiscVbaTemplate.xlsb) to download the template.
-"""
-        )
+""")
 
         # Inject the repo's README.md file into the documentation as the starting page.
         with repo_dir.joinpath("README.md").open("r") as src:
@@ -40,8 +38,7 @@ Click [here](MiscVbaTemplate.xlsb) to download the template.
             nav[src_path.relative_to(repo_dir).parts] = doc_path.as_posix()
 
             with mkdocs_gen_files.open(doc_path, "w") as f:
-                f.write(
-                    f"""\
+                f.write(f"""\
 ---
 title: '{src_path.name}'
 ---
@@ -50,8 +47,7 @@ title: '{src_path.name}'
 
 ::: {src_path}
     handler: vba
-"""
-                )
+""")
 
     with mkdocs_gen_files.open("nav.md", "w") as f:
         f.writelines(nav.build_literate_nav())
