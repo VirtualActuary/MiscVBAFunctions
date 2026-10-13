@@ -1,0 +1,38 @@
+name: Test
+
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  test-windows-excel:
+    timeout-minutes: 120
+    runs-on: [self-hosted, python3, Windows, excel]
+    steps:
+      - uses: actions/checkout@v4
+        timeout-minutes: 10
+
+      - name: Install dependencies
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 3
+          timeout_minutes: 20
+          command: pip install --upgrade -r requirements.txt -r test-requirements.txt
+        env:
+          PIP_EXTRA_INDEX_URL: https://aa:${{ secrets.PYPI_PASSWORD }}@pypi.autoactuary.com/simple
+
+      - name: Compile workbooks
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 3
+          timeout_minutes: 20
+          command: python scripts/compile.py
+
+      - name: Run unit tests
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 3
+          timeout_minutes: 20
+          command: python -X utf8 -m unittest
