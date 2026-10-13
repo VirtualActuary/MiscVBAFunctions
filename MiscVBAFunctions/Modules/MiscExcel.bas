@@ -380,7 +380,7 @@ Sub InsertRows(ReferenceR As Range, Optional NrRows As Integer = 1)
     '
     ' Args:
     '   ReferenceR: Range object, used to place the new row.
-    '   NrCols: Number of rows to add.
+    '   NrRows: Number of rows to add.
     
     Dim I As Long
     For I = 1 To NrRows

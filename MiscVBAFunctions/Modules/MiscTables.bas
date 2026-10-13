@@ -310,7 +310,7 @@ Public Function GetTableColumnRange( _
     '
     ' Args:
     '   TableName: Name of the Table.
-    '   Columns: Name of the column.
+    '   Column: Name of the column.
     '   WB: Selected WorkBook.
     '
     ' Returns:
