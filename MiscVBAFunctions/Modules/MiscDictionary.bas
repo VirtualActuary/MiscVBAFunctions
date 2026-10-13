@@ -151,8 +151,7 @@ Function DictToCollection(D As Dictionary) As Collection
     ' This might be useful in some backwards-compatibility situations.
     '
     ' Args:
-    '   Args: List of keys and values that gets inserted into the Collection.
-    '         All uneven entries are the keys and all even entries are the values for the matching keys.
+    '   D: Dictionary whose keys and values are copied into the collection.
     '
     ' Returns:
     '   The Collection

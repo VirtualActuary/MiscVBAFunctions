@@ -481,7 +481,6 @@ Function ArrayUniqueValues(Arr() As Variant)  ' , Optional Dimension As Integer 
     '
     ' Args:
     '   Arr: Input array with potential duplicates.
-    '   Dimension: 1 or 2. The dimension of the input array.
     '
     ' Returns:
     '   The array with unique entries only, or an empty array if there are no unique entries.

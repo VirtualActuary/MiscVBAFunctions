@@ -61,9 +61,6 @@ Private Sub SetCellValue(Cell As Range, Value As Variant)
     ' Args:
     '   Cell: the cell set
     '   Value: the value to give the cell
-    '
-    ' Returns:
-    '   Returns nothing. Side-effect on the value of the cell
     
     If Application.WorksheetFunction.IsText(Value) Then
         If Left(Value, 1) = "=" Then
